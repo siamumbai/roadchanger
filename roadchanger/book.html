@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Book DJ Roadchanger — Emīls Ašmanis</title>
+  <meta name="description" content="Book DJ Roadchanger for your wedding, corporate event or private party. DJ with live saxophone and fire shows. Based in Riga, Latvia." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=Lato:wght@300;400&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body { background: #FFFBF5; color: #2C2416; font-family: 'Lato', Arial, sans-serif; }
+
+    nav { display: flex; justify-content: space-between; align-items: center; padding: 1.25rem 3rem; background: #FFFBF5; border-bottom: 0.5px solid #EAD9B8; }
+    .nav-logo { font-family: 'Libre Baskerville', Georgia, serif; font-size: 16px; font-weight: 700; letter-spacing: 0.08em; color: #2C2416; text-transform: uppercase; text-decoration: none; }
+    .nav-back { font-size: 13px; color: #8A6840; text-decoration: none; }
+    .nav-back:hover { color: #B07320; }
+
+    .hero { background: #2C2416; padding: 4rem 3rem; }
+    .hero-inner { display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; align-items: center; max-width: 960px; margin: 0 auto; }
+    .hero-tag { font-size: 11px; letter-spacing: 0.2em; color: #C4A06A; text-transform: uppercase; margin-bottom: 1rem; }
+    .hero-title { font-family: 'Libre Baskerville', Georgia, serif; font-size: 38px; font-weight: 700; line-height: 1.2; color: #F5ECD8; margin-bottom: 1.25rem; }
+    .hero-title em { font-style: italic; color: #C4A06A; }
+    .hero-sub { font-size: 15px; color: #A08060; line-height: 1.85; font-weight: 300; margin-bottom: 2rem; }
+    .hero-img { background: #3D3020; border-radius: 6px; aspect-ratio: 1/1; display: flex; align-items: center; justify-content: center; border: 0.5px solid #5C4028; overflow: hidden; }
+    .hero-img img { width: 100%; height: 100%; object-fit: cover; border-radius: 6px; display: block; }
+    .img-ph { font-size: 12px; color: #6B5035; letter-spacing: 0.08em; text-align: center; padding: 1rem; line-height: 2; }
+
+    .audio-bar { background: #3D3020; border: 0.5px solid #5C4028; border-radius: 6px; padding: 1rem 1.25rem; display: flex; align-items: center; gap: 1rem; margin-bottom: 1.75rem; }
+    .play-btn { width: 36px; height: 36px; background: #B07320; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; flex-shrink: 0; border: none; }
+    .play-icon { width: 0; height: 0; border-top: 7px solid transparent; border-bottom: 7px solid transparent; border-left: 11px solid #FFFBF5; margin-left: 3px; }
+    .audio-info strong { font-size: 14px; color: #F5ECD8; font-weight: 400; display: block; margin-bottom: 2px; }
+    .audio-info span { font-size: 12px; color: #A08060; font-weight: 300; }
+    .audio-track { flex: 1; height: 3px; background: #5C4028; border-radius: 2px; }
+
+    .cta-stack { display: flex; flex-direction: column; gap: 10px; }
+    .btn-amber { background: #B07320; color: #FFFBF5; font-size: 15px; padding: 14px 28px; border-radius: 4px; text-decoration: none; letter-spacing: 0.04em; text-align: center; display: block; font-family: 'Lato', Arial, sans-serif; }
+    .btn-amber:hover { background: #C4850A; }
+    .btn-ghost { background: transparent; color: #C4A06A; font-size: 14px; padding: 13px 28px; border-radius: 4px; text-decoration: none; letter-spacing: 0.04em; text-align: center; display: block; border: 0.5px solid #5C4028; font-family: 'Lato', Arial, sans-serif; }
+    .btn-ghost:hover { border-color: #8A6840; }
+
+    .services { padding: 4rem 3rem; background: #FDF5E6; }
+    .section-wrap { max-width: 960px; margin: 0 auto; }
+    .section-tag { font-size: 11px; letter-spacing: 0.2em; color: #B07320; text-transform: uppercase; margin-bottom: 0.75rem; }
+    .section-title { font-family: 'Libre Baskerville', Georgia, serif; font-size: 26px; font-weight: 700; color: #2C2416; margin-bottom: 2rem; }
+    .pills { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; }
+    .pill { background: #FFFBF5; border: 0.5px solid #E0CCA4; border-radius: 6px; padding: 1.5rem 1.25rem; }
+    .pill-icon { font-size: 22px; margin-bottom: 0.75rem; }
+    .pill-name { font-family: 'Libre Baskerville', Georgia, serif; font-size: 15px; font-weight: 700; color: #2C2416; margin-bottom: 0.4rem; }
+    .pill-desc { font-size: 12px; color: #7A5C38; line-height: 1.65; font-weight: 300; }
+
+    .bottom { padding: 3.5rem 3rem; background: #FFFBF5; border-top: 0.5px solid #EAD9B8; }
+    .bottom-inner { display: grid; grid-template-columns: 1fr 1fr; gap: 3rem; align-items: start; max-width: 960px; margin: 0 auto; }
+
+    .quote-block { border-left: 3px solid #E8C87A; padding-left: 1.25rem; margin-bottom: 1.5rem; }
+    .quote-stars { color: #C4850A; font-size: 11px; letter-spacing: 2px; margin-bottom: 0.5rem; }
+    .quote-text { font-family: 'Libre Baskerville', Georgia, serif; font-size: 14px; font-style: italic; color: #5C4028; line-height: 1.75; margin-bottom: 0.5rem; }
+    .quote-author { font-size: 12px; color: #A08060; }
+    .reviews-link { font-size: 13px; color: #B07320; text-decoration: none; border-bottom: 0.5px solid #C4A06A; padding-bottom: 2px; }
+
+    .contact-card { background: #FDF5E6; border: 0.5px solid #E0CCA4; border-radius: 6px; padding: 1.75rem; }
+    .contact-title { font-family: 'Libre Baskerville', Georgia, serif; font-size: 18px; font-weight: 700; color: #2C2416; margin-bottom: 1.25rem; }
+    .contact-row { display: flex; gap: 1rem; margin-bottom: 0.85rem; }
+    .contact-label { font-size: 11px; color: #A08060; text-transform: uppercase; letter-spacing: 0.1em; min-width: 60px; padding-top: 2px; }
+    .contact-val { font-size: 14px; color: #2C2416; }
+    .contact-val a { color: #B07320; text-decoration: none; }
+    .contact-divider { height: 0.5px; background: #E0CCA4; margin: 1.25rem 0; }
+
+    footer { background: #1E1810; padding: 1.5rem 3rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; }
+    .footer-logo { font-family: 'Libre Baskerville', Georgia, serif; font-size: 13px; font-weight: 700; letter-spacing: 0.1em; color: #C4A06A; text-transform: uppercase; }
+    .footer-link { font-size: 12px; color: #6B5035; text-decoration: none; }
+    .footer-link:hover { color: #C4A06A; }
+
+    @media (max-width: 768px) {
+      nav { padding: 1rem 1.5rem; }
+      .hero, .services, .bottom { padding: 2.5rem 1.5rem; }
+      .hero-inner, .bottom-inner { grid-template-columns: 1fr; gap: 2rem; }
+      .hero-title { font-size: 30px; }
+      .pills { grid-template-columns: 1fr; }
+      footer { padding: 1.5rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <nav>
+    <a href="index.html" class="nav-logo">Roadchanger</a>
+    <a href="index.html" class="nav-back">← Back to site</a>
+  </nav>
+
+  <div class="hero">
+    <div class="hero-inner">
+      <div>
+        <p class="hero-tag">You just met me — here's everything you need</p>
+        <h1 class="hero-title">Emīls Ašmanis<br><em>DJ Roadchanger</em></h1>
+        <p class="hero-sub">DJ · Saxophone · Fire shows · Based in Riga, available across Europe. If we just talked at an event, here's how to make it happen for yours.</p>
+
+        <div class="audio-bar">
+          <button class="play-btn" onclick="togglePlay(this)">
+            <div class="play-icon" id="play-icon"></div>
+          </button>
+          <div class="audio-info">
+            <strong>Hear a live set</strong>
+            <span>60 second sample · replace with your audio file</span>
+          </div>
+          <div class="audio-track"></div>
+        </div>
+
+        <div class="cta-stack">
+          <a href="index.html#booking" class="btn-amber">Check my availability</a>
+          <a href="index.html#services" class="btn-ghost">Watch a full set →</a>
+        </div>
+      </div>
+      <div class="hero-img">
+        <!-- Replace with: <img src="images/book.jpg" alt="DJ Roadchanger" /> -->
+        <p class="img-ph">Add images/book.jpg<br>Square or portrait format</p>
+      </div>
+    </div>
+  </div>
+
+  <section class="services">
+    <div class="section-wrap">
+      <p class="section-tag">What I do</p>
+      <h2 class="section-title">Pick what fits your event</h2>
+      <div class="pills">
+        <div class="pill">
+          <div class="pill-icon">🎷</div>
+          <div class="pill-name">DJ + saxophone</div>
+          <p class="pill-desc">Live sax woven through a DJ set. Weddings, corporate nights, clubs.</p>
+        </div>
+        <div class="pill">
+          <div class="pill-icon">🎹</div>
+          <div class="pill-name">Piano lounge</div>
+          <p class="pill-desc">Piano, flute, ambient pads. Welcome drinks, gala dinners, ceremonies.</p>
+        </div>
+        <div class="pill">
+          <div class="pill-icon">🔥</div>
+          <div class="pill-name">Fire show + DJ</div>
+          <p class="pill-desc">Live fire performer, up to 15 pyro moments, then a full DJ finale.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="bottom">
+    <div class="bottom-inner">
+      <div>
+        <p class="section-tag">What people say</p>
+        <h2 class="section-title" style="margin-bottom:1.5rem;">Real reviews</h2>
+        <div class="quote-block">
+          <div class="quote-stars">★★★★★</div>
+          <p class="quote-text">"Emīls played our corporate gala and the room was completely transformed. Guests were asking for his contact all night."</p>
+          <p class="quote-author">Anna K. — Event manager, Riga</p>
+        </div>
+        <div class="quote-block">
+          <div class="quote-stars">★★★★★</div>
+          <p class="quote-text">"The fire finale was unreal. We've had DJs before. We've never had anything like this."</p>
+          <p class="quote-author">Tomas R. — Private villa, Sigulda</p>
+        </div>
+        <a href="reviews.html" class="reviews-link">Read all reviews →</a>
+      </div>
+      <div class="contact-card">
+        <div class="contact-title">Get in touch</div>
+        <div class="contact-row">
+          <span class="contact-label">Email</span>
+          <span class="contact-val"><a href="mailto:e.asmanis@gmail.com">e.asmanis@gmail.com</a></span>
+        </div>
+        <div class="contact-row">
+          <span class="contact-label">Phone</span>
+          <span class="contact-val"><a href="tel:+37120031578">+371 200 31578</a></span>
+        </div>
+        <div class="contact-row">
+          <span class="contact-label">Based</span>
+          <span class="contact-val">Riga, Latvia · EU-wide</span>
+        </div>
+        <div class="contact-divider"></div>
+        <a href="index.html#booking" class="btn-amber" style="font-size:14px;padding:12px 20px;">Send a booking enquiry</a>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    <div class="footer-logo">Roadchanger</div>
+    <a href="reviews.html" class="footer-link">Leave a review →</a>
+  </footer>
+
+  <script>
+    function togglePlay(btn) {
+      const icon = document.getElementById('play-icon');
+      const isPlaying = btn.dataset.playing === 'true';
+      if (isPlaying) {
+        btn.dataset.playing = 'false';
+        icon.style.cssText = 'width:0;height:0;border-top:7px solid transparent;border-bottom:7px solid transparent;border-left:11px solid #FFFBF5;margin-left:3px;';
+      } else {
+        btn.dataset.playing = 'true';
+        icon.style.cssText = 'width:10px;height:12px;background:#FFFBF5;border-left:3px solid #B07320;border-right:3px solid #B07320;box-sizing:border-box;';
+      }
+      // Add your audio file: new Audio('audio/sample.mp3').play();
+    }
+  </script>
+</body>
+</html>

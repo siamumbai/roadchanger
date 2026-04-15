@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Reviews — DJ Roadchanger</title>
+  <meta name="description" content="Real reviews from real events. Read what clients say about DJ Roadchanger and leave your own review." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=Lato:wght@300;400&display=swap" rel="stylesheet" />
+
+  <!-- Firebase for real Google sign-in + storing reviews -->
+  <!-- SETUP INSTRUCTIONS (see README):
+       1. Go to https://console.firebase.google.com
+       2. Create a project called "roadchanger"
+       3. Enable Authentication > Google sign-in
+       4. Enable Firestore Database
+       5. Replace the firebaseConfig below with your own values
+  -->
+  <script type="module">
+    import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
+    import { getAuth, signInWithPopup, GoogleAuthProvider, onAuthStateChanged, signOut } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js';
+    import { getFirestore, collection, addDoc, getDocs, orderBy, query, serverTimestamp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js';
+
+    // ⚠️  REPLACE THIS with your Firebase config from the Firebase console
+    const firebaseConfig = {
+      apiKey: "YOUR_API_KEY",
+      authDomain: "YOUR_PROJECT.firebaseapp.com",
+      projectId: "YOUR_PROJECT_ID",
+      storageBucket: "YOUR_PROJECT.appspot.com",
+      messagingSenderId: "YOUR_SENDER_ID",
+      appId: "YOUR_APP_ID"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
+    const provider = new GoogleAuthProvider();
+
+    let currentUser = null;
+    let currentRating = 0;
+
+    async function loadReviews() {
+      const list = document.getElementById('reviews-list');
+      list.innerHTML = '<p style="color:#A08060;font-size:14px;font-weight:300;">Loading reviews...</p>';
+      try {
+        const q = query(collection(db, 'reviews'), orderBy('createdAt', 'desc'));
+        const snap = await getDocs(q);
+        if (snap.empty) {
+          list.innerHTML = '<p style="color:#A08060;font-size:14px;font-weight:300;">No reviews yet — be the first!</p>';
+          return;
+        }
+        list.innerHTML = '';
+        snap.forEach(doc => {
+          const r = doc.data();
+          const stars = '★'.repeat(r.rating) + '☆'.repeat(5 - r.rating);
+          const initials = r.name.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2);
+          list.innerHTML += `
+            <div class="review-card">
+              <div class="review-header">
+                <div class="avatar" style="background:#FAEEDA;color:#854F0B;">
+                  ${r.photo ? `<img src="${r.photo}" alt="${r.name}" style="width:100%;height:100%;border-radius:50%;object-fit:cover;" />` : initials}
+                </div>
+                <div class="review-meta">
+                  <div class="review-name">${r.name}</div>
+                  <div class="review-event">${r.event || ''}</div>
+                </div>
+                <div style="display:flex;flex-direction:column;align-items:flex-end;gap:4px;">
+                  <div class="review-stars">${stars}</div>
+                  <div class="google-badge"><span class="google-g">G</span> Verified</div>
+                </div>
+              </div>
+              <p class="review-text">"${r.text}"</p>
+            </div>`;
+        });
+      } catch (e) {
+        list.innerHTML = '<p style="color:#A08060;font-size:14px;">Could not load reviews. Please check your Firebase setup.</p>';
+      }
+    }
+
+    onAuthStateChanged(auth, user => {
+      currentUser = user;
+      if (user) {
+        document.getElementById('signed-out').style.display = 'none';
+        document.getElementById('signed-in').style.display = 'flex';
+        document.getElementById('user-avatar').textContent = user.displayName?.split(' ').map(n => n[0]).join('').toUpperCase().slice(0,2) || 'U';
+        document.getElementById('user-name').textContent = user.displayName || 'Anonymous';
+        document.getElementById('user-email').textContent = user.email || '';
+        if (user.photoURL) {
+          document.getElementById('user-avatar').innerHTML = `<img src="${user.photoURL}" style="width:100%;height:100%;border-radius:50%;object-fit:cover;" />`;
+        }
+      } else {
+        document.getElementById('signed-out').style.display = 'block';
+        document.getElementById('signed-in').style.display = 'none';
+        document.getElementById('thank-you').style.display = 'none';
+      }
+    });
+
+    window.signInGoogle = async () => {
+      try { await signInWithPopup(auth, provider); } catch (e) { console.error(e); }
+    };
+
+    window.signOutUser = async () => {
+      await signOut(auth);
+      document.getElementById('signed-in').style.display = 'none';
+      document.getElementById('thank-you').style.display = 'none';
+      document.getElementById('signed-out').style.display = 'block';
+    };
+
+    window.setRating = (n) => {
+      currentRating = n;
+      document.querySelectorAll('.star-btn').forEach((b, i) => {
+        b.classList.toggle('active', i < n);
+      });
+    };
+
+    window.submitReview = async () => {
+      if (!currentUser) return;
+      const text = document.getElementById('review-text').value.trim();
+      const event = document.getElementById('review-event').value.trim();
+      if (!text) { alert('Please write something about your experience.'); return; }
+      if (currentRating === 0) { alert('Please select a star rating.'); return; }
+      const btn = document.getElementById('submit-btn');
+      btn.textContent = 'Posting...';
+      btn.disabled = true;
+      try {
+        await addDoc(collection(db, 'reviews'), {
+          name: currentUser.displayName || 'Anonymous',
+          email: currentUser.email,
+          photo: currentUser.photoURL || '',
+          text, event,
+          rating: currentRating,
+          createdAt: serverTimestamp()
+        });
+        document.getElementById('signed-in').style.display = 'none';
+        document.getElementById('thank-you').style.display = 'block';
+        await loadReviews();
+      } catch (e) {
+        btn.textContent = 'Something went wrong. Try again.';
+        btn.disabled = false;
+      }
+    };
+
+    loadReviews();
+  </script>
+
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body { background: #FFFBF5; color: #2C2416; font-family: 'Lato', Arial, sans-serif; }
+
+    nav { display: flex; justify-content: space-between; align-items: center; padding: 1.25rem 3rem; background: #FFFBF5; border-bottom: 0.5px solid #EAD9B8; }
+    .nav-logo { font-family: 'Libre Baskerville', Georgia, serif; font-size: 16px; font-weight: 700; letter-spacing: 0.08em; color: #2C2416; text-transform: uppercase; text-decoration: none; }
+    .nav-back { font-size: 13px; color: #8A6840; text-decoration: none; }
+    .nav-back:hover { color: #B07320; }
+
+    .page-header { background: #FDF5E6; padding: 4rem 3rem 3rem; border-bottom: 0.5px solid #EAD9B8; }
+    .section-tag { font-size: 11px; letter-spacing: 0.2em; color: #B07320; text-transform: uppercase; margin-bottom: 0.75rem; }
+    .page-title { font-family: 'Libre Baskerville', Georgia, serif; font-size: 36px; font-weight: 700; color: #2C2416; margin-bottom: 0.75rem; line-height: 1.2; }
+    .page-sub { font-size: 15px; color: #6B5035; font-weight: 300; line-height: 1.8; max-width: 500px; }
+
+    .main { display: grid; grid-template-columns: 1fr 1.1fr; gap: 4rem; padding: 4rem 3rem; align-items: start; max-width: 1100px; margin: 0 auto; }
+
+    #reviews-list { display: flex; flex-direction: column; gap: 1.25rem; }
+    .review-card { background: #FDF5E6; border: 0.5px solid #E0CCA4; border-radius: 6px; padding: 1.5rem; }
+    .review-header { display: flex; align-items: center; gap: 12px; margin-bottom: 0.85rem; }
+    .avatar { width: 38px; height: 38px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 400; flex-shrink: 0; overflow: hidden; }
+    .review-meta { flex: 1; }
+    .review-name { font-size: 14px; color: #2C2416; font-weight: 400; }
+    .review-event { font-size: 12px; color: #A08060; }
+    .review-stars { color: #C4850A; font-size: 13px; letter-spacing: 2px; }
+    .google-badge { display: flex; align-items: center; gap: 4px; font-size: 10px; color: #A08060; background: #FFFBF5; border: 0.5px solid #E0CCA4; border-radius: 3px; padding: 3px 7px; }
+    .google-g { font-size: 11px; font-weight: 700; color: #4285F4; }
+    .review-text { font-family: 'Libre Baskerville', Georgia, serif; font-size: 14px; font-style: italic; color: #5C4028; line-height: 1.8; }
+
+    .write-panel { position: sticky; top: 24px; }
+    .write-card { background: #FDF5E6; border: 0.5px solid #E0CCA4; border-radius: 8px; overflow: hidden; }
+    .write-top { padding: 2rem; border-bottom: 0.5px solid #EAD9B8; }
+    .write-title { font-family: 'Libre Baskerville', Georgia, serif; font-size: 20px; font-weight: 700; color: #2C2416; margin-bottom: 0.5rem; }
+    .write-sub { font-size: 13px; color: #7A5C38; font-weight: 300; line-height: 1.65; }
+
+    #signed-out { padding: 2rem; }
+    .google-btn { display: flex; align-items: center; justify-content: center; gap: 12px; background: #FFFBF5; border: 0.5px solid #DEC898; border-radius: 4px; padding: 12px 20px; cursor: pointer; width: 100%; font-size: 14px; color: #2C2416; margin-bottom: 1rem; font-family: 'Lato', Arial, sans-serif; }
+    .google-btn:hover { border-color: #B07320; }
+    .sign-note { font-size: 12px; color: #A08060; line-height: 1.65; text-align: center; }
+
+    #signed-in { padding: 2rem; display: none; flex-direction: column; gap: 14px; }
+    .user-row { display: flex; align-items: center; gap: 10px; margin-bottom: 0.25rem; }
+    .user-avatar { width: 32px; height: 32px; border-radius: 50%; background: #FAEEDA; display: flex; align-items: center; justify-content: center; font-size: 12px; color: #854F0B; overflow: hidden; flex-shrink: 0; }
+    #user-name { font-size: 13px; color: #2C2416; font-weight: 400; }
+    #user-email { font-size: 11px; color: #A08060; display: block; }
+    .sign-out { font-size: 11px; color: #A08060; cursor: pointer; text-decoration: underline; background: none; border: none; font-family: 'Lato', Arial, sans-serif; }
+    .star-label { font-size: 12px; color: #A08060; margin-bottom: 6px; }
+    .star-row { display: flex; gap: 6px; }
+    .star-btn { font-size: 24px; color: #E0CCA4; cursor: pointer; background: none; border: none; padding: 0; line-height: 1; font-family: Arial, sans-serif; }
+    .star-btn.active { color: #C4850A; }
+    .form-input { background: #FFFBF5; border: 0.5px solid #DEC898; border-radius: 4px; padding: 10px 14px; font-size: 13px; width: 100%; font-family: 'Lato', Arial, sans-serif; color: #2C2416; }
+    .form-input::placeholder { color: #C4A06A; }
+    .form-input:focus { outline: none; border-color: #B07320; }
+    #review-text { font-family: 'Libre Baskerville', Georgia, serif; font-size: 14px; font-style: italic; color: #5C4028; min-height: 120px; resize: vertical; padding: 12px 14px; }
+    #review-text::placeholder { color: #C4A06A; font-style: italic; }
+    #review-text:focus { outline: none; border-color: #B07320; }
+    .submit-btn { background: #2C2416; color: #F5ECD8; font-size: 14px; padding: 13px; border-radius: 4px; border: none; cursor: pointer; width: 100%; font-family: 'Lato', Arial, sans-serif; letter-spacing: 0.05em; }
+    .submit-btn:hover { background: #3D3020; }
+    .submit-btn:disabled { opacity: 0.6; cursor: not-allowed; }
+
+    #thank-you { padding: 2rem; display: none; text-align: center; }
+    .ty-icon { font-size: 32px; margin-bottom: 1rem; }
+    .ty-title { font-family: 'Libre Baskerville', Georgia, serif; font-size: 20px; font-weight: 700; color: #2C2416; margin-bottom: 0.5rem; }
+    .ty-sub { font-size: 14px; color: #7A5C38; font-weight: 300; line-height: 1.7; }
+
+    footer { background: #1E1810; padding: 2rem 3rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; border-top: 0.5px solid #3D3020; }
+    .footer-logo { font-family: 'Libre Baskerville', Georgia, serif; font-size: 14px; font-weight: 700; letter-spacing: 0.1em; color: #C4A06A; text-transform: uppercase; }
+    .footer-link { font-size: 12px; color: #6B5035; text-decoration: none; }
+    .footer-link:hover { color: #C4A06A; }
+
+    @media (max-width: 768px) {
+      nav, footer { padding: 1rem 1.5rem; }
+      .page-header { padding: 2.5rem 1.5rem; }
+      .main { grid-template-columns: 1fr; padding: 2.5rem 1.5rem; gap: 2.5rem; }
+      .write-panel { position: static; }
+    }
+  </style>
+</head>
+<body>
+
+  <nav>
+    <a href="index.html" class="nav-logo">Roadchanger</a>
+    <a href="index.html" class="nav-back">← Back to site</a>
+  </nav>
+
+  <div class="page-header">
+    <p class="section-tag">Reviews</p>
+    <h1 class="page-title">What people say<br>about Roadchanger</h1>
+    <p class="page-sub">Real reviews from real events. Sign in with your Google account to leave yours — takes less than a minute.</p>
+  </div>
+
+  <div class="main">
+
+    <div id="reviews-list">
+      <!-- Reviews load here from Firebase -->
+      <div class="review-card">
+        <div class="review-header">
+          <div class="avatar" style="background:#E1F5EE;color:#085041;">AK</div>
+          <div class="review-meta">
+            <div class="review-name">Anna K.</div>
+            <div class="review-event">Corporate gala, Riga</div>
+          </div>
+          <div style="display:flex;flex-direction:column;align-items:flex-end;gap:4px;">
+            <div class="review-stars">★★★★★</div>
+            <div class="google-badge"><span class="google-g">G</span> Verified</div>
+          </div>
+        </div>
+        <p class="review-text">"Emīls played our corporate gala and the room was completely transformed. Guests were asking for his contact all night."</p>
+      </div>
+      <div class="review-card">
+        <div class="review-header">
+          <div class="avatar" style="background:#EEEDFE;color:#3C3489;">MJ</div>
+          <div class="review-meta">
+            <div class="review-name">Marta & Jānis</div>
+            <div class="review-event">Wedding, Jūrmala</div>
+          </div>
+          <div style="display:flex;flex-direction:column;align-items:flex-end;gap:4px;">
+            <div class="review-stars">★★★★★</div>
+            <div class="google-badge"><span class="google-g">G</span> Verified</div>
+          </div>
+        </div>
+        <p class="review-text">"Our wedding cocktail hour was everything we dreamed of. The saxophone over the DJ set was pure magic — our guests still talk about it."</p>
+      </div>
+      <div class="review-card">
+        <div class="review-header">
+          <div class="avatar" style="background:#FAEEDA;color:#633806;">TR</div>
+          <div class="review-meta">
+            <div class="review-name">Tomas R.</div>
+            <div class="review-event">Private villa evening, Sigulda</div>
+          </div>
+          <div style="display:flex;flex-direction:column;align-items:flex-end;gap:4px;">
+            <div class="review-stars">★★★★★</div>
+            <div class="google-badge"><span class="google-g">G</span> Verified</div>
+          </div>
+        </div>
+        <p class="review-text">"We've had DJs before. We've never had anything like this. The fire finale was unreal. Already booked for next year."</p>
+      </div>
+    </div>
+
+    <div class="write-panel">
+      <div class="write-card">
+        <div class="write-top">
+          <div class="write-title">Were you there?</div>
+          <p class="write-sub">Sign in with Google and leave a review. Your real name and photo appear — so others know it's genuine.</p>
+        </div>
+
+        <div id="signed-out">
+          <button class="google-btn" onclick="signInGoogle()">
+            <svg width="18" height="18" viewBox="0 0 48 48">
+              <path fill="#EA4335" d="M24 9.5c3.5 0 6.6 1.2 9.1 3.2l6.8-6.8C35.8 2.3 30.2 0 24 0 14.8 0 6.9 5.4 3 13.3l7.9 6.1C12.8 13.1 17.9 9.5 24 9.5z"/>
+              <path fill="#4285F4" d="M46.5 24.5c0-1.6-.1-3.1-.4-4.5H24v8.5h12.7c-.6 3-2.3 5.5-4.8 7.2l7.5 5.8c4.4-4 6.1-10 6.1-17z"/>
+              <path fill="#FBBC05" d="M10.9 28.6A14.8 14.8 0 0 1 9.5 24c0-1.6.3-3.1.8-4.6L2.4 13.3A24 24 0 0 0 0 24c0 3.9.9 7.5 2.6 10.8l8.3-6.2z"/>
+              <path fill="#34A853" d="M24 48c6.2 0 11.4-2 15.2-5.5l-7.5-5.8c-2 1.4-4.6 2.2-7.7 2.2-6.1 0-11.2-3.6-13.1-9.3l-8.3 6.2C6.9 42.6 14.8 48 24 48z"/>
+            </svg>
+            Continue with Google
+          </button>
+          <p class="sign-note">We never post anything without your confirmation. Your email is never shared.</p>
+        </div>
+
+        <div id="signed-in">
+          <div class="user-row">
+            <div class="user-avatar" id="user-avatar">U</div>
+            <div>
+              <span id="user-name">Your Name</span>
+              <span id="user-email">email@gmail.com</span>
+            </div>
+            <button class="sign-out" onclick="signOutUser()" style="margin-left:auto;">Sign out</button>
+          </div>
+          <div>
+            <p class="star-label">Your rating</p>
+            <div class="star-row">
+              <button class="star-btn" onclick="setRating(1)">★</button>
+              <button class="star-btn" onclick="setRating(2)">★</button>
+              <button class="star-btn" onclick="setRating(3)">★</button>
+              <button class="star-btn" onclick="setRating(4)">★</button>
+              <button class="star-btn" onclick="setRating(5)">★</button>
+            </div>
+          </div>
+          <input id="review-event" class="form-input" type="text" placeholder="Which event? (e.g. Wedding in Jūrmala)" />
+          <textarea id="review-text" class="form-input" placeholder="Tell others what made the night special..."></textarea>
+          <button id="submit-btn" class="submit-btn" onclick="submitReview()">Post my review</button>
+        </div>
+
+        <div id="thank-you">
+          <div class="ty-icon">🙏</div>
+          <div class="ty-title">Thank you so much.</div>
+          <p class="ty-sub">Your review means everything. It helps other people know what to expect — and it takes a lot to build something like this from scratch.</p>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <footer>
+    <div class="footer-logo">Roadchanger</div>
+    <a href="index.html" class="footer-link">← Back to site</a>
+  </footer>
+
+</body>
+</html>
