@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="google-site-verification" content="cFablQZdHyicL2D4DYvgPe5L6XYp3VGnuGy-gCQamlM" />
+  <title>DJ Roadchanger — DJ, Saxophone & Fire Shows | Riga, Latvia</title>
+  <meta name="description" content="DJ Roadchanger — live DJ sets with saxophone, piano lounge and fire shows for weddings, corporate events and private parties. Based in Riga, available across Europe." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=Lato:wght@300;400&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body { background: #FFFBF5; color: #2C2416; font-family: 'Lato', Arial, sans-serif; }
+
+    nav { display: flex; justify-content: space-between; align-items: center; padding: 1.25rem 3rem; background: #FFFBF5; border-bottom: 0.5px solid #EAD9B8; position: sticky; top: 0; z-index: 100; }
+    .nav-logo { font-family: 'Libre Baskerville', Georgia, serif; font-size: 16px; font-weight: 700; letter-spacing: 0.08em; color: #2C2416; text-transform: uppercase; text-decoration: none; }
+    .nav-links { display: flex; gap: 2.5rem; }
+    .nav-links a { font-size: 13px; color: #8A6840; text-decoration: none; letter-spacing: 0.05em; }
+    .nav-links a:hover { color: #B07320; }
+    .nav-cta { background: #2C2416; color: #F5ECD8; font-size: 13px; padding: 9px 22px; border-radius: 3px; text-decoration: none; letter-spacing: 0.06em; }
+    .nav-cta:hover { background: #3D3020; }
+
+    .hero { background: #FDF5E6; padding: 5rem 3rem; }
+    .hero-inner { display: grid; grid-template-columns: 1.1fr 0.9fr; gap: 5rem; align-items: center; max-width: 1100px; margin: 0 auto; }
+    .hero-tag { font-size: 11px; letter-spacing: 0.2em; color: #B07320; text-transform: uppercase; margin-bottom: 1.5rem; }
+    .hero-title { font-family: 'Libre Baskerville', Georgia, serif; font-size: 46px; font-weight: 700; line-height: 1.2; color: #2C2416; margin-bottom: 1.5rem; }
+    .dot { color: #B07320; }
+    .hero-sub { font-size: 16px; color: #6B5035; line-height: 1.85; margin-bottom: 2.25rem; font-weight: 300; max-width: 440px; }
+    .hero-actions { display: flex; gap: 1.25rem; align-items: center; flex-wrap: wrap; }
+    .btn-dark { background: #2C2416; color: #F5ECD8; font-size: 14px; padding: 13px 30px; border-radius: 3px; text-decoration: none; letter-spacing: 0.05em; }
+    .btn-dark:hover { background: #3D3020; }
+    .btn-outline-light { font-size: 14px; color: #8A6840; text-decoration: none; border-bottom: 1px solid #C4A06A; padding-bottom: 2px; }
+    .hero-img { background: #EDD9B4; border-radius: 6px; aspect-ratio: 3/4; display: flex; align-items: center; justify-content: center; border: 0.5px solid #DEC898; overflow: hidden; }
+    .hero-img img { width: 100%; height: 100%; object-fit: cover; border-radius: 6px; display: block; }
+    .img-ph { font-size: 12px; color: #B8935A; letter-spacing: 0.08em; text-align: center; padding: 1rem; line-height: 2; }
+
+    .divider { height: 1px; background: #EAD9B8; margin: 0 3rem; }
+
+    .section-wrap { max-width: 1100px; margin: 0 auto; }
+    .section-tag { font-size: 11px; letter-spacing: 0.2em; color: #B07320; text-transform: uppercase; margin-bottom: 0.75rem; }
+    .section-title { font-family: 'Libre Baskerville', Georgia, serif; font-size: 32px; font-weight: 700; color: #2C2416; margin-bottom: 3rem; line-height: 1.2; }
+
+    .services { padding: 5rem 3rem; background: #FFFBF5; }
+    .services-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; }
+    .service-card { border: 0.5px solid #E0CCA4; border-radius: 6px; padding: 2rem 1.75rem; background: #FDF5E6; }
+    .service-card.fire { border-color: #DEB87A; background: #FEF3E2; }
+    .service-num { font-family: 'Libre Baskerville', Georgia, serif; font-size: 28px; font-weight: 700; color: #E8D4A8; margin-bottom: 1.25rem; }
+    .service-name { font-family: 'Libre Baskerville', Georgia, serif; font-size: 16px; font-weight: 700; color: #2C2416; margin-bottom: 0.6rem; }
+    .service-desc { font-size: 13px; color: #7A5C38; line-height: 1.75; margin-bottom: 1.25rem; font-weight: 300; }
+    .tags { display: flex; flex-wrap: wrap; gap: 6px; }
+    .tag { font-size: 11px; color: #854F0B; background: #FAEEDA; padding: 4px 10px; border-radius: 3px; letter-spacing: 0.03em; }
+
+    .about { padding: 5rem 3rem; background: #FDF5E6; }
+    .about-inner { display: grid; grid-template-columns: 0.85fr 1.15fr; gap: 5rem; align-items: center; max-width: 1100px; margin: 0 auto; }
+    .about-img { background: #EDD9B4; border-radius: 6px; aspect-ratio: 4/5; display: flex; align-items: center; justify-content: center; border: 0.5px solid #DEC898; overflow: hidden; }
+    .about-img img { width: 100%; height: 100%; object-fit: cover; border-radius: 6px; display: block; }
+    .about-text p { font-size: 15px; color: #6B5035; line-height: 1.9; margin-bottom: 1rem; font-weight: 300; }
+    .about-text .section-title { margin-bottom: 1.25rem; }
+    .about-quote { border-left: 3px solid #E8C87A; padding: 0.75rem 0 0.75rem 1.25rem; margin: 1.75rem 0; }
+    .about-quote p { font-family: 'Libre Baskerville', Georgia, serif; font-size: 20px; font-style: italic; color: #5C4028; line-height: 1.6; margin: 0; }
+
+    .testimonials { padding: 5rem 3rem; background: #FFFBF5; }
+    .testi-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.25rem; margin-bottom: 2.5rem; }
+    .testi-card { border: 0.5px solid #E0CCA4; border-radius: 6px; padding: 1.75rem; background: #FDF5E6; }
+    .testi-stars { font-size: 12px; color: #C4850A; margin-bottom: 0.85rem; letter-spacing: 3px; }
+    .testi-text { font-family: 'Libre Baskerville', Georgia, serif; font-size: 14px; font-style: italic; color: #5C4028; line-height: 1.8; margin-bottom: 1rem; }
+    .testi-author strong { font-size: 13px; color: #2C2416; font-weight: 400; display: block; margin-bottom: 2px; }
+    .testi-author span { font-size: 12px; color: #A08060; }
+    .testi-footer { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1rem; }
+    .testi-footer p { font-size: 13px; color: #8A6840; font-weight: 300; }
+    .testi-footer a { font-size: 14px; color: #B07320; text-decoration: none; border-bottom: 0.5px solid #C4A06A; padding-bottom: 2px; }
+
+    .booking { padding: 5rem 3rem; background: #2C2416; }
+    .booking-inner { display: grid; grid-template-columns: 1fr 1fr; gap: 5rem; align-items: start; max-width: 1100px; margin: 0 auto; }
+    .booking .section-tag { color: #C4A06A; }
+    .booking .section-title { color: #F5ECD8; margin-bottom: 1rem; }
+    .booking-desc { font-size: 15px; color: #A08060; line-height: 1.85; font-weight: 300; }
+    .booking-info { margin-top: 2.5rem; display: flex; flex-direction: column; gap: 1rem; }
+    .booking-info-item { display: flex; gap: 1rem; }
+    .booking-label { font-size: 12px; color: #6B5035; text-transform: uppercase; letter-spacing: 0.1em; min-width: 80px; padding-top: 2px; }
+    .booking-val { font-size: 14px; color: #C4A06A; }
+    .booking-val a { color: #C4A06A; text-decoration: none; }
+    .booking-form { display: flex; flex-direction: column; gap: 10px; }
+    .booking-form input, .booking-form select, .booking-form textarea { background: #3D3020; border: 0.5px solid #5C4028; color: #F5ECD8; border-radius: 4px; padding: 12px 14px; font-size: 14px; width: 100%; font-family: 'Lato', Arial, sans-serif; font-weight: 300; }
+    .booking-form input::placeholder, .booking-form textarea::placeholder { color: #6B5035; }
+    .booking-form select { color: #A08060; }
+    .booking-form textarea { min-height: 110px; resize: vertical; }
+    .booking-form input:focus, .booking-form select:focus, .booking-form textarea:focus { outline: none; border-color: #B07320; }
+    .btn-send { background: #B07320; border: none; cursor: pointer; width: 100%; font-size: 14px; padding: 14px; color: #FFFBF5; border-radius: 4px; font-family: 'Lato', Arial, sans-serif; letter-spacing: 0.06em; }
+    .btn-send:hover { background: #C4850A; }
+
+    footer { background: #1E1810; padding: 2rem 3rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; border-top: 0.5px solid #3D3020; }
+    .footer-logo { font-family: 'Libre Baskerville', Georgia, serif; font-size: 14px; font-weight: 700; letter-spacing: 0.1em; color: #C4A06A; text-transform: uppercase; }
+    .footer-sub { font-size: 11px; color: #5C4028; margin-top: 4px; }
+    .footer-links { display: flex; gap: 2rem; flex-wrap: wrap; }
+    .footer-links a { font-size: 12px; color: #6B5035; text-decoration: none; }
+    .footer-links a:hover { color: #C4A06A; }
+
+    @media (max-width: 768px) {
+      nav { padding: 1rem 1.5rem; }
+      .nav-links { display: none; }
+      .hero, .services, .about, .testimonials, .booking { padding: 3rem 1.5rem; }
+      .hero-inner, .about-inner, .booking-inner { grid-template-columns: 1fr; gap: 2.5rem; }
+      .hero-title { font-size: 34px; }
+      .hero-img { aspect-ratio: 3/2; height: 380px; width: 100%; }
+      .hero-img img { object-position: center 20%; }
+      .about-img { aspect-ratio: 3/2; height: 320px; }
+      .about-text .section-title { font-size: 26px; }
+      .services-grid, .testi-grid { grid-template-columns: 1fr; }
+      .divider { margin: 0 1.5rem; }
+      footer { padding: 1.5rem; flex-direction: column; align-items: flex-start; }
+    }
+  </style>
+</head>
+<body>
+
+  <nav>
+    <a href="index.html" class="nav-logo">Roadchanger</a>
+    <div class="nav-links">
+      <a href="#services">DJ sets</a>
+      <a href="#services">Live music</a>
+      <a href="#services">Fire show</a>
+      <a href="#about">About</a>
+      <a href="reviews.html">Reviews</a>
+    </div>
+    <a href="#booking" class="nav-cta">Book now</a>
+  </nav>
+
+  <section class="hero">
+    <div class="hero-inner">
+      <div>
+        <p class="hero-tag">Riga, Latvia · Available across Europe</p>
+        <h1 class="hero-title">DJ<span class="dot">.</span> Saxophone<span class="dot">.</span><br>One performance<span class="dot">.</span></h1>
+        <p class="hero-sub">Live DJ sets with saxophone, piano lounge and fire shows for weddings, corporate events and private parties. Something your guests have never experienced before.</p>
+        <div class="hero-actions">
+          <a href="#booking" class="btn-dark">Check availability</a>
+          <a href="#services" class="btn-outline-light">See what I do</a>
+        </div>
+      </div>
+      <div class="hero-img">
+        <img src="images/hero.jpg" alt="DJ Roadchanger performing" />
+      </div>
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
+  <section class="services" id="services">
+    <div class="section-wrap">
+      <p class="section-tag">What I offer</p>
+      <h2 class="section-title">Three ways to book me</h2>
+      <div class="services-grid">
+        <div class="service-card">
+          <div class="service-num">01</div>
+          <div class="service-name">DJ set with live saxophone</div>
+          <p class="service-desc">World grooves and uplifting energy with live saxophone woven through the mix. The moment the sax comes in, the room changes.</p>
+          <div class="tags">
+            <span class="tag">Weddings</span><span class="tag">Corporate</span><span class="tag">Clubs</span>
+          </div>
+        </div>
+        <div class="service-card">
+          <div class="service-num">02</div>
+          <div class="service-name">Piano lounge & soundscapes</div>
+          <p class="service-desc">Piano, saxophone, flute and ambient pads. Crafted for cocktail hours, welcome drinks and elegant atmospheres where the music sets the mood.</p>
+          <div class="tags">
+            <span class="tag">Welcome drink</span><span class="tag">Gala dinner</span><span class="tag">Award night</span>
+          </div>
+        </div>
+        <div class="service-card fire">
+          <div class="service-num">03</div>
+          <div class="service-name">Fire show & DJ finale</div>
+          <p class="service-desc">A live fire performance with up to 15 pyrotechnic moments, followed by a full DJ set to close the night. The kind of ending people photograph, share and never forget.</p>
+          <div class="tags">
+            <span class="tag">Grand finale</span><span class="tag">Corporate gala</span><span class="tag">Private event</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
+  <section class="about" id="about">
+    <div class="about-inner">
+      <div class="about-img">
+        <img src="images/about.jpg" alt="Emīls Ašmanis" />
+      </div>
+      <div class="about-text">
+        <p class="section-tag">The artist</p>
+        <h2 class="section-title">Emīls Ašmanis<br><em style="color:#B07320;">aka DJ Roadchanger</em></h2>
+        <p>I'm a DJ, saxophonist and flautist based in Riga, Latvia. I play at everything from intimate villa evenings to large corporate galas and international festivals.</p>
+        <p>I've performed at Burning Man in Nevada, across Europe, and at some of Latvia's most memorable private events. Every show is different — because every room is different.</p>
+        <div class="about-quote"><p>"Different stage. Same fire."</p></div>
+        <p>I bring my own professional equipment and collaborate with a live fire performer for events that need something truly spectacular. You tell me the vision — I handle the rest.</p>
+        <div style="margin-top:1.75rem;"><a href="#booking" class="btn-outline-light">Get in touch</a></div>
+      </div>
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
+  <section class="testimonials" id="testimonials">
+    <div class="section-wrap">
+      <p class="section-tag">Reviews</p>
+      <h2 class="section-title" style="margin-bottom:2rem;">What clients say</h2>
+      <div class="testi-grid">
+        <div class="testi-card">
+          <div class="testi-stars">★★★★★</div>
+          <p class="testi-text">"Emīls played our corporate gala and the room was completely transformed. Guests were asking for his contact all night."</p>
+          <div class="testi-author"><strong>Anna K.</strong><span>Event manager, Riga</span></div>
+        </div>
+        <div class="testi-card">
+          <div class="testi-stars">★★★★★</div>
+          <p class="testi-text">"Our wedding cocktail hour was everything we dreamed of. The saxophone over the DJ set was pure magic — our guests still talk about it."</p>
+          <div class="testi-author"><strong>Marta & Jānis</strong><span>Wedding, Jūrmala</span></div>
+        </div>
+        <div class="testi-card">
+          <div class="testi-stars">★★★★★</div>
+          <p class="testi-text">"We've had DJs before. We've never had anything like this. The fire finale was unreal. Already booked for next year."</p>
+          <div class="testi-author"><strong>Tomas R.</strong><span>Private villa evening, Sigulda</span></div>
+        </div>
+      </div>
+      <div class="testi-footer">
+        <p>Were you at one of my events?</p>
+        <a href="reviews.html">Leave your review →</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="booking" id="booking">
+    <div class="booking-inner">
+      <div>
+        <p class="section-tag">Get in touch</p>
+        <h2 class="section-title">Tell me about your event</h2>
+        <p class="booking-desc">I'll get back to you as soon as possible with availability and a quote. No long forms, no waiting — just a real conversation about what you need.</p>
+        <div class="booking-info">
+          <div class="booking-info-item">
+            <span class="booking-label">Email</span>
+            <span class="booking-val"><a href="mailto:e.asmanis@gmail.com">e.asmanis@gmail.com</a></span>
+          </div>
+          <div class="booking-info-item">
+            <span class="booking-label">Phone</span>
+            <span class="booking-val"><a href="tel:+37120031578">+371 200 31578</a></span>
+          </div>
+          <div class="booking-info-item">
+            <span class="booking-label">Based in</span>
+            <span class="booking-val">Riga, Latvia · Available across Europe</span>
+          </div>
+        </div>
+      </div>
+      <form class="booking-form" onsubmit="handleSubmit(event)">
+        <input type="text" name="name" placeholder="Your name" required />
+        <input type="email" name="email" placeholder="Email address" required />
+        <input type="text" name="date" placeholder="Event date" />
+        <select name="type">
+          <option value="">Type of event</option>
+          <option>Wedding</option>
+          <option>Corporate event</option>
+          <option>Private party / villa</option>
+          <option>Fire show & DJ finale</option>
+          <option>Club / venue</option>
+          <option>Other</option>
+        </select>
+        <textarea name="message" placeholder="Tell me about the event — location, vibe, number of guests..."></textarea>
+        <button type="submit" class="btn-send">Send enquiry</button>
+      </form>
+    </div>
+  </section>
+
+  <footer>
+    <div>
+      <div class="footer-logo">Roadchanger</div>
+      <div class="footer-sub">SIA Mumbai · PVN Nr: LV40203627024 · Reģ. Nr: 40203627024</div>
+    </div>
+    <div class="footer-links">
+      <a href="#services">DJ sets</a>
+      <a href="#services">Live music</a>
+      <a href="#services">Fire show</a>
+      <a href="reviews.html">Reviews</a>
+      <a href="book.html">Book now</a>
+    </div>
+  </footer>
+
+  <script>
+    function handleSubmit(e) {
+      e.preventDefault();
+      const btn = e.target.querySelector('.btn-send');
+      btn.textContent = "Sent! I'll be in touch soon.";
+      btn.style.background = '#3B6D11';
+      btn.disabled = true;
+    }
+  </script>
+</body>
+</html>
