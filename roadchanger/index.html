@@ -43,10 +43,20 @@
 
     .services { padding: 5rem 3rem; background: #FFFBF5; }
     .services-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; }
+    .service-row { display: grid; grid-template-columns: 1fr 1fr; min-height: 260px; }
+    .service-row.reverse { direction: rtl; }
+    .service-row.reverse > * { direction: ltr; }
+    .service-row-img { overflow: hidden; }
+    .service-row-img img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .collaborators-header { padding: 2.5rem 4rem 1rem; background: #FFFBF5; }
+    .img-slot { width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; font-family: 'Libre Baskerville', serif; font-size: 13px; color: #B8935A; letter-spacing: 0.08em; text-align: center; padding: 2rem; }
+    .service-row.alt .service-row-text { background: #FDF5E6; }
+    .service-row-text { padding: 2.25rem 2.5rem; display: flex; flex-direction: column; justify-content: center; background: #FFFBF5; }
+    .service-row:nth-child(even) .service-row-text { background: #FDF5E6; }
     .service-card { border: 0.5px solid #E0CCA4; border-radius: 6px; padding: 2rem 1.75rem; background: #FDF5E6; }
     .service-card.fire { border-color: #DEB87A; background: #FEF3E2; }
-    .service-num { font-family: 'Libre Baskerville', Georgia, serif; font-size: 28px; font-weight: 700; color: #E8D4A8; margin-bottom: 1.25rem; }
-    .service-name { font-family: 'Libre Baskerville', Georgia, serif; font-size: 16px; font-weight: 700; color: #2C2416; margin-bottom: 0.6rem; }
+    .service-num { font-family: 'Libre Baskerville', Georgia, serif; font-size: 22px; font-weight: 700; color: #E8D4A8; margin-bottom: 0.75rem; }
+    .service-name { font-family: 'Libre Baskerville', Georgia, serif; font-size: 20px; font-weight: 700; color: #2C2416; margin-bottom: 0.6rem; }
     .service-desc { font-size: 13px; color: #7A5C38; line-height: 1.75; margin-bottom: 1.25rem; font-weight: 300; }
     .tags { display: flex; flex-wrap: wrap; gap: 6px; }
     .tag { font-size: 11px; color: #854F0B; background: #FAEEDA; padding: 4px 10px; border-radius: 3px; letter-spacing: 0.03em; }
@@ -108,6 +118,11 @@
       .about-img { aspect-ratio: 3/2; height: 320px; }
       .about-text .section-title { font-size: 26px; }
       .services-grid, .testi-grid { grid-template-columns: 1fr; }
+      .service-row-wrap { padding: 0 1.5rem; }
+      .service-row-wrap + .service-row-wrap { margin-top: 1rem; }
+      .service-row, .service-row.reverse { grid-template-columns: 1fr; direction: ltr; }
+      .service-row-img { min-height: 220px; }
+      .service-row-text { padding: 1.75rem 1.5rem; }
       .divider { margin: 0 1.5rem; }
       footer { padding: 1.5rem; flex-direction: column; align-items: flex-start; }
     }
@@ -147,37 +162,101 @@
   <div class="divider"></div>
 
   <section class="services" id="services">
-    <div class="section-wrap">
+    <div style="max-width:1200px;margin:0 auto;padding:5rem 2rem 2rem;">
       <p class="section-tag">What I offer</p>
-      <h2 class="section-title">Three ways to book me</h2>
-      <div class="services-grid">
-        <div class="service-card">
+      <h2 class="section-title">Six experiences.</h2>
+    </div>
+
+    <!-- 01 -->
+    <div style="max-width:1200px;margin:0 auto;padding:0 2rem 1.5rem;">
+      <div style="display:grid;grid-template-columns:380px 1fr 1fr;border-radius:10px;overflow:hidden;border:0.5px solid #E0CCA4;height:300px;box-shadow:0 4px 18px rgba(44,36,22,0.08);gap:4px;background:#FFFBF5;">
+        <div style="padding:2.5rem;background:#FFFBF5;display:flex;flex-direction:column;justify-content:center;">
           <div class="service-num">01</div>
-          <div class="service-name">DJ set with live saxophone</div>
-          <p class="service-desc">World grooves and uplifting energy with live saxophone woven through the mix. The moment the sax comes in, the room changes.</p>
-          <div class="tags">
-            <span class="tag">Weddings</span><span class="tag">Corporate</span><span class="tag">Clubs</span>
-          </div>
+          <div class="service-name">DJ with live saxophone</div>
+          <p class="service-desc">World grooves and uplifting energy with live saxophone woven through the mix.<br>The moment the sax comes in, the room changes — every time.</p>
+          <div class="tags"><span class="tag">Weddings</span><span class="tag">Corporate</span><span class="tag">Clubs</span><span class="tag">Private villa</span></div>
         </div>
-        <div class="service-card">
-          <div class="service-num">02</div>
-          <div class="service-name">Piano lounge & soundscapes</div>
-          <p class="service-desc">Piano, saxophone, flute and ambient pads. Crafted for cocktail hours, welcome drinks and elegant atmospheres where the music sets the mood.</p>
-          <div class="tags">
-            <span class="tag">Welcome drink</span><span class="tag">Gala dinner</span><span class="tag">Award night</span>
-          </div>
-        </div>
-        <div class="service-card fire">
-          <div class="service-num">03</div>
-          <div class="service-name">Fire show & DJ finale</div>
-          <p class="service-desc">A live fire performance with up to 15 pyrotechnic moments, followed by a full DJ set to close the night. The kind of ending people photograph, share and never forget.</p>
-          <div class="tags">
-            <span class="tag">Grand finale</span><span class="tag">Corporate gala</span><span class="tag">Private event</span>
-          </div>
-        </div>
+        <div style="overflow:hidden;"><img src="images/dj1.jpg" style="width:100%;height:100%;object-fit:cover;object-position:40% 35%;display:block;" alt="DJ Roadchanger" /></div>
+        <div style="overflow:hidden;"><img src="images/book.jpg" style="width:100%;height:100%;object-fit:cover;object-position:center 20%;display:block;" alt="DJ Roadchanger" /></div>
       </div>
     </div>
-  </section>
+
+    <!-- 02 -->
+    <div style="max-width:1200px;margin:0 auto;padding:0 2rem 1.5rem;">
+      <div style="display:grid;grid-template-columns:380px 1fr 1fr;border-radius:10px;overflow:hidden;border:0.5px solid #E0CCA4;height:300px;box-shadow:0 4px 18px rgba(44,36,22,0.08);gap:4px;background:#FFFBF5;">
+        <div style="padding:2.5rem;background:#FDF5E6;display:flex;flex-direction:column;justify-content:center;">
+          <div class="service-num">02</div>
+          <div class="service-name">Roadchanger Fire Show</div>
+          <p class="service-desc">A live fire performance with up to 15 pyrotechnic moments, followed by a full DJ set to close the night. The kind of ending people photograph, share and talk about for years.</p>
+          <div class="tags"><span class="tag">Grand finale</span><span class="tag">Corporate gala</span><span class="tag">Private event</span></div>
+        </div>
+        <div style="overflow:hidden;"><img src="images/fire1.jpg" style="width:100%;height:100%;object-fit:cover;display:block;" alt="Fire show" /></div>
+        <div style="overflow:hidden;"><img src="images/fire3.jpg" style="width:100%;height:100%;object-fit:cover;object-position:65% center;display:block;" alt="Fire show star" /></div>
+      </div>
+    </div>
+
+    <!-- 03 -->
+    <div style="max-width:1200px;margin:0 auto;padding:0 2rem 1.5rem;">
+      <div style="display:grid;grid-template-columns:380px 1fr 1fr;border-radius:10px;overflow:hidden;border:0.5px solid #E0CCA4;height:300px;box-shadow:0 4px 18px rgba(44,36,22,0.08);gap:4px;background:#FFFBF5;">
+        <div style="padding:2.5rem;background:#FFFBF5;display:flex;flex-direction:column;justify-content:center;">
+          <div class="service-num">03</div>
+          <div class="service-name">Piano lounge</div>
+          <p class="service-desc">Piano, saxophone, flute and ambient pads — crafted for moments that need elegance without noise. Perfect for welcome drinks, cocktail hours and gala dinners.</p>
+          <div class="tags"><span class="tag">Welcome drink</span><span class="tag">Gala dinner</span><span class="tag">Award night</span></div>
+        </div>
+        <div style="overflow:hidden;"><img src="images/piano1.jpg" style="width:100%;height:100%;object-fit:cover;display:block;" alt="Piano setup" /></div>
+        <div style="overflow:hidden;"><img src="images/piano2.jpg" style="width:100%;height:100%;object-fit:cover;display:block;" alt="Piano sunset" /></div>
+      </div>
+    </div>
+
+    <!-- collaborators header -->
+    <div style="max-width:1200px;margin:0 auto;padding:2.5rem 2rem 1rem;">
+      <p class="section-tag">Working together</p>
+      <h2 class="section-title" style="margin-bottom:0;">My Creative Collaborators</h2>
+    </div>
+
+    <!-- 04 -->
+    <div style="max-width:1200px;margin:0 auto;padding:0 2rem 1.5rem;">
+      <div style="display:grid;grid-template-columns:380px 1fr 1fr;border-radius:10px;overflow:hidden;border:0.5px solid #E0CCA4;height:300px;box-shadow:0 4px 18px rgba(44,36,22,0.08);gap:4px;background:#FFFBF5;">
+        <div style="padding:2.5rem;background:#FDF5E6;display:flex;flex-direction:column;justify-content:center;">
+          <div class="service-num">04</div>
+          <div class="service-name">Live Roses</div>
+          <p class="service-desc">Elegant performers in breathtaking floral costumes — floor-length rose gowns, dramatic headpieces and an atmosphere that stops guests in their tracks. They move through your event and become part of the memory.</p>
+          <div class="tags"><span class="tag">Weddings</span><span class="tag">Corporate</span><span class="tag">Photo moments</span></div>
+        </div>
+        <div style="overflow:hidden;"><img src="images/characters1.jpg" style="width:100%;height:100%;object-fit:cover;object-position:center 80%;display:block;" alt="Live characters" /></div>
+        <div style="overflow:hidden;"><img src="images/characters2.jpg" style="width:100%;height:100%;object-fit:cover;display:block;" alt="Rose characters" /></div>
+      </div>
+    </div>
+
+    <!-- 05 -->
+    <div style="max-width:1200px;margin:0 auto;padding:0 2rem 1.5rem;">
+      <div style="grid-template-columns:380px 1fr 1fr;border-radius:10px;overflow:hidden;border:0.5px solid #E0CCA4;height:300px;box-shadow:0 4px 18px rgba(44,36,22,0.08);gap:4px;background:#FFFBF5;display:grid;">
+        <div style="padding:2.5rem;background:#FDF5E6;display:flex;flex-direction:column;justify-content:center;">
+          <div class="service-num">05</div>
+          <div class="service-name">Live Eyes</div>
+          <p class="service-desc">Mysterious performers in striking eye costumes — black and gold, otherworldly and unforgettable. They move through your event, interact with guests and create moments people photograph and share.</p>
+          <div class="tags"><span class="tag">Festivals</span><span class="tag">Corporate</span><span class="tag">Photo moments</span></div>
+        </div>
+        <div style="overflow:hidden;"><img src="images/eyes1.jpg" style="width:130%;height:130%;object-fit:cover;object-position:center 95%;display:block;margin:-15% -15%;" alt="Live Eyes performer" /></div>
+        <div style="overflow:hidden;"><img src="images/eyes2.jpg" style="width:100%;height:100%;object-fit:cover;display:block;" alt="Live Eyes duo" /></div>
+      </div>
+    </div>
+
+    <div style="max-width:1200px;margin:0 auto;padding:0 2rem 1.5rem;">
+      <div style="display:grid;grid-template-columns:380px 1fr 1fr;border-radius:10px;overflow:hidden;border:0.5px solid #E0CCA4;height:300px;box-shadow:0 4px 18px rgba(44,36,22,0.08);gap:4px;background:#FFFBF5;">
+        <div style="padding:2.5rem;background:#FFFBF5;display:flex;flex-direction:column;justify-content:center;">
+          <div class="service-num">06</div>
+          <div class="service-name">Live painting</div>
+          <p class="service-desc">A painter sets up an easel at your event and creates a piece live — capturing the venue, the atmosphere, the moment. Guests gather, watch and connect. The painting becomes a unique keepsake from the evening.</p>
+          <div class="tags"><span class="tag">Corporate events</span><span class="tag">Private parties</span><span class="tag">Weddings</span></div>
+        </div>
+        <div style="overflow:hidden;"><img src="images/paint1.jpg" style="width:100%;height:100%;object-fit:cover;object-position:center 55%;display:block;" alt="Live painting" /></div>
+        <div style="overflow:hidden;"><img src="images/paint2.jpg" style="width:145%;height:145%;object-fit:cover;object-position:center 100%;display:block;margin:-22% -22%;" alt="Paint palette" /></div>
+      </div>
+    </div>
+
+    </section>
 
   <div class="divider"></div>
 
