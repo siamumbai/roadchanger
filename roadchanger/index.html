@@ -126,15 +126,18 @@
       .divider { margin: 0 1rem; }
       footer { padding: 1rem; flex-direction: column; align-items: flex-start; }
       
-      /* Service cards - make them responsive (info full width, 2 images side-by-side) */
+      /* Service cards - make them responsive (1 column, smaller info) */
       div[style*="grid-template-columns:380px 1fr 1fr"] { 
-        grid-template-columns: 1fr 1fr !important; 
-        grid-template-rows: auto auto !important;
+        grid-template-columns: 1fr !important; 
         height: auto !important;
       }
       
       div[style*="grid-template-columns:380px 1fr 1fr"] > div:first-child { 
-        grid-column: 1 / -1 !important;
+        padding: 1.25rem !important;
+      }
+      
+      div[style*="grid-template-columns:380px 1fr 1fr"] > div:first-child div[style*="display: flex; justify-content: flex-end"] {
+        justify-content: center !important;
       }
     }
   </style>
