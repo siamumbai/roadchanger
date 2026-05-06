@@ -140,7 +140,48 @@
     </div>
   </section>
 
-  <footer>
+  <div style="height: 1px; background: #EAD9B8; margin: 5rem 3rem;"></div>
+
+  <!-- GET IN TOUCH SEKCIJA -->
+  <section style="padding: 5rem 3rem; background: #2C2416;">
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 5rem; align-items: start; max-width: 1100px; margin: 0 auto;">
+      <div>
+        <p style="font-size: 11px; letter-spacing: 0.2em; color: #C4A06A; text-transform: uppercase; margin-bottom: 1rem;">Get in touch</p>
+        <h2 style="font-family: 'Libre Baskerville', Georgia, serif; font-size: 32px; font-weight: 700; color: #F5ECD8; margin-bottom: 1rem; line-height: 1.2;">Tell me about your event</h2>
+        <p style="font-size: 15px; color: #A08060; line-height: 1.85; font-weight: 300; margin-bottom: 2.5rem;">I'll get back to you as soon as possible with availability and a quote. No long forms, no waiting — just a real conversation about what you need.</p>
+        <div style="display: flex; flex-direction: column; gap: 1rem;">
+          <div style="display: flex; gap: 1rem;">
+            <span style="font-size: 12px; color: #6B5035; text-transform: uppercase; letter-spacing: 0.1em; min-width: 80px; padding-top: 2px;">Email</span>
+            <span style="font-size: 14px; color: #C4A06A;"><a href="mailto:e.asmanis@gmail.com" style="color: #C4A06A; text-decoration: none;">e.asmanis@gmail.com</a></span>
+          </div>
+          <div style="display: flex; gap: 1rem;">
+            <span style="font-size: 12px; color: #6B5035; text-transform: uppercase; letter-spacing: 0.1em; min-width: 80px; padding-top: 2px;">Phone</span>
+            <span style="font-size: 14px; color: #C4A06A;"><a href="tel:+37120031578" style="color: #C4A06A; text-decoration: none;">+371 200 31578</a></span>
+          </div>
+          <div style="display: flex; gap: 1rem;">
+            <span style="font-size: 12px; color: #6B5035; text-transform: uppercase; letter-spacing: 0.1em; min-width: 80px; padding-top: 2px;">Based in</span>
+            <span style="font-size: 14px; color: #C4A06A;">Riga, Latvia · Available across Europe</span>
+          </div>
+        </div>
+      </div>
+      <form style="display: flex; flex-direction: column; gap: 10px;" onsubmit="handleSubmit(event)">
+        <input type="text" name="name" placeholder="Your name" required style="background: #3D3020; border: 0.5px solid #5C4028; color: #F5ECD8; border-radius: 4px; padding: 12px 14px; font-size: 14px; width: 100%; font-family: 'Lato', Arial, sans-serif; font-weight: 300;" />
+        <input type="email" name="email" placeholder="Email address" required style="background: #3D3020; border: 0.5px solid #5C4028; color: #F5ECD8; border-radius: 4px; padding: 12px 14px; font-size: 14px; width: 100%; font-family: 'Lato', Arial, sans-serif; font-weight: 300;" />
+        <input type="text" name="date" placeholder="Event date" style="background: #3D3020; border: 0.5px solid #5C4028; color: #F5ECD8; border-radius: 4px; padding: 12px 14px; font-size: 14px; width: 100%; font-family: 'Lato', Arial, sans-serif; font-weight: 300;" />
+        <select name="type" style="background: #3D3020; border: 0.5px solid #5C4028; color: #A08060; border-radius: 4px; padding: 12px 14px; font-size: 14px; width: 100%; font-family: 'Lato', Arial, sans-serif; font-weight: 300;">
+          <option value="">Type of event</option>
+          <option>Wedding</option>
+          <option>Corporate event</option>
+          <option>Private party / villa</option>
+          <option>Fire show & DJ finale</option>
+          <option>Club / venue</option>
+          <option>Other</option>
+        </select>
+        <textarea name="message" placeholder="Tell me about the event — location, vibe, number of guests..." style="background: #3D3020; border: 0.5px solid #5C4028; color: #F5ECD8; border-radius: 4px; padding: 12px 14px; font-size: 14px; width: 100%; min-height: 110px; resize: vertical; font-family: 'Lato', Arial, sans-serif; font-weight: 300;"></textarea>
+        <button type="submit" style="background: #B07320; border: none; cursor: pointer; width: 100%; font-size: 14px; padding: 14px; color: #FFFBF5; border-radius: 4px; font-family: 'Lato', Arial, sans-serif; letter-spacing: 0.06em; font-weight: bold;">Send enquiry</button>
+      </form>
+    </div>
+  </section>
     <div>
       <div class="footer-logo">Roadchanger</div>
       <div class="footer-sub">SIA Mumbai · PVN Nr: LV40203627024 · Reģ. Nr: 40203627024</div>
