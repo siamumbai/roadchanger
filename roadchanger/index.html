@@ -126,10 +126,15 @@
       .divider { margin: 0 1rem; }
       footer { padding: 1rem; flex-direction: column; align-items: flex-start; }
       
-      /* Service cards - make them responsive (1 column mobile) */
+      /* Service cards - make them responsive (info full width, 2 images side-by-side) */
       div[style*="grid-template-columns:380px 1fr 1fr"] { 
-        grid-template-columns: 1fr !important; 
+        grid-template-columns: 1fr 1fr !important; 
+        grid-template-rows: auto auto !important;
         height: auto !important;
+      }
+      
+      div[style*="grid-template-columns:380px 1fr 1fr"] > div:first-child { 
+        grid-column: 1 / -1 !important;
       }
     }
   </style>
