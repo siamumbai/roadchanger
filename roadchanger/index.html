@@ -343,8 +343,7 @@
           </div>
         </div>
       </div>
-      <form class="booking-form" action="https://formspree.io/f/mnjwzwrq" method="POST">
-        <input type="hidden" name="_next" value="https://roadchanger.com/thanks" />
+      <form class="booking-form" action="https://formspree.io/f/mnjwzwrq" method="POST" onsubmit="setTimeout(() => window.location.href='https://roadchanger.com/thanks', 1000); return true;">
         <input type="text" name="name" placeholder="Your name" required />
         <input type="email" name="email" placeholder="Email address" required />
         <input type="text" name="date" placeholder="Event date" />
