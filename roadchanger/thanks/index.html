@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Thank You - Roadchanger</title>
+  <link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:wght@400;700&family=Lato:wght@300;400;700&display=swap" rel="stylesheet" />
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: 'Lato', Arial, sans-serif; background: #FFFBF5; color: #6B5035; line-height: 1.6; }
+    
+    nav {
+      padding: 1.5rem 3rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      max-width: 1400px;
+      margin: 0 auto;
+      width: 100%;
+    }
+    
+    .nav-logo { font-family: 'Libre Baskerville', Georgia, serif; font-size: 18px; font-weight: 700; letter-spacing: 0.05em; color: #2C2416; text-decoration: none; }
+    .nav-links { display: flex; gap: 2rem; }
+    .nav-links a { text-decoration: none; color: #B07320; font-size: 14px; letter-spacing: 0.05em; transition: color 0.3s; }
+    .nav-links a:hover { color: #8A6840; }
+    .nav-cta { background: #2C2416; padding: 10px 20px; border-radius: 3px; text-decoration: none; color: #FFFBF5; font-size: 13px; letter-spacing: 0.05em; font-weight: bold; }
+    
+    .thank-you-section {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: calc(100vh - 100px);
+      padding: 3rem 2rem;
+      text-align: center;
+    }
+    
+    .thank-you-content {
+      max-width: 600px;
+    }
+    
+    .thank-you-content h1 {
+      font-family: 'Libre Baskerville', Georgia, serif;
+      font-size: 48px;
+      font-weight: 700;
+      color: #2C2416;
+      margin-bottom: 1.5rem;
+    }
+    
+    .thank-you-content p {
+      font-size: 18px;
+      color: #6B5035;
+      margin-bottom: 2rem;
+      line-height: 1.8;
+    }
+    
+    .thank-you-contact {
+      background: #FDF5E6;
+      padding: 2rem;
+      border-radius: 10px;
+      margin-bottom: 2rem;
+      border: 0.5px solid #E0CCA4;
+    }
+    
+    .thank-you-contact p {
+      font-size: 16px;
+      margin-bottom: 0.5rem;
+    }
+    
+    .thank-you-contact a {
+      color: #B07320;
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 18px;
+    }
+    
+    .thank-you-contact a:hover {
+      color: #8A6840;
+    }
+    
+    .go-back-btn {
+      display: inline-block;
+      background: #B07320;
+      color: #FFFBF5;
+      padding: 12px 28px;
+      border-radius: 3px;
+      text-decoration: none;
+      font-weight: bold;
+      font-size: 14px;
+      letter-spacing: 0.05em;
+      transition: background 0.3s;
+      border: none;
+      cursor: pointer;
+    }
+    
+    .go-back-btn:hover {
+      background: #8A6840;
+    }
+    
+    footer {
+      background: #1E1810;
+      padding: 2rem 3rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 1rem;
+      margin-top: 4rem;
+    }
+    
+    .footer-logo { color: #F5ECD8; font-family: 'Libre Baskerville', Georgia, serif; font-size: 14px; font-weight: 700; letter-spacing: 0.05em; }
+    .footer-sub { color: #8A6840; font-size: 12px; }
+    .footer-links { display: flex; gap: 1.5rem; }
+    .footer-links a { color: #A08060; text-decoration: none; font-size: 12px; }
+    .footer-links a:hover { color: #C4A06A; }
+    
+    @media (max-width: 768px) {
+      nav { padding: 0.75rem 1rem; }
+      .nav-links { display: none; }
+      .thank-you-section { min-height: auto; padding: 2rem 1rem; }
+      .thank-you-content h1 { font-size: 32px; }
+      .thank-you-content p { font-size: 16px; }
+      footer { padding: 1rem; flex-direction: column; align-items: flex-start; }
+    }
+  </style>
+</head>
+<body>
+
+  <nav>
+    <a href="./" class="nav-logo">Roadchanger</a>
+    <div class="nav-links">
+      <a href="#services">DJ sets</a>
+      <a href="fire/">Fire show</a>
+      <a href="#about">About</a>
+    </div>
+    <a href="#booking" class="nav-cta">Book now</a>
+  </nav>
+
+  <section class="thank-you-section">
+    <div class="thank-you-content">
+      <h1>Thanks!</h1>
+      <p>The form was submitted successfully.</p>
+      
+      <div class="thank-you-contact">
+        <p>If you are in hurry,<br>feel free to call or send me a message:</p>
+        <a href="tel:+37120031578">+371 200 31578</a>
+      </div>
+      
+      <a href="./" class="go-back-btn">Go back</a>
+    </div>
+  </section>
+
+  <footer>
+    <div>
+      <div class="footer-logo">Roadchanger</div>
+      <div class="footer-sub">SIA Mumbai · PVN Nr: LV40203627024 · Reģ. Nr: 40203627024</div>
+    </div>
+    <div class="footer-links">
+      <a href="mailto:e.asmanis@gmail.com">Email</a>
+      <a href="tel:+37120031578">Phone</a>
+    </div>
+  </footer>
+
+</body>
+</html>
