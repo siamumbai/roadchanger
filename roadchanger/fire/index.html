@@ -158,11 +158,11 @@
           </div>
           <div style="display: flex; gap: 1rem;">
             <span style="font-size: 12px; color: #6B5035; text-transform: uppercase; letter-spacing: 0.1em; min-width: 80px; padding-top: 2px;">Based in</span>
-            <span style="font-size: 14px; color: #C4A06A;">Riga, Latvia · Available across Europe</span>
+            <span style="font-size: 14px; color: #C4A06A;">Riga, Latvia</span>
           </div>
         </div>
       </div>
-      <form style="display: flex; flex-direction: column; gap: 10px;" onsubmit="handleSubmit(event)">
+      <form style="display: flex; flex-direction: column; gap: 10px;" action="mailto:e.asmanis@gmail.com" method="POST" enctype="text/plain" onsubmit="handleSubmit(event)">
         <input type="text" name="name" placeholder="Your name" required style="background: #3D3020; border: 0.5px solid #5C4028; color: #F5ECD8; border-radius: 4px; padding: 12px 14px; font-size: 14px; width: 100%; font-family: 'Lato', Arial, sans-serif; font-weight: 300;" />
         <input type="email" name="email" placeholder="Email address" required style="background: #3D3020; border: 0.5px solid #5C4028; color: #F5ECD8; border-radius: 4px; padding: 12px 14px; font-size: 14px; width: 100%; font-family: 'Lato', Arial, sans-serif; font-weight: 300;" />
         <input type="text" name="date" placeholder="Event date" style="background: #3D3020; border: 0.5px solid #5C4028; color: #F5ECD8; border-radius: 4px; padding: 12px 14px; font-size: 14px; width: 100%; font-family: 'Lato', Arial, sans-serif; font-weight: 300;" />
@@ -170,9 +170,8 @@
           <option value="">Type of event</option>
           <option>Wedding</option>
           <option>Corporate event</option>
-          <option>Private party / villa</option>
-          <option>Fire show & DJ finale</option>
-          <option>Club / venue</option>
+          <option>Private party</option>
+          <option>Club</option>
           <option>Other</option>
         </select>
         <textarea name="message" placeholder="Tell me about the event — location, vibe, number of guests..." style="background: #3D3020; border: 0.5px solid #5C4028; color: #F5ECD8; border-radius: 4px; padding: 12px 14px; font-size: 14px; width: 100%; min-height: 110px; resize: vertical; font-family: 'Lato', Arial, sans-serif; font-weight: 300;"></textarea>
