@@ -186,7 +186,7 @@
         <div style="padding:2.5rem;background:#FFFBF5;display:flex;flex-direction:column;justify-content:center;">
           <div class="service-num">01</div>
           <div class="service-name">DJ with live saxophone</div>
-          <p class="service-desc">World grooves and uplifting energy with live saxophone woven through the mix.<br>The moment the sax comes in, the room changes — every time.</p>
+          <p class="service-desc">World grooves and uplifting energy with live saxophone woven through the mix.</p>
           <div class="tags"><span class="tag">Weddings</span><span class="tag">Corporate</span><span class="tag">Clubs</span><span class="tag">Private</span></div>
         </div>
         <div style="overflow:hidden;"><img src="images/dj1.jpg" style="width:100%;height:100%;object-fit:cover;object-position:40% 35%;display:block;" alt="DJ Roadchanger" /></div>
@@ -200,7 +200,7 @@
           <div>
             <div class="service-num">02</div>
             <div class="service-name">Roadchanger Fire Show</div>
-            <p class="service-desc">A live fire performance with up to 15 pyrotechnic moments, followed by a full DJ set to close the night. The kind of ending people photograph, share and talk about for years.</p>
+            <p class="service-desc">A live fire performance with up to 15 pyrotechnic moments, followed by a full DJ set to close the night. The kind of ending people photograph, share and enjoy.</p>
           </div>
           <div style="display: flex; justify-content: flex-end;">
             <a href="fire/" style="background: #B07320; padding: 10px 20px; border-radius: 3px; text-decoration: none; color: #FFFFFF; font-size: 14px; letter-spacing: 0.05em; font-weight: bold;">WATCH VIDEO</a>
@@ -217,7 +217,7 @@
         <div style="padding:2.5rem;background:#FFFBF5;display:flex;flex-direction:column;justify-content:center;">
           <div class="service-num">03</div>
           <div class="service-name">Piano lounge</div>
-          <p class="service-desc">Piano, saxophone, flute and ambient pads — crafted for moments that need elegance without noise. Perfect for welcome drinks, cocktail hours and gala dinners.</p>
+          <p class="service-desc">Piano, saxophone, flute and ambient pads —<br>crafted for moments that need elegance without noise. Perfect for welcome drinks, cocktail hours and gala dinners.</p>
           <div class="tags"><span class="tag">Welcome drink</span><span class="tag">Gala dinner</span><span class="tag">Award night</span></div>
         </div>
         <div style="overflow:hidden;"><img src="images/piano1.jpg" style="width:100%;height:100%;object-fit:cover;display:block;" alt="Piano setup" /></div>
@@ -237,7 +237,7 @@
         <div style="padding:2.5rem;background:#FDF5E6;display:flex;flex-direction:column;justify-content:center;">
           <div class="service-num">04</div>
           <div class="service-name">Live Roses</div>
-          <p class="service-desc">Elegant performers in breathtaking floral costumes — floor-length rose gowns, dramatic headpieces and an atmosphere that stops guests in their tracks. They move through your event and become part of the memory.</p>
+          <p class="service-desc">Elegant performers in breathtaking floral costumes — floor-length rose gowns, dramatic headpieces and an atmosphere that stops guests in their tracks.<br>They move through your event and become part of the memory.</p>
           <div class="tags"><span class="tag">Weddings</span><span class="tag">Corporate</span><span class="tag">Photo moments</span></div>
         </div>
         <div style="overflow:hidden;"><img src="images/characters1.jpg" style="width:100%;height:100%;object-fit:cover;object-position:center 80%;display:block;" alt="Live characters" /></div>
@@ -316,7 +316,7 @@
           </div>
         </div>
       </div>
-      <form class="booking-form" action="https://formspree.io/f/mnjwzwrq" method="POST" onsubmit="setTimeout(() => window.location.href='https://roadchanger.com/thanks', 1000); return true;">
+      <form class="booking-form" id="booking-form" onsubmit="submitForm(event)">
         <input type="text" name="name" placeholder="Your name" required />
         <input type="email" name="email" placeholder="Email address" required />
         <input type="text" name="date" placeholder="Event date" />
@@ -355,6 +355,27 @@
       btn.textContent = "Sent! I'll be in touch soon.";
       btn.style.background = '#3B6D11';
       btn.disabled = true;
+    }
+  </script>
+  <script>
+    function submitForm(e) {
+      e.preventDefault();
+      const form = document.getElementById('booking-form');
+      const formData = new FormData(form);
+      
+      fetch('https://formspree.io/f/mnjwzwrq', {
+        method: 'POST',
+        body: formData,
+        headers: {
+          'Accept': 'application/json'
+        }
+      })
+      .then(response => {
+        if (response.ok) {
+          window.location.href = 'https://roadchanger.com/thanks';
+        }
+      })
+      .catch(error => console.error('Error:', error));
     }
   </script>
 </body>
