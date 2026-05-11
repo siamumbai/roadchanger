@@ -11,7 +11,7 @@
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     html { scroll-behavior: smooth; }
-    body { background: #FFFBF5; color: #2C2416; font-family: 'Lato', Arial, sans-serif; }
+    body { background: #FFFBF5; color: #2C2416; font-family: 'Lato', Arial, sans-serif; zoom: 0.9; }
 
     nav { display: flex; justify-content: space-between; align-items: center; padding: 1.25rem 3rem; background: #FFFBF5; border-bottom: 0.5px solid #EAD9B8; position: sticky; top: 0; z-index: 100; }
     .nav-logo { font-family: 'Libre Baskerville', Georgia, serif; font-size: 16px; font-weight: 700; letter-spacing: 0.08em; color: #2C2416; text-transform: uppercase; text-decoration: none; }
@@ -21,7 +21,7 @@
     .nav-cta { background: #2C2416; color: #F5ECD8; font-size: 13px; padding: 9px 22px; border-radius: 3px; text-decoration: none; letter-spacing: 0.06em; }
     .nav-cta:hover { background: #3D3020; }
 
-    .fire-section { padding: 5rem 3rem; }
+    .fire-section { padding: 5rem 3rem; width: 100%; }
     .fire-inner { display: grid; grid-template-columns: 1fr 1fr; gap: 3rem; max-width: 1200px; margin: 0 auto; align-items: start; }
     .fire-video { aspect-ratio: 16/9; border-radius: 6px; overflow: hidden; box-shadow: 0 4px 18px rgba(44,36,22,0.08); }
     .fire-video iframe { width: 100%; height: 100%; border: none; }
@@ -29,7 +29,7 @@
     .gallery-item { aspect-ratio: 1; background: #EDD9B4; border-radius: 6px; border: 0.5px solid #DEC898; display: flex; align-items: center; justify-content: center; }
     .gallery-placeholder { font-size: 12px; color: #B8935A; letter-spacing: 0.08em; text-align: center; }
 
-    footer { background: #1E1810; padding: 2rem 3rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; margin-top: 5rem; }
+    footer { background: #1E1810; padding: 2rem 3rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; margin: 0; width: 100%; }
     .footer-logo { font-family: 'Libre Baskerville', Georgia, serif; font-size: 14px; font-weight: 700; letter-spacing: 0.1em; color: #C4A06A; text-transform: uppercase; }
     .footer-sub { font-size: 11px; color: #5C4028; margin-top: 4px; }
     .footer-links { display: flex; gap: 2rem; flex-wrap: wrap; }
@@ -63,7 +63,7 @@
     <div style="max-width: 1200px; margin: 0 auto; margin-bottom: 4rem; padding: 0 3rem;">
       <p style="font-size: 11px; letter-spacing: 0.2em; color: #B07320; text-transform: uppercase; margin-bottom: 0.3rem;">Grand Finale</p>
       
-      <div style="display: flex; gap: 3rem; align-items: start; margin-bottom: 3rem; flex-wrap: nowrap; overflow-x: auto;">
+      <div style="display: flex; gap: 3rem; align-items: start; margin-bottom: 3rem; flex-wrap: nowrap;">
         <!-- VIRSRAKSTS -->
         <h1 style="font-family: 'Libre Baskerville', Georgia, serif; font-size: clamp(32px, 5vw, 48px); font-weight: 700; line-height: 1.2; margin: 0; white-space: nowrap; flex-shrink: 0;">
           <span style="color: #B07320;">Fire Show</span> <span style="color: #2C2416;">with</span>
@@ -138,10 +138,10 @@
     </div>
   </section>
 
-  <div style="height: 1px; background: #EAD9B8; margin: 5rem 3rem;"></div>
+  <div style="height: 1px; background: #EAD9B8; margin: 5rem 0;"></div>
 
   <!-- GET IN TOUCH SEKCIJA -->
-  <section style="padding: 5rem 3rem; background: #2C2416;">
+  <section style="padding: 5rem 3rem; background: #2C2416; width: 100%;">
     <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 5rem; align-items: start; max-width: 1100px; margin: 0 auto;">
       <div>
         <p style="font-size: 11px; letter-spacing: 0.2em; color: #C4A06A; text-transform: uppercase; margin-bottom: 1rem;">Get in touch</p>
@@ -179,16 +179,11 @@
       </form>
     </div>
   </section>
+
+  <footer>
     <div>
       <div class="footer-logo">Roadchanger</div>
       <div class="footer-sub">SIA Mumbai · PVN Nr: LV40203627024 · Reģ. Nr: 40203627024</div>
-    </div>
-    <div class="footer-links">
-      <a href="index.html#services">DJ sets</a>
-      <a href="index.html#services">Live music</a>
-      <a href="fire.html">Fire show</a>
-      <a href="reviews.html">Reviews</a>
-      <a href="book.html">Book now</a>
     </div>
   </footer>
 
