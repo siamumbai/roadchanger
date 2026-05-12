@@ -162,7 +162,7 @@
           </div>
         </div>
       </div>
-      <form style="display: flex; flex-direction: column; gap: 10px;" action="https://formspree.io/f/mnjwzwrq" method="POST" onsubmit="window.location.href='https://roadchanger.com/thanks'; return false;">
+      <form id="booking-form" style="display: flex; flex-direction: column; gap: 10px;" action="https://formspree.io/f/mnjwzwrq" method="POST" onsubmit="submitForm(event)">
         <input type="text" name="name" placeholder="Your name" required style="background: #3D3020; border: 0.5px solid #5C4028; color: #F5ECD8; border-radius: 4px; padding: 12px 14px; font-size: 14px; width: 100%; font-family: 'Lato', Arial, sans-serif; font-weight: 300;" />
         <input type="email" name="email" placeholder="Email address" required style="background: #3D3020; border: 0.5px solid #5C4028; color: #F5ECD8; border-radius: 4px; padding: 12px 14px; font-size: 14px; width: 100%; font-family: 'Lato', Arial, sans-serif; font-weight: 300;" />
         <input type="text" name="date" placeholder="Event date" style="background: #3D3020; border: 0.5px solid #5C4028; color: #F5ECD8; border-radius: 4px; padding: 12px 14px; font-size: 14px; width: 100%; font-family: 'Lato', Arial, sans-serif; font-weight: 300;" />
@@ -186,6 +186,28 @@
       <div class="footer-sub">SIA Mumbai · PVN Nr: LV40203627024 · Reģ. Nr: 40203627024</div>
     </div>
   </footer>
+
+  <script>
+    function submitForm(e) {
+      e.preventDefault();
+      const form = document.getElementById('booking-form');
+      const formData = new FormData(form);
+      
+      fetch('https://formspree.io/f/mnjwzwrq', {
+        method: 'POST',
+        body: formData,
+        headers: {
+          'Accept': 'application/json'
+        }
+      })
+      .then(response => {
+        if (response.ok) {
+          window.location.href = 'https://roadchanger.com/thanks';
+        }
+      })
+      .catch(error => console.error('Error:', error));
+    }
+  </script>
 
 </body>
 </html>
