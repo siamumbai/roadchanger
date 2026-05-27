@@ -117,7 +117,7 @@
       .hero-inner, .about-inner, .booking-inner { grid-template-columns: 1fr; gap: 1.5rem; }
       .hero-title { font-size: 28px; }
       .hero-img { aspect-ratio: 3/2; height: 240px; width: 100%; margin-top: 0; }
-      .hero-img img { object-position: center 50%; }
+      .hero-img img { object-position: center 30%; }
       .about-img { aspect-ratio: 3/2; height: 240px; }
       .about-text .section-title { font-size: 24px; }
       .section-title { margin-bottom: 1rem; }
@@ -145,8 +145,26 @@
       }
       
       div[style*="grid-template-columns:380px 1fr 1fr"] > div:first-child div[style*="display: flex; justify-content: flex-end"] {
-        justify-content: center !important;
+        justify-content: flex-start !important;
       }
+
+      /* Kartiņa 1 - pirma bilde sadalita uz pusem (blakus), otra paliek */
+      .services .card-dj {
+        grid-template-columns: 1fr 1fr !important;
+        height: auto !important;
+      }
+      .card-dj > .svc-text-light { grid-column: 1 / -1; }
+      .card-dj .dj-img1-right { display: block !important; }
+      .card-dj .dj-img1-left, .card-dj .dj-img1-right { height: 240px; }
+      .card-dj .dj-img2 { grid-column: 1 / -1; }
+
+      /* Kartiņa 4 - bildes blakus (kreisa | laba), vertikalas */
+      .services .card-roses {
+        grid-template-columns: 1fr 1fr !important;
+        height: auto !important;
+      }
+      .card-roses > div:first-child { grid-column: 1 / -1; }
+      .card-roses .img-shorter, .card-roses .img-short { height: 240px; }
     }
   </style>
   </style>
@@ -190,14 +208,15 @@
 
     <!-- 01 -->
     <div style="max-width:1200px;margin:0 auto;padding:0 2rem 1.5rem;">
-      <div style="display:grid;grid-template-columns:380px 1fr 1fr;border-radius:10px;overflow:hidden;border:0.5px solid #E0CCA4;height:300px;box-shadow:0 4px 18px rgba(44,36,22,0.08);gap:4px;background:#FFFBF5;">
+      <div class="card-dj" style="display:grid;grid-template-columns:380px 1fr 1fr;border-radius:10px;overflow:hidden;border:0.5px solid #E0CCA4;height:300px;box-shadow:0 4px 18px rgba(44,36,22,0.08);gap:4px;background:#FFFBF5;">
         <div class="svc-text-light" style="padding:2.5rem;display:flex;flex-direction:column;justify-content:flex-start;">
           <div class="service-num">01</div>
           <div class="service-name">DJ with live saxophone</div>
           <p class="service-desc">World grooves and uplifting energy with live saxophone woven through the mix.</p>
         </div>
-        <div class="img-short" style="overflow:hidden;"><img src="images/ddj1.jpg" style="width:100%;height:100%;object-fit:cover;object-position:40% 35%;display:block;" alt="DJ Roadchanger" /></div>
-        <div class="img-short" style="overflow:hidden;"><img src="images/ddj2.jpg" style="width:100%;height:100%;object-fit:cover;object-position:center 20%;display:block;" alt="DJ Roadchanger" /></div>
+        <div class="dj-img1-left img-short" style="overflow:hidden;"><img src="images/ddj1.jpg" style="width:100%;height:100%;object-fit:cover;object-position:25% 35%;display:block;" alt="DJ Roadchanger" /></div>
+        <div class="dj-img1-right" style="overflow:hidden;display:none;"><img src="images/ddj1.jpg" style="width:100%;height:100%;object-fit:cover;object-position:75% 35%;display:block;" alt="DJ Roadchanger" /></div>
+        <div class="dj-img2 img-short" style="overflow:hidden;"><img src="images/ddj2.jpg" style="width:100%;height:100%;object-fit:cover;object-position:center 20%;display:block;" alt="DJ Roadchanger" /></div>
       </div>
     </div>
 
@@ -240,7 +259,7 @@
 
     <!-- 04 -->
     <div style="max-width:1200px;margin:0 auto;padding:0 2rem 1.5rem;">
-      <div style="display:grid;grid-template-columns:380px 1fr 1fr;border-radius:10px;overflow:hidden;border:0.5px solid #E0CCA4;height:300px;box-shadow:0 4px 18px rgba(44,36,22,0.08);gap:4px;background:#FFFBF5;">
+      <div class="card-roses" style="display:grid;grid-template-columns:380px 1fr 1fr;border-radius:10px;overflow:hidden;border:0.5px solid #E0CCA4;height:300px;box-shadow:0 4px 18px rgba(44,36,22,0.08);gap:4px;background:#FFFBF5;">
         <div style="padding:2.5rem;background:#FDF5E6;display:flex;flex-direction:column;justify-content:flex-start;">
           <div class="service-num">04</div>
           <div class="service-name">Live Roses</div>
