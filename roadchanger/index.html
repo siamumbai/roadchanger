@@ -8,6 +8,23 @@
   <meta name="description" content="DJ Roadchanger — live DJ sets with saxophone, piano lounge and fire shows for weddings, corporate events and private parties. Based in Riga, available across Europe." />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=Lato:wght@300;400&display=swap" rel="stylesheet" />
+  
+  <!-- Prerender dj/ un fire/ lapas fona, lai atverot tos butu uzreiz gatavi (ar bildem) -->
+  <script type="speculationrules">
+  {
+    "prerender": [
+      {
+        "source": "list",
+        "urls": ["/dj/", "/fire/"]
+      }
+    ]
+  }
+  </script>
+  
+  <!-- Fallback prefetch atbalsts vecakiem parluksiem -->
+  <link rel="prefetch" href="dj/" />
+  <link rel="prefetch" href="fire/" />
+  
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     html { scroll-behavior: smooth; }
