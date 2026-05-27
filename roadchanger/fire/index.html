@@ -22,6 +22,7 @@
     .nav-cta:hover { background: #3D3020; }
 
     .fire-section { padding: 5rem 3rem; width: 100%; }
+    .fire-inner-wrap { max-width: 1200px; margin: 0 auto; padding: 0 3rem; }
     .fire-inner { display: grid; grid-template-columns: 1fr 1fr; gap: 3rem; max-width: 1200px; margin: 0 auto; align-items: start; }
     .fire-video { aspect-ratio: 16/9; border-radius: 6px; overflow: hidden; box-shadow: 0 4px 18px rgba(44,36,22,0.08); }
     .fire-video iframe { width: 100%; height: 100%; border: none; }
@@ -43,6 +44,7 @@
     .fire-image-item img { width: 100%; height: 100%; object-fit: cover; }
 
     /* Contact Section */
+    .contact-section { padding: 5rem 3rem; background: #2C2416; width: 100%; }
     .contact-wrapper { display: grid; grid-template-columns: 1fr 1fr; gap: 5rem; align-items: start; max-width: 1100px; margin: 0 auto; }
     .contact-text { }
     .contact-form { display: flex; flex-direction: column; gap: 10px; }
@@ -59,6 +61,7 @@
       nav { padding: 1rem 0.5rem; }
       .nav-links { display: none; }
       .fire-section { padding: 3rem 0.5rem; }
+      .fire-inner-wrap { padding: 0; }
       .fire-header-wrapper { flex-direction: column; gap: 1.5rem; align-items: stretch; }
       .fire-title { white-space: normal; }
       .fire-bullets { 
@@ -85,7 +88,8 @@
       }
       .fire-content-wrapper { grid-template-columns: 1fr; gap: 2rem; }
       .fire-images-grid { grid-template-columns: repeat(2, 1fr); }
-      .contact-wrapper { grid-template-columns: 1fr; gap: 2rem; padding: 0 0.5rem; }
+      .contact-section { padding: 3rem 0.5rem; }
+      .contact-wrapper { grid-template-columns: 1fr; gap: 2rem; }
       footer { padding: 0.5rem; flex-direction: column; align-items: flex-start; }
     }
 
@@ -112,7 +116,7 @@
 
   <section class="fire-section">
     <!-- VIRSRAKSTS AR BULLET PUNKTIEM -->
-    <div style="max-width: 1200px; margin: 0 auto; margin-bottom: 4rem; padding: 0 3rem;">
+    <div class="fire-inner-wrap" style="margin-bottom: 4rem;">
       <p style="font-size: 11px; letter-spacing: 0.2em; color: #B07320; text-transform: uppercase; margin-bottom: 0.3rem;">Grand Finale</p>
       
       <div class="fire-header-wrapper">
@@ -151,7 +155,7 @@
     </div>
 
     <!-- TEKSTS + BILDES -->
-    <div style="max-width: 1200px; margin: 0 auto; padding: 0 3rem;">
+    <div class="fire-inner-wrap">
       <div class="fire-content-wrapper">
         
         <!-- TEKSTS KREISAJĀ PUSĒ -->
@@ -193,7 +197,7 @@
   <div style="height: 1px; background: #EAD9B8; margin: 5rem 0;"></div>
 
   <!-- GET IN TOUCH SEKCIJA -->
-  <section style="padding: 5rem 3rem; background: #2C2416; width: 100%;">
+  <section class="contact-section">
     <div class="contact-wrapper">
       <div class="contact-text">
         <p style="font-size: 11px; letter-spacing: 0.2em; color: #C4A06A; text-transform: uppercase; margin-bottom: 1rem;">Get in touch</p>
