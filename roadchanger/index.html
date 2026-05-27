@@ -116,7 +116,7 @@
       .hero, .services, .about, .testimonials, .booking { padding: 2.5rem 1rem; }
       .hero-inner, .about-inner, .booking-inner { grid-template-columns: 1fr; gap: 1.5rem; }
       .hero-title { font-size: 28px; }
-      .hero-img { aspect-ratio: 3/2; height: 240px; width: 100%; margin-top: 3rem; }
+      .hero-img { aspect-ratio: 3/2; height: 240px; width: 100%; margin-top: 0; }
       .hero-img img { object-position: center 20%; }
       .about-img { aspect-ratio: 3/2; height: 240px; }
       .about-text .section-title { font-size: 24px; }
@@ -127,8 +127,10 @@
       .service-row-img { min-height: 180px; }
       .service-row-text { padding: 1.5rem 1rem; }
       .svc-text-light { background: #FDF5E6; }
+      .img-short { height: 200px; }
+      .img-shorter { height: 160px; }
       .divider { margin: 0; width: 100%; }
-      .divider-artist { background: #C4A06A; }
+      .divider-artist { background: #D2B488; }
       footer { padding: 1rem; flex-direction: column; align-items: flex-start; }
       
       /* Service cards - make them responsive (1 column, smaller info) */
@@ -193,8 +195,8 @@
           <div class="service-name">DJ with live saxophone</div>
           <p class="service-desc">World grooves and uplifting energy with live saxophone woven through the mix.</p>
         </div>
-        <div style="overflow:hidden;"><img src="images/ddj1.jpg" style="width:100%;height:100%;object-fit:cover;object-position:40% 35%;display:block;" alt="DJ Roadchanger" /></div>
-        <div style="overflow:hidden;"><img src="images/ddj2.jpg" style="width:100%;height:100%;object-fit:cover;object-position:center 20%;display:block;" alt="DJ Roadchanger" /></div>
+        <div class="img-short" style="overflow:hidden;"><img src="images/ddj1.jpg" style="width:100%;height:100%;object-fit:cover;object-position:40% 35%;display:block;" alt="DJ Roadchanger" /></div>
+        <div class="img-short" style="overflow:hidden;"><img src="images/ddj2.jpg" style="width:100%;height:100%;object-fit:cover;object-position:center 20%;display:block;" alt="DJ Roadchanger" /></div>
       </div>
     </div>
 
@@ -224,7 +226,7 @@
           <p class="service-desc">Piano, saxophone, flute and ambient pads —<br>crafted for moments that need elegance without noise. Perfect for welcome drinks, cocktail hours and gala dinners.</p>
           <div class="tags"><span class="tag">Welcome drink</span><span class="tag">Gala dinner</span><span class="tag">Award night</span></div>
         </div>
-        <div style="overflow:hidden;"><img src="images/piano1.jpg" style="width:100%;height:100%;object-fit:cover;display:block;" alt="Piano setup" /></div>
+        <div class="img-short" style="overflow:hidden;"><img src="images/piano1.jpg" style="width:100%;height:100%;object-fit:cover;display:block;" alt="Piano setup" /></div>
         <div style="overflow:hidden;"><img src="images/piano2.jpg" style="width:100%;height:100%;object-fit:cover;display:block;" alt="Piano sunset" /></div>
       </div>
     </div>
@@ -244,8 +246,8 @@
           <p class="service-desc">Elegant performers in breathtaking floral costumes — floor-length rose gowns, dramatic headpieces and an atmosphere that stops guests in their tracks.<br>They move through your event and become part of the memory.</p>
           <div class="tags"><span class="tag">Weddings</span><span class="tag">Corporate</span><span class="tag">Photo moments</span></div>
         </div>
-        <div style="overflow:hidden;"><img src="images/characters1.jpg" style="width:100%;height:100%;object-fit:cover;object-position:center 80%;display:block;" alt="Live characters" /></div>
-        <div style="overflow:hidden;"><img src="images/characters2.jpg" style="width:100%;height:100%;object-fit:cover;display:block;" alt="Rose characters" /></div>
+        <div class="img-shorter" style="overflow:hidden;"><img src="images/characters1.jpg" style="width:100%;height:100%;object-fit:cover;object-position:center 80%;display:block;" alt="Live characters" /></div>
+        <div class="img-short" style="overflow:hidden;"><img src="images/characters2.jpg" style="width:100%;height:100%;object-fit:cover;display:block;" alt="Rose characters" /></div>
       </div>
     </div>
 
