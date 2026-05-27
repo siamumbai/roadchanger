@@ -39,7 +39,9 @@
     /* Text + Images Layout */
     .fire-content-wrapper { display: grid; grid-template-columns: 1fr 1.2fr; gap: 3rem; align-items: start; }
     .fire-text { }
+    .fire-text-h2 { margin-bottom: 1.5rem; }
     .fire-text-p { line-height: 1.9; }
+    .mobile-br { display: none; }
     .fire-images-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.75rem; }
     .fire-image-item { aspect-ratio: 1; background: #EDD9B4; border-radius: 6px; border: 0.5px solid #DEC898; overflow: hidden; }
     .fire-image-item img { width: 100%; height: 100%; object-fit: cover; }
@@ -88,7 +90,9 @@
         grid-row: 2;
       }
       .fire-content-wrapper { grid-template-columns: 1fr; gap: 2rem; }
+      .fire-text-h2 { margin-bottom: 0.3rem; }
       .fire-text-p { line-height: 1.4; }
+      .mobile-br { display: inline; }
       .section-divider { display: none; }
       .fire-images-grid { grid-template-columns: repeat(2, 1fr); }
       .contact-section { padding: 3rem 0.5rem; }
@@ -163,9 +167,9 @@
         
         <!-- TEKSTS KREISAJĀ PUSĒ -->
         <div class="fire-text">
-          <h2 style="font-family: 'Libre Baskerville', Georgia, serif; font-size: 28px; font-weight: 700; color: #2C2416; margin-bottom: 1.5rem;">Grand Finale Fire Show</h2>
+          <h2 class="fire-text-h2" style="font-family: 'Libre Baskerville', Georgia, serif; font-size: 28px; font-weight: 700; color: #2C2416;">Grand Finale Fire Show</h2>
           <p class="fire-text-p" style="font-size: 15px; color: #6B5035; margin-bottom: 0.75rem; font-weight: 300;">We perform as a two-person fire show with everything you see in the video.</p>
-          <p class="fire-text-p" style="font-size: 15px; color: #6B5035; margin-bottom: 0.75rem; font-weight: 300;">Tell us what you'd like — the full experience with all elements,<br>or a more intimate version without the cars and stage.</p>
+          <p class="fire-text-p" style="font-size: 15px; color: #6B5035; margin-bottom: 0.75rem; font-weight: 300;">Tell us what you'd like —<br class="mobile-br">the full experience with all elements,<br>or a more intimate version without the cars and stage.</p>
           <p class="fire-text-p" style="font-size: 15px; color: #6B5035; font-weight: 300;">The show is 15 minutes, and we can extend the night<br>with our DJ spinning dance music.</p>
           <div style="margin-top: 2rem;">
             <a href="#booking" style="background: #B07320; padding: 12px 28px; border-radius: 3px; text-decoration: none; color: #FFFFFF; font-size: 14px; letter-spacing: 0.05em; font-weight: bold; display: inline-block;">Book now</a>
@@ -204,7 +208,7 @@
     <div class="contact-wrapper">
       <div class="contact-text">
         <p style="font-size: 11px; letter-spacing: 0.2em; color: #C4A06A; text-transform: uppercase; margin-bottom: 1rem;">Get in touch</p>
-        <h2 style="font-family: 'Libre Baskerville', Georgia, serif; font-size: 32px; font-weight: 700; color: #F5ECD8; margin-bottom: 1rem; line-height: 1.2;">Tell me about your event</h2>
+        <h2 style="font-family: 'Libre Baskerville', Georgia, serif; font-size: 32px; font-weight: 700; color: #F5ECD8; margin-bottom: 1rem; line-height: 1.2;">Tell me about<br class="mobile-br">your event</h2>
         <p style="font-size: 15px; color: #A08060; line-height: 1.85; font-weight: 300; margin-bottom: 2.5rem;">I'll get back to you as soon as possible with availability and a quote. No long forms, no waiting — just a real conversation about what you need.</p>
         <div style="display: flex; flex-direction: column; gap: 1rem;">
           <div style="display: flex; gap: 1rem;">
