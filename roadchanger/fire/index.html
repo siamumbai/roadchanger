@@ -39,6 +39,7 @@
     /* Text + Images Layout */
     .fire-content-wrapper { display: grid; grid-template-columns: 1fr 1.2fr; gap: 3rem; align-items: start; }
     .fire-text { }
+    .fire-text-p { line-height: 1.9; }
     .fire-images-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.75rem; }
     .fire-image-item { aspect-ratio: 1; background: #EDD9B4; border-radius: 6px; border: 0.5px solid #DEC898; overflow: hidden; }
     .fire-image-item img { width: 100%; height: 100%; object-fit: cover; }
@@ -62,7 +63,7 @@
       .nav-links { display: none; }
       .fire-section { padding: 3rem 0.5rem; }
       .fire-inner-wrap { padding: 0; }
-      .fire-header-wrapper { flex-direction: column; gap: 1.5rem; align-items: stretch; }
+      .fire-header-wrapper { flex-direction: column; gap: 0.5rem; align-items: stretch; }
       .fire-title { white-space: normal; }
       .fire-bullets { 
         grid-template-columns: 1fr 1fr;
@@ -87,6 +88,8 @@
         grid-row: 2;
       }
       .fire-content-wrapper { grid-template-columns: 1fr; gap: 2rem; }
+      .fire-text-p { line-height: 1.4; }
+      .section-divider { display: none; }
       .fire-images-grid { grid-template-columns: repeat(2, 1fr); }
       .contact-section { padding: 3rem 0.5rem; }
       .contact-wrapper { grid-template-columns: 1fr; gap: 2rem; }
@@ -161,9 +164,9 @@
         <!-- TEKSTS KREISAJĀ PUSĒ -->
         <div class="fire-text">
           <h2 style="font-family: 'Libre Baskerville', Georgia, serif; font-size: 28px; font-weight: 700; color: #2C2416; margin-bottom: 1.5rem;">Grand Finale Fire Show</h2>
-          <p style="font-size: 15px; color: #6B5035; line-height: 1.9; margin-bottom: 0.75rem; font-weight: 300;">We perform as a two-person fire show with everything you see in the video.</p>
-          <p style="font-size: 15px; color: #6B5035; line-height: 1.9; margin-bottom: 0.75rem; font-weight: 300;">Tell us what you'd like — the full experience with all elements,<br>or a more intimate version without the cars and stage.</p>
-          <p style="font-size: 15px; color: #6B5035; line-height: 1.9; font-weight: 300;">The show is 15 minutes, and we can extend the night<br>with our DJ spinning dance music.</p>
+          <p class="fire-text-p" style="font-size: 15px; color: #6B5035; margin-bottom: 0.75rem; font-weight: 300;">We perform as a two-person fire show with everything you see in the video.</p>
+          <p class="fire-text-p" style="font-size: 15px; color: #6B5035; margin-bottom: 0.75rem; font-weight: 300;">Tell us what you'd like — the full experience with all elements,<br>or a more intimate version without the cars and stage.</p>
+          <p class="fire-text-p" style="font-size: 15px; color: #6B5035; font-weight: 300;">The show is 15 minutes, and we can extend the night<br>with our DJ spinning dance music.</p>
           <div style="margin-top: 2rem;">
             <a href="#booking" style="background: #B07320; padding: 12px 28px; border-radius: 3px; text-decoration: none; color: #FFFFFF; font-size: 14px; letter-spacing: 0.05em; font-weight: bold; display: inline-block;">Book now</a>
           </div>
@@ -194,7 +197,7 @@
     </div>
   </section>
 
-  <div style="height: 1px; background: #EAD9B8; margin: 5rem 0;"></div>
+  <div class="section-divider" style="height: 1px; background: #EAD9B8; margin: 5rem 0;"></div>
 
   <!-- GET IN TOUCH SEKCIJA -->
   <section class="contact-section">
