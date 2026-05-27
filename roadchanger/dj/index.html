@@ -41,8 +41,11 @@
       .dj-section { padding: 3rem 0.5rem; }
       .dj-inner-wrap { padding: 0; }
       .dj-text-wrap { padding: 0; }
-      .dj-puzzle-outer { grid-template-columns: 1fr; gap: 0.5rem; }
-      .dj-puzzle-grid { aspect-ratio: 1/1; }
+      .dj-puzzle-outer { grid-template-columns: 1fr; gap: 0.25rem; }
+      .dj-puzzle-grid { aspect-ratio: 1/1; gap: 0.25rem; }
+      .dj-bottom-row { gap: 0.25rem !important; }
+      .dj-bottom-images { gap: 0.25rem !important; }
+      .desktop-br { display: none; }
       .contact-section { padding: 3rem 0.5rem; }
       .contact-wrapper { grid-template-columns: 1fr; gap: 2rem; }
       footer { padding: 0.5rem; flex-direction: column; align-items: flex-start; }
@@ -58,7 +61,7 @@
       <a href="../fire/">Fire show</a>
       <a href="../#about">About</a>
     </div>
-    <a href="../#booking" class="nav-cta">Book now</a>
+    <a href="#booking" class="nav-cta">Book now</a>
   </nav>
 
   <section class="dj-section">
@@ -134,11 +137,11 @@
       </div>
 
       <!-- APAKSEJA RINDA - secība: 11(1:1), 12(3:4), 13(1:1), 14(3:4), 15(1:1) -->
-      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem; margin-bottom: 4rem;">
+      <div class="dj-bottom-row" style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem; margin-bottom: 4rem;">
         <!-- HORIZONTALA (16:9) PA KREISI - zem video, paliek tāda pati pozīcija video lielumam -->
         <!-- Šeit nav video, šī ir tikai apakšējā bilžu rinda -->
         <!-- Interleaved order: square, vertical, square, vertical, square -->
-        <div style="display: grid; grid-template-columns: 4fr 3fr 4fr 3fr 4fr; gap: 0.5rem; grid-column: 1 / 3;">
+        <div class="dj-bottom-images" style="display: grid; grid-template-columns: 4fr 3fr 4fr 3fr 4fr; gap: 0.5rem; grid-column: 1 / 3;">
           <!-- 11 (1:1 kvadrāts) -->
           <div style="aspect-ratio: 1/1; background: #EDD9B4; border-radius: 6px; border: 0.5px solid #DEC898; overflow: hidden; position: relative; display: flex; align-items: center; justify-content: center;">
             <span style="font-family: 'Libre Baskerville', Georgia, serif; font-size: 36px; color: #B8935A; font-weight: bold; pointer-events: none;">11</span>
@@ -172,7 +175,7 @@
     <div class="dj-text-wrap">
       <h2 style="font-family: 'Libre Baskerville', Georgia, serif; font-size: 28px; font-weight: 700; color: #2C2416; margin-bottom: 1.5rem;">DJ Set with Live Saxophone</h2>
       <p style="font-size: 15px; color: #6B5035; line-height: 1.9; margin-bottom: 0.75rem; font-weight: 300;">A unique experience combining DJ sets with live saxophone performance.</p>
-      <p style="font-size: 15px; color: #6B5035; line-height: 1.9; margin-bottom: 0.75rem; font-weight: 300;">Perfect for weddings, corporate events, and private parties where you want<br>to elevate the energy with live music on top of curated DJ sets.</p>
+      <p style="font-size: 15px; color: #6B5035; line-height: 1.9; margin-bottom: 0.75rem; font-weight: 300;">Perfect for weddings, corporate events, and private parties where you want<br class="desktop-br">to elevate the energy with live music on top of curated DJ sets.</p>
       <div style="margin-top: 2rem;">
         <a href="#booking" style="background: #B07320; padding: 12px 28px; border-radius: 3px; text-decoration: none; color: #FFFFFF; font-size: 14px; letter-spacing: 0.05em; font-weight: bold; display: inline-block;">Book now</a>
       </div>
@@ -180,7 +183,7 @@
   </section>
 
   <!-- GET IN TOUCH SEKCIJA -->
-  <section class="contact-section">
+  <section class="contact-section" id="booking">
     <div class="contact-wrapper">
       <div>
         <p style="font-size: 11px; letter-spacing: 0.2em; color: #C4A06A; text-transform: uppercase; margin-bottom: 1rem;">Get in touch</p>
