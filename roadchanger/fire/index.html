@@ -41,8 +41,16 @@
     .fire-images-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.75rem; }
     .fire-image-item { aspect-ratio: 1; background: #EDD9B4; border-radius: 6px; border: 0.5px solid #DEC898; overflow: hidden; }
     .fire-image-item img { width: 100%; height: 100%; object-fit: cover; }
+    
+    /* Fire header padding responsive */
+    .fire-header-section { max-width: 1200px; margin: 0 auto; margin-bottom: 4rem; padding: 0 0.8rem; }
+    .fire-video-section { max-width: 1200px; margin: 0 auto; padding: 0 0.8rem; margin: 2rem auto 4rem; }
+    .fire-header-wrapper { display: flex; gap: 3rem; align-items: start; margin-bottom: 3rem; flex-wrap: nowrap; width: 100%; }
+    .fire-title { font-family: 'Libre Baskerville', Georgia, serif; font-size: clamp(32px, 5vw, 48px); font-weight: 700; line-height: 1.2; margin: 0; white-space: nowrap; flex-shrink: 0; }
+    .fire-bullets { display: grid; grid-template-columns: repeat(4, auto); gap: 0 3rem; font-size: clamp(14px, 2vw, 16px); color: #8A6840; letter-spacing: 0.05em; line-height: 1; margin-top: 12px; flex-shrink: 0; white-space: nowrap; width: 100%; }
 
     /* Contact Section */
+    .contact-section { padding: 5rem 3rem; background: #2C2416; width: 100%; }
     .contact-wrapper { display: grid; grid-template-columns: 1fr 1fr; gap: 5rem; align-items: start; max-width: 1100px; margin: 0 auto; }
     .contact-text { }
     .contact-form { display: flex; flex-direction: column; gap: 10px; }
@@ -55,9 +63,11 @@
     .footer-links a:hover { color: #C4A06A; }
 
     @media (max-width: 768px) {
-      nav { padding: 1rem 1.5rem; }
+      nav { padding: 1rem 0.8rem; }
       .nav-links { display: none; }
-      .fire-section { padding: 3rem 1.5rem; }
+      .fire-section { padding: 3rem 0.8rem; }
+      .fire-header-section { padding: 0 0.8rem; margin-bottom: 2rem; }
+      .fire-video-section { padding: 0 0.8rem; }
       .fire-header-wrapper { flex-direction: column; gap: 1.5rem; align-items: stretch; }
       .fire-title { white-space: normal; }
       .fire-bullets { 
@@ -65,6 +75,7 @@
         gap: 0.5rem 2rem;
         white-space: normal;
         margin-top: 0;
+        width: 100%;
       }
       .bullet-column:nth-child(1) {
         grid-column: 1;
@@ -82,10 +93,11 @@
         grid-column: 2;
         grid-row: 2;
       }
-      .fire-content-wrapper { grid-template-columns: 1fr; gap: 2rem; }
+      .fire-content-wrapper { grid-template-columns: 1fr; gap: 2rem; padding: 0 0.8rem; }
       .fire-images-grid { grid-template-columns: repeat(2, 1fr); }
-      .contact-wrapper { grid-template-columns: 1fr; gap: 2rem; padding: 0 1.5rem; }
-      footer { padding: 1.5rem; flex-direction: column; align-items: flex-start; }
+      .contact-section { padding: 3rem 0.8rem; }
+      .contact-wrapper { grid-template-columns: 1fr; gap: 2rem; }
+      footer { padding: 0.8rem; flex-direction: column; align-items: flex-start; }
     }
 
     @media (max-width: 480px) {
@@ -111,7 +123,7 @@
 
   <section class="fire-section">
     <!-- VIRSRAKSTS AR BULLET PUNKTIEM -->
-    <div style="max-width: 1200px; margin: 0 auto; margin-bottom: 4rem; padding: 0 3rem;">
+    <div class="fire-header-section">
       <p style="font-size: 11px; letter-spacing: 0.2em; color: #B07320; text-transform: uppercase; margin-bottom: 0.3rem;">Grand Finale</p>
       
       <div class="fire-header-wrapper">
@@ -142,7 +154,7 @@
       </div>
 
       <!-- VIDEO LIELĀKS -->
-      <div style="margin: 2rem 0 4rem;">
+      <div class="fire-video-section">
         <div style="aspect-ratio: 16/9; border-radius: 6px; overflow: hidden; box-shadow: 0 4px 18px rgba(44,36,22,0.08);">
           <iframe src="https://iframe.mediadelivery.net/embed/658708/60214724-4266-4f45-949c-12ec60a8eadd?autoplay=false" title="Roadchanger Fire Show" loading="lazy" style="width: 100%; height: 100%; border: none;" allow="accelerometer;gyroscope;autoplay;encrypted-media;picture-in-picture;" allowfullscreen="true"></iframe>
         </div>
@@ -150,7 +162,7 @@
     </div>
 
     <!-- TEKSTS + BILDES -->
-    <div style="max-width: 1200px; margin: 0 auto; padding: 0 3rem;">
+    <div class="fire-header-section">
       <div class="fire-content-wrapper">
         
         <!-- TEKSTS KREISAJĀ PUSĒ -->
@@ -192,7 +204,7 @@
   <div style="height: 1px; background: #EAD9B8; margin: 5rem 0;"></div>
 
   <!-- GET IN TOUCH SEKCIJA -->
-  <section style="padding: 5rem 3rem; background: #2C2416; width: 100%;">
+  <section class="contact-section">
     <div class="contact-wrapper">
       <div class="contact-text">
         <p style="font-size: 11px; letter-spacing: 0.2em; color: #C4A06A; text-transform: uppercase; margin-bottom: 1rem;">Get in touch</p>
