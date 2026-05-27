@@ -42,6 +42,11 @@
     .fire-image-item { aspect-ratio: 1; background: #EDD9B4; border-radius: 6px; border: 0.5px solid #DEC898; overflow: hidden; }
     .fire-image-item img { width: 100%; height: 100%; object-fit: cover; }
 
+    /* Contact Section */
+    .contact-wrapper { display: grid; grid-template-columns: 1fr 1fr; gap: 5rem; align-items: start; max-width: 1100px; margin: 0 auto; }
+    .contact-text { }
+    .contact-form { display: flex; flex-direction: column; gap: 10px; }
+
     footer { background: #1E1810; padding: 2rem 3rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; margin: 0; width: 100%; }
     .footer-logo { font-family: 'Libre Baskerville', Georgia, serif; font-size: 14px; font-weight: 700; letter-spacing: 0.1em; color: #C4A06A; text-transform: uppercase; }
     .footer-sub { font-size: 11px; color: #5C4028; margin-top: 4px; }
@@ -79,6 +84,7 @@
       }
       .fire-content-wrapper { grid-template-columns: 1fr; gap: 2rem; }
       .fire-images-grid { grid-template-columns: repeat(2, 1fr); }
+      .contact-wrapper { grid-template-columns: 1fr; gap: 2rem; padding: 0 1.5rem; }
       footer { padding: 1.5rem; flex-direction: column; align-items: flex-start; }
     }
 
@@ -187,8 +193,8 @@
 
   <!-- GET IN TOUCH SEKCIJA -->
   <section style="padding: 5rem 3rem; background: #2C2416; width: 100%;">
-    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 5rem; align-items: start; max-width: 1100px; margin: 0 auto;">
-      <div>
+    <div class="contact-wrapper">
+      <div class="contact-text">
         <p style="font-size: 11px; letter-spacing: 0.2em; color: #C4A06A; text-transform: uppercase; margin-bottom: 1rem;">Get in touch</p>
         <h2 style="font-family: 'Libre Baskerville', Georgia, serif; font-size: 32px; font-weight: 700; color: #F5ECD8; margin-bottom: 1rem; line-height: 1.2;">Tell me about your event</h2>
         <p style="font-size: 15px; color: #A08060; line-height: 1.85; font-weight: 300; margin-bottom: 2.5rem;">I'll get back to you as soon as possible with availability and a quote. No long forms, no waiting — just a real conversation about what you need.</p>
@@ -207,7 +213,7 @@
           </div>
         </div>
       </div>
-      <form id="booking-form" style="display: flex; flex-direction: column; gap: 10px;" action="https://formspree.io/f/mnjwzwrq" method="POST" onsubmit="submitForm(event)">
+      <form id="booking-form" class="contact-form" action="https://formspree.io/f/mnjwzwrq" method="POST" onsubmit="submitForm(event)">
         <input type="text" name="name" placeholder="Your name" required style="background: #3D3020; border: 0.5px solid #5C4028; color: #F5ECD8; border-radius: 4px; padding: 12px 14px; font-size: 14px; width: 100%; font-family: 'Lato', Arial, sans-serif; font-weight: 300;" />
         <input type="email" name="email" placeholder="Email address" required style="background: #3D3020; border: 0.5px solid #5C4028; color: #F5ECD8; border-radius: 4px; padding: 12px 14px; font-size: 14px; width: 100%; font-family: 'Lato', Arial, sans-serif; font-weight: 300;" />
         <input type="text" name="date" placeholder="Event date" style="background: #3D3020; border: 0.5px solid #5C4028; color: #F5ECD8; border-radius: 4px; padding: 12px 14px; font-size: 14px; width: 100%; font-family: 'Lato', Arial, sans-serif; font-weight: 300;" />
