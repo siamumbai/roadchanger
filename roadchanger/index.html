@@ -127,9 +127,12 @@
     .footer-links a { font-size: 12px; color: #6B5035; text-decoration: none; }
     .footer-links a:hover { color: #C4A06A; }
 
+    .mobile-br { display: none; }
+
     @media (max-width: 768px) {
       nav { padding: 0.75rem 1rem; }
       .nav-links { display: none; }
+      .mobile-br { display: inline; }
       .hero, .services, .about, .testimonials, .booking { padding: 2.5rem 1rem; }
       .hero-inner, .about-inner, .booking-inner { grid-template-columns: 1fr; gap: 1.5rem; }
       .hero-title { font-size: 28px; }
@@ -351,7 +354,7 @@
     <div class="booking-inner">
       <div>
         <p class="section-tag">Get in touch</p>
-        <h2 class="section-title">Tell me about your event</h2>
+        <h2 class="section-title">Tell me about<br class="mobile-br">your event</h2>
         <div class="booking-info">
           <div class="booking-info-item">
             <span class="booking-label">Email</span>
