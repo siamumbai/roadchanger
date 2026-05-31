@@ -179,6 +179,14 @@
       .card-dj .dj-img1-m1, .card-dj .dj-img1-m2 { display: block !important; height: 240px; }
       .card-dj .dj-img2 { grid-column: 1 / -1; }
 
+      /* Kartiņa 6 - tads pats stils ka 4 */
+      .services .card-paint {
+        grid-template-columns: 1fr 1fr !important;
+        height: auto !important;
+      }
+      .card-paint > div:first-child { grid-column: 1 / -1; }
+      .card-paint .img-short { height: 240px; }
+
       /* Kartiņa 4 - bildes blakus (kreisa | laba), vertikalas */
       .services .card-roses {
         grid-template-columns: 1fr 1fr !important;
@@ -314,7 +322,7 @@
     </div>
 
     <div style="max-width:1200px;margin:0 auto;padding:0 2rem 1.5rem;">
-      <div style="display:grid;grid-template-columns:380px 1fr 1fr;border-radius:10px;overflow:hidden;border:0.5px solid #E0CCA4;height:300px;box-shadow:0 4px 18px rgba(44,36,22,0.08);gap:4px;background:#FFFBF5;">
+      <div class="card-paint" style="display:grid;grid-template-columns:380px 1fr 1fr;border-radius:10px;overflow:hidden;border:0.5px solid #E0CCA4;height:300px;box-shadow:0 4px 18px rgba(44,36,22,0.08);gap:4px;background:#FFFBF5;">
         <div style="padding:2.5rem;background:#FFFBF5;display:flex;flex-direction:column;justify-content:flex-start;">
           <div class="service-num">06</div>
           <div class="service-name">Live Painting</div>
