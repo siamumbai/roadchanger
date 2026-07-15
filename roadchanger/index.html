@@ -207,20 +207,19 @@
       .services .card-equip > div:first-child {          /* teksta bloks: augš/apakš atstarpe vienāda */
         padding: 1.75rem 1.5rem !important;
       }
-      .services .card-equip > div:last-of-type {          /* video josla: zemāka + video palielināts, lai aizpilda */
+      .services .card-equip > div:last-of-type {          /* video josla mobilajā: zemāka */
         position: relative !important;
         width: 100% !important;
-        height: 170px !important;
+        height: 180px !important;
         aspect-ratio: auto !important;
         overflow: hidden !important;
       }
-      .services .card-equip > div:last-of-type iframe {
+      .services .card-equip > div:last-of-type video {
         position: absolute !important;
-        top: 50% !important;
-        left: 50% !important;
-        transform: translate(-50%, -50%) scale(1.28) !important;
+        inset: 0 !important;
         width: 100% !important;
         height: 100% !important;
+        object-fit: cover !important;
       }
     }
   </style>
@@ -373,14 +372,13 @@
           <div class="service-name">My Equipment</div>
           <p class="service-desc">Sound System, lights, smoke machines,<br>DJ table, wireless microphones.</p>
         </div>
-        <!-- VIDEO: bunny.net — loads last (after the rest of the page) and autoplays muted -->
+        <!-- VIDEO: bunny.net tiešais MP4 — aizpilda rāmi (object-fit: cover), ielādējas pēc attēliem -->
         <div style="position:relative;width:100%;aspect-ratio:16/9;background:#1E1810;overflow:hidden;">
-          <iframe id="equip-video"
-            data-src="https://player.mediadelivery.net/embed/658708/6dbc668d-3945-4cb1-b3d3-299a46fc062c?autoplay=true&loop=true&muted=true&preload=true&responsive=true"
-            title="My Equipment" loading="lazy"
-            style="position:absolute;inset:0;width:100%;height:100%;border:0;"
-            allow="accelerometer;gyroscope;autoplay;encrypted-media;picture-in-picture;fullscreen;"
-            allowfullscreen="true"></iframe>
+          <video id="equip-video"
+            data-src="https://vz-7bf5e195-7d3.b-cdn.net/6dbc668d-3945-4cb1-b3d3-299a46fc062c/play_720p.mp4"
+            poster="https://vz-7bf5e195-7d3.b-cdn.net/6dbc668d-3945-4cb1-b3d3-299a46fc062c/thumbnail.jpg"
+            muted loop playsinline preload="none"
+            style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block;"></video>
         </div>
         <script>
           /* Palaiž video (autoplay) tiklīdz visi lapas attēli ir ielādējušies.
@@ -389,7 +387,13 @@
             var v = document.getElementById('equip-video');
             if (!v || !v.dataset.src) return;
             var started = false;
-            function startVideo() { if (started) return; started = true; v.src = v.dataset.src; }
+            function startVideo() {
+              if (started) return;
+              started = true;
+              v.src = v.dataset.src;
+              var p = v.play();
+              if (p && p.catch) p.catch(function () {});
+            }
 
             var imgs = Array.prototype.slice.call(document.images);
             var pending = imgs.filter(function (img) { return !img.complete; }).length;
