@@ -361,20 +361,33 @@
             allowfullscreen="true"></iframe>
         </div>
         <script>
+          /* Palaiž video (autoplay) tiklīdz visi lapas attēli ir ielādējušies.
+             Attēli tiek ielādēti normāli (src), šis tos neietekmē. */
           (function () {
             var v = document.getElementById('equip-video');
             if (!v || !v.dataset.src) return;
-            function load() { if (!v.src) v.src = v.dataset.src; }
-            if ('IntersectionObserver' in window) {
-              var io = new IntersectionObserver(function (entries) {
-                entries.forEach(function (e) {
-                  if (e.isIntersecting) { load(); io.disconnect(); }
-                });
-              }, { threshold: 0.4 });
-              io.observe(v);
+            var started = false;
+            function startVideo() { if (started) return; started = true; v.src = v.dataset.src; }
+
+            var imgs = Array.prototype.slice.call(document.images);
+            var pending = imgs.filter(function (img) { return !img.complete; }).length;
+            if (pending === 0) {
+              startVideo();
             } else {
-              window.addEventListener('load', load);
+              imgs.forEach(function (img) {
+                if (img.complete) return;
+                var done = function () {
+                  img.removeEventListener('load', done);
+                  img.removeEventListener('error', done);
+                  pending--;
+                  if (pending === 0) startVideo();
+                };
+                img.addEventListener('load', done);
+                img.addEventListener('error', done);
+              });
             }
+            /* Drošības tīkls: garantēti sāk, kad visa lapa ir ielādēta. */
+            window.addEventListener('load', startVideo);
           })();
         </script>
       </div>
