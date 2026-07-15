@@ -207,9 +207,18 @@
       .services .card-equip > div:first-child {          /* teksta bloks: augš/apakš atstarpe vienāda */
         padding: 1.75rem 1.5rem !important;
       }
-      .services .card-equip > div:last-of-type {          /* video bloks: pilns platums, pareizs izmērs */
+      .services .card-equip > div:last-of-type {          /* video bloks: pilns platums, aizpilda rāmi */
         width: 100% !important;
         aspect-ratio: 16 / 9 !important;
+        overflow: hidden !important;
+      }
+      .services .card-equip > div:last-of-type iframe {
+        position: absolute !important;
+        top: 50% !important;
+        left: 50% !important;
+        transform: translate(-50%, -50%) scale(1.02) !important;
+        width: 100% !important;
+        height: 100% !important;
       }
     }
   </style>
@@ -352,7 +361,7 @@
     <!-- Bringing it all together -->
     <div style="max-width:1200px;margin:0 auto;padding:2.5rem 2rem 1rem;">
       <p class="section-tag">Bringing it all together</p>
-      <h2 class="section-title" style="margin-bottom:0;">Sound and <br class="mobile-br">Lights as well?</h2>
+      <h2 class="section-title" style="margin-bottom:0;">Need sound and lights?</h2>
     </div>
 
     <!-- 07 -->
