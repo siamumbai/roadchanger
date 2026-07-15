@@ -197,6 +197,9 @@
       .card-roses > div:first-child { grid-column: 1 / -1; }
       .card-roses .img-shorter, .card-roses .img-short { height: 240px; }
       .card-roses .img-shorter img { transform: scale(1.2); }
+
+      /* Kartiņa 7 - teksts augša, video zem (1 kolonna) */
+      .services .card-equip { grid-template-columns: 1fr !important; }
     }
   </style>
   </style>
@@ -220,7 +223,6 @@
         <h1 class="hero-title">DJ<span class="dot">.</span> Saxophone<span class="dot">.</span><br>One performance<span class="dot">.</span></h1>
         <p class="hero-sub">Live DJ sets with saxophone and flute for corporate events, weddings and private parties.<br>DJ Roadchanger brings the vibe — from spinning dance music on the dancefloor to Burning Man desert energy.</p>
         <div class="hero-actions">
-          <a href="#booking" class="btn-dark">Check availability</a>
           <a href="#services" class="btn-outline-light">See what I do</a>
         </div>
       </div>
@@ -336,6 +338,30 @@
       </div>
     </div>
 
+    <!-- Bringing it all together -->
+    <div style="max-width:1200px;margin:0 auto;padding:2.5rem 2rem 1rem;">
+      <p class="section-tag">Bringing it all together</p>
+      <h2 class="section-title" style="margin-bottom:0;">Sound and Lights as well?</h2>
+    </div>
+
+    <!-- 07 -->
+    <div style="max-width:1200px;margin:0 auto;padding:0 2rem 1.5rem;">
+      <div class="card-equip" style="display:grid;grid-template-columns:380px 1fr;border-radius:10px;overflow:hidden;border:0.5px solid #E0CCA4;box-shadow:0 4px 18px rgba(44,36,22,0.08);gap:4px;background:#FFFBF5;">
+        <div style="padding:2.5rem;background:#FDF5E6;display:flex;flex-direction:column;justify-content:center;">
+          <div class="service-name">My Equipment</div>
+          <p class="service-desc">Sound System, lights, smoke machines,<br>DJ table, wireless microphones.</p>
+        </div>
+        <!-- VIDEO: bunny.net -->
+        <div style="position:relative;width:100%;aspect-ratio:16/9;background:#1E1810;overflow:hidden;">
+          <iframe src="https://iframe.mediadelivery.net/embed/658708/6dbc668d-3945-4cb1-b3d3-299a46fc062c?autoplay=false&loop=false&muted=false&preload=true&responsive=true"
+            title="My Equipment" loading="lazy"
+            style="position:absolute;inset:0;width:100%;height:100%;border:0;"
+            allow="accelerometer;gyroscope;autoplay;encrypted-media;picture-in-picture;"
+            allowfullscreen="true"></iframe>
+        </div>
+      </div>
+    </div>
+
     </section>
 
   <div class="divider divider-artist"></div>
@@ -350,7 +376,7 @@
         <h2 class="section-title">Emīls Ašmanis<br><em style="color:#B07320;">aka DJ Roadchanger</em></h2>
         <p>I'm a DJ, saxophonist and flautist based in Riga, Latvia. I play at everything from intimate villa evenings to large corporate galas and international festivals.</p>
         <p>I've performed at Burning Man in Nevada, across Europe, and at some of Latvia's most memorable private events. Every show is different — because every room is different.</p>
-        <div class="about-quote"><p>"Different stage. Same fire."</p></div>
+        <div class="about-quote"><p>"I love to be part of your vision,<br>let's make the magic happen"</p></div>
         <p>I bring my own professional equipment and collaborate with a different kind of live artists for events that need something truly spectacular.<br>Tell me the vision...</p>
         <div style="margin-top:1.75rem;"><a href="#booking" class="btn-outline-light">Get in touch</a></div>
       </div>
@@ -402,13 +428,6 @@
     <div>
       <div class="footer-logo">Roadchanger</div>
       <div class="footer-sub">SIA Mumbai · PVN Nr: LV40203627024 · Reģ. Nr: 40203627024</div>
-    </div>
-    <div class="footer-links">
-      <a href="#services">DJ sets</a>
-      <a href="#services">Live music</a>
-      <a href="fire.html">Fire show</a>
-      <a href="reviews.html">Reviews</a>
-      <a href="book.html">Book now</a>
     </div>
   </footer>
 
