@@ -347,18 +347,25 @@
     <!-- 07 -->
     <div style="max-width:1200px;margin:0 auto;padding:0 2rem 1.5rem;">
       <div class="card-equip" style="display:grid;grid-template-columns:380px 1fr;border-radius:10px;overflow:hidden;border:0.5px solid #E0CCA4;box-shadow:0 4px 18px rgba(44,36,22,0.08);gap:4px;background:#FFFBF5;">
-        <div style="padding:2.5rem;background:#FDF5E6;display:flex;flex-direction:column;justify-content:center;">
+        <div style="padding:2.5rem;background:#FDF5E6;display:flex;flex-direction:column;justify-content:flex-start;">
           <div class="service-name">My Equipment</div>
           <p class="service-desc">Sound System, lights, smoke machines,<br>DJ table, wireless microphones.</p>
         </div>
-        <!-- VIDEO: bunny.net -->
+        <!-- VIDEO: bunny.net — loads last (after the rest of the page) and autoplays muted -->
         <div style="position:relative;width:100%;aspect-ratio:16/9;background:#1E1810;overflow:hidden;">
-          <iframe src="https://iframe.mediadelivery.net/embed/658708/6dbc668d-3945-4cb1-b3d3-299a46fc062c?autoplay=false&loop=false&muted=false&preload=true&responsive=true"
+          <iframe id="equip-video"
+            data-src="https://iframe.mediadelivery.net/embed/658708/6dbc668d-3945-4cb1-b3d3-299a46fc062c?autoplay=true&muted=true&loop=false&preload=false&responsive=true"
             title="My Equipment" loading="lazy"
             style="position:absolute;inset:0;width:100%;height:100%;border:0;"
             allow="accelerometer;gyroscope;autoplay;encrypted-media;picture-in-picture;"
             allowfullscreen="true"></iframe>
         </div>
+        <script>
+          window.addEventListener('load', function () {
+            var v = document.getElementById('equip-video');
+            if (v && v.dataset.src) { v.src = v.dataset.src; }
+          });
+        </script>
       </div>
     </div>
 
