@@ -361,10 +361,21 @@
             allowfullscreen="true"></iframe>
         </div>
         <script>
-          window.addEventListener('load', function () {
+          (function () {
             var v = document.getElementById('equip-video');
-            if (v && v.dataset.src) { v.src = v.dataset.src; }
-          });
+            if (!v || !v.dataset.src) return;
+            function load() { if (!v.src) v.src = v.dataset.src; }
+            if ('IntersectionObserver' in window) {
+              var io = new IntersectionObserver(function (entries) {
+                entries.forEach(function (e) {
+                  if (e.isIntersecting) { load(); io.disconnect(); }
+                });
+              }, { threshold: 0.4 });
+              io.observe(v);
+            } else {
+              window.addEventListener('load', load);
+            }
+          })();
         </script>
       </div>
     </div>
