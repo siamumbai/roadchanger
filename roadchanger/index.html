@@ -207,16 +207,18 @@
       .services .card-equip > div:first-child {          /* teksta bloks: augš/apakš atstarpe vienāda */
         padding: 1.75rem 1.5rem !important;
       }
-      .services .card-equip > div:last-of-type {          /* video bloks: pilns platums, aizpilda rāmi */
+      .services .card-equip > div:last-of-type {          /* video josla: zemāka + video palielināts, lai aizpilda */
+        position: relative !important;
         width: 100% !important;
-        aspect-ratio: 16 / 9 !important;
+        height: 170px !important;
+        aspect-ratio: auto !important;
         overflow: hidden !important;
       }
       .services .card-equip > div:last-of-type iframe {
         position: absolute !important;
         top: 50% !important;
         left: 50% !important;
-        transform: translate(-50%, -50%) scale(1.02) !important;
+        transform: translate(-50%, -50%) scale(1.28) !important;
         width: 100% !important;
         height: 100% !important;
       }
@@ -241,7 +243,7 @@
       <div>
         <p class="hero-tag">Riga, Latvia</p>
         <h1 class="hero-title">DJ<span class="dot">.</span> Saxophone<span class="dot">.</span><br>One performance<span class="dot">.</span></h1>
-        <p class="hero-sub">Live DJ sets with saxophone and flute for corporate events, weddings and private parties.<br>DJ Roadchanger brings the vibe — from spinning dance music on the dancefloor to Burning Man desert energy.</p>
+        <p class="hero-sub">Live DJ sets with saxophone and flute<br>for corporate events, weddings and private parties.<br>DJ Roadchanger brings the vibe — from spinning dance music on the dancefloor to Burning Man desert energy.</p>
         <div class="hero-actions">
           <a href="#services" class="btn-outline-light">See what I do</a>
         </div>
@@ -426,8 +428,8 @@
         <p class="section-tag">The artist</p>
         <h2 class="section-title">Emīls Ašmanis<br><em style="color:#B07320;">aka DJ Roadchanger</em></h2>
         <p>I'm a DJ, saxophonist and flautist based in Riga, Latvia. I play at everything from intimate villa evenings to large corporate galas and international festivals.</p>
-        <p>I've performed at Burning Man in Nevada, across Europe, and at some of Latvia's most memorable private events. Every show is different — because every room is different.</p>
-        <div class="about-quote"><p>"I love to be part of your vision,<br>let's make the magic happen"</p></div>
+        <p>I've performed at Burning Man in Nevada, across Europe, and at some of Latvia's most memorable private events. Every event and show is different.</p>
+        <div class="about-quote"><p>"I would love to be part of your moment,<br>let's make the magic happen"</p></div>
         <p>I bring my own professional equipment and collaborate with a different kind of live artists for events that need something truly spectacular.<br>Tell me the vision...</p>
         <div style="margin-top:1.75rem;"><a href="#booking" class="btn-outline-light">Get in touch</a></div>
       </div>
