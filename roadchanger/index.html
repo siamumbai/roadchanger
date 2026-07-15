@@ -198,8 +198,19 @@
       .card-roses .img-shorter, .card-roses .img-short { height: 240px; }
       .card-roses .img-shorter img { transform: scale(1.2); }
 
-      /* Kartiņa 7 - teksts augša, video zem (1 kolonna) */
-      .services .card-equip { grid-template-columns: 1fr !important; }
+      /* Kartiņa 7 mobilā: teksts augšā, video zem pilnā platumā (kā bildes augšā) */
+      .services .card-equip {
+        display: flex !important;
+        flex-direction: column !important;
+        gap: 0 !important;
+      }
+      .services .card-equip > div:first-child {          /* teksta bloks: augš/apakš atstarpe vienāda */
+        padding: 1.75rem 1.5rem !important;
+      }
+      .services .card-equip > div:last-of-type {          /* video bloks: pilns platums, pareizs izmērs */
+        width: 100% !important;
+        aspect-ratio: 16 / 9 !important;
+      }
     }
   </style>
   </style>
@@ -341,7 +352,7 @@
     <!-- Bringing it all together -->
     <div style="max-width:1200px;margin:0 auto;padding:2.5rem 2rem 1rem;">
       <p class="section-tag">Bringing it all together</p>
-      <h2 class="section-title" style="margin-bottom:0;">Sound and Lights as well?</h2>
+      <h2 class="section-title" style="margin-bottom:0;">Sound and <br class="mobile-br">Lights as well?</h2>
     </div>
 
     <!-- 07 -->
