@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sound &amp; Lights — Roadchanger</title>
+  <meta name="description" content="Sound and lights setup by Roadchanger — full sound system, lights, smoke machines, DJ table and wireless microphones." />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=Lato:wght@300;400&display=swap" rel="stylesheet" />
+
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html, body { height: 100%; }
+    body {
+      background: #1E1810;
+      color: #2C2416;
+      font-family: 'Lato', Arial, sans-serif;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    /* Header - tāds pats kā galvenajā lapā */
+    nav {
+      flex: 0 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1.25rem 3rem;
+      background: #FFFBF5;
+      border-bottom: 0.5px solid #EAD9B8;
+      z-index: 100;
+    }
+    .nav-logo { font-family: 'Libre Baskerville', Georgia, serif; font-size: 16px; font-weight: 700; letter-spacing: 0.08em; color: #2C2416; text-transform: uppercase; text-decoration: none; }
+    .nav-links { display: flex; gap: 2.5rem; }
+    .nav-links a { font-size: 13px; color: #8A6840; text-decoration: none; letter-spacing: 0.05em; }
+    .nav-links a:hover { color: #B07320; }
+    .nav-cta { background: #2C2416; color: #F5ECD8; font-size: 13px; padding: 9px 22px; border-radius: 3px; text-decoration: none; letter-spacing: 0.06em; }
+    .nav-cta:hover { background: #3D3020; }
+
+    /* Video pa visu atlikušo lapu */
+    .video-wrap {
+      flex: 1 1 auto;
+      position: relative;
+      overflow: hidden;
+      background: #1E1810;
+    }
+    .video-wrap video {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    @media (max-width: 768px) {
+      nav { padding: 0.75rem 1rem; }
+      .nav-links { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+  <nav>
+    <a href="/" class="nav-logo">Roadchanger</a>
+    <div class="nav-links">
+      <a href="/dj/">DJ sets</a>
+      <a href="/fire/">Fire show</a>
+      <a href="/#about">About</a>
+    </div>
+    <a href="/#booking" class="nav-cta">Book now</a>
+  </nav>
+
+  <div class="video-wrap">
+    <video id="lights-video"
+      src="https://vz-7bf5e195-7d3.b-cdn.net/6dbc668d-3945-4cb1-b3d3-299a46fc062c/play_720p.mp4"
+      poster="https://vz-7bf5e195-7d3.b-cdn.net/6dbc668d-3945-4cb1-b3d3-299a46fc062c/thumbnail.jpg"
+      autoplay muted loop playsinline preload="auto"></video>
+  </div>
+
+  <script>
+    /* Nodrošina, ka video sākas (daži pārlūki bloķē autoplay bez play() izsaukuma) */
+    (function () {
+      var v = document.getElementById('lights-video');
+      if (!v) return;
+      v.muted = true;
+      var p = v.play();
+      if (p && p.catch) p.catch(function () {});
+    })();
+  </script>
+
+</body>
+</html>
