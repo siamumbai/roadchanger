@@ -15,7 +15,7 @@
     html { scroll-behavior: smooth; }
     body { background: #FFFBF5; color: #2C2416; font-family: 'Lato', Arial, sans-serif; }
 
-    /* Header - tāds pats kā galvenajā lapā */
+    /* Header - tāds pats kā galvenajā lapā (bez Book now) */
     nav {
       display: flex;
       justify-content: space-between;
@@ -31,28 +31,29 @@
     .nav-links { display: flex; gap: 2.5rem; }
     .nav-links a { font-size: 13px; color: #8A6840; text-decoration: none; letter-spacing: 0.05em; }
     .nav-links a:hover { color: #B07320; }
-    .nav-cta { background: #2C2416; color: #F5ECD8; font-size: 13px; padding: 9px 22px; border-radius: 3px; text-decoration: none; letter-spacing: 0.06em; }
-    .nav-cta:hover { background: #3D3020; }
 
-    /* Video - kartiņas platumā, augstums tāds, kāds video dabiski ir */
-    .video-section { max-width: 1200px; margin: 0 auto; padding: 2.5rem 2rem 3rem; }
-    .video-card {
+    /* Video un bildes - kartiņas platumā, augstums dabiskais */
+    .media-section { max-width: 1200px; margin: 0 auto; padding: 2.5rem 2rem 3rem; }
+    .media-card {
       border-radius: 10px;
       overflow: hidden;
       border: 0.5px solid #E0CCA4;
       box-shadow: 0 4px 18px rgba(44,36,22,0.08);
       background: #1E1810;
     }
-    .video-card video {
+    .media-card + .media-card { margin-top: 1.5rem; }
+    .media-card video,
+    .media-card img {
       width: 100%;
-      height: auto;      /* vertikāli tik liels, cik video ir */
+      height: auto;      /* vertikāli tik liels, cik video/bilde ir */
       display: block;
     }
 
     @media (max-width: 768px) {
       nav { padding: 0.75rem 1rem; }
       .nav-links { display: none; }
-      .video-section { padding: 1.5rem 1rem 2rem; }
+      .media-section { padding: 1.5rem 1rem 2rem; }
+      .media-card + .media-card { margin-top: 1rem; }
     }
   </style>
 </head>
@@ -65,15 +66,22 @@
       <a href="/fire/">Fire show</a>
       <a href="/#about">About</a>
     </div>
-    <a href="/#booking" class="nav-cta">Book now</a>
   </nav>
 
-  <div class="video-section">
-    <div class="video-card">
+  <div class="media-section">
+    <div class="media-card">
       <video id="lights-video"
         src="https://vz-7bf5e195-7d3.b-cdn.net/6dbc668d-3945-4cb1-b3d3-299a46fc062c/play_720p.mp4"
         poster="https://vz-7bf5e195-7d3.b-cdn.net/6dbc668d-3945-4cb1-b3d3-299a46fc062c/thumbnail.jpg"
         autoplay muted loop playsinline preload="auto"></video>
+    </div>
+
+    <div class="media-card">
+      <img src="/images/lights1.jpg" alt="Sound and lights setup" />
+    </div>
+
+    <div class="media-card">
+      <img src="/images/lights2.jpg" alt="Sound and lights setup" />
     </div>
   </div>
 
