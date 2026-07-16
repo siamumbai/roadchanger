@@ -12,25 +12,19 @@
 
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
-    html, body { height: 100%; }
-    body {
-      background: #1E1810;
-      color: #2C2416;
-      font-family: 'Lato', Arial, sans-serif;
-      display: flex;
-      flex-direction: column;
-      overflow: hidden;
-    }
+    html { scroll-behavior: smooth; }
+    body { background: #FFFBF5; color: #2C2416; font-family: 'Lato', Arial, sans-serif; }
 
     /* Header - tāds pats kā galvenajā lapā */
     nav {
-      flex: 0 0 auto;
       display: flex;
       justify-content: space-between;
       align-items: center;
       padding: 1.25rem 3rem;
       background: #FFFBF5;
       border-bottom: 0.5px solid #EAD9B8;
+      position: sticky;
+      top: 0;
       z-index: 100;
     }
     .nav-logo { font-family: 'Libre Baskerville', Georgia, serif; font-size: 16px; font-weight: 700; letter-spacing: 0.08em; color: #2C2416; text-transform: uppercase; text-decoration: none; }
@@ -40,25 +34,25 @@
     .nav-cta { background: #2C2416; color: #F5ECD8; font-size: 13px; padding: 9px 22px; border-radius: 3px; text-decoration: none; letter-spacing: 0.06em; }
     .nav-cta:hover { background: #3D3020; }
 
-    /* Video pa visu atlikušo lapu */
-    .video-wrap {
-      flex: 1 1 auto;
-      position: relative;
+    /* Video - kartiņas platumā, augstums tāds, kāds video dabiski ir */
+    .video-section { max-width: 1200px; margin: 0 auto; padding: 2.5rem 2rem 3rem; }
+    .video-card {
+      border-radius: 10px;
       overflow: hidden;
+      border: 0.5px solid #E0CCA4;
+      box-shadow: 0 4px 18px rgba(44,36,22,0.08);
       background: #1E1810;
     }
-    .video-wrap video {
-      position: absolute;
-      inset: 0;
+    .video-card video {
       width: 100%;
-      height: 100%;
-      object-fit: cover;
+      height: auto;      /* vertikāli tik liels, cik video ir */
       display: block;
     }
 
     @media (max-width: 768px) {
       nav { padding: 0.75rem 1rem; }
       .nav-links { display: none; }
+      .video-section { padding: 1.5rem 1rem 2rem; }
     }
   </style>
 </head>
@@ -74,11 +68,13 @@
     <a href="/#booking" class="nav-cta">Book now</a>
   </nav>
 
-  <div class="video-wrap">
-    <video id="lights-video"
-      src="https://vz-7bf5e195-7d3.b-cdn.net/6dbc668d-3945-4cb1-b3d3-299a46fc062c/play_720p.mp4"
-      poster="https://vz-7bf5e195-7d3.b-cdn.net/6dbc668d-3945-4cb1-b3d3-299a46fc062c/thumbnail.jpg"
-      autoplay muted loop playsinline preload="auto"></video>
+  <div class="video-section">
+    <div class="video-card">
+      <video id="lights-video"
+        src="https://vz-7bf5e195-7d3.b-cdn.net/6dbc668d-3945-4cb1-b3d3-299a46fc062c/play_720p.mp4"
+        poster="https://vz-7bf5e195-7d3.b-cdn.net/6dbc668d-3945-4cb1-b3d3-299a46fc062c/thumbnail.jpg"
+        autoplay muted loop playsinline preload="auto"></video>
+    </div>
   </div>
 
   <script>
