@@ -23,7 +23,7 @@
 
     .fire-section { padding: 5rem 3rem 2rem; width: 100%; }
     .fire-inner-wrap { max-width: 1200px; margin: 0 auto; padding: 0 3rem; }
-    .fire-big-wrap { margin-top: 4rem; }
+    .fire-big-wrap { grid-column: 1 / -1; }
     .fire-inner { display: grid; grid-template-columns: 1fr 1fr; gap: 3rem; max-width: 1200px; margin: 0 auto; align-items: start; }
     .fire-video { aspect-ratio: 16/9; border-radius: 6px; overflow: hidden; box-shadow: 0 4px 18px rgba(44,36,22,0.08); }
     .fire-video iframe { width: 100%; height: 100%; border: none; }
@@ -38,7 +38,7 @@
     .bullet-column { display: flex; flex-direction: column; gap: 0.2rem; }
 
     /* Text + Images Layout */
-    .fire-content-wrapper { display: grid; grid-template-columns: 1fr 1.2fr; gap: 3rem; align-items: start; }
+    .fire-content-wrapper { display: grid; grid-template-columns: 1fr 1.2fr; column-gap: 3rem; row-gap: 0.75rem; align-items: start; }
     .fire-text { }
     .fire-text-h2 { margin-bottom: 1.5rem; }
     .fire-text-p { line-height: 1.9; }
@@ -90,13 +90,14 @@
         grid-column: 2;
         grid-row: 2;
       }
-      .fire-content-wrapper { grid-template-columns: 1fr; gap: 2rem; }
+      .fire-content-wrapper { grid-template-columns: 1fr; gap: 0.75rem; }
+      .fire-text { order: 1; margin-bottom: 1rem; }
+      .fire-big-wrap { order: 2; }
       .fire-text-h2 { margin-bottom: 0.3rem; }
       .fire-text-p { line-height: 1.4; }
       .mobile-br { display: inline; }
       .section-divider { display: none; }
-      .fire-images-grid { grid-template-columns: repeat(2, 1fr); }
-      .fire-big-wrap { margin-top: 0.75rem; }
+      .fire-images-grid { grid-template-columns: repeat(2, 1fr); order: 3; }
       .contact-section { padding: 3rem 0.5rem; }
       .contact-wrapper { grid-template-columns: 1fr; gap: 2rem; }
       footer { padding: 0.5rem; flex-direction: column; align-items: flex-start; }
@@ -107,8 +108,8 @@
       nav { padding: 0.75rem 1rem; }
       .fire-section { padding: 2rem 1rem; }
       .fire-bullets { font-size: 13px; gap: 0.3rem 1.5rem; }
+      .fire-content-wrapper { gap: 0.5rem; }
       .fire-images-grid { grid-template-columns: repeat(2, 1fr); gap: 0.5rem; }
-      .fire-big-wrap { margin-top: 0.5rem; }
     }
   </style>
 </head>
@@ -200,13 +201,13 @@
             <img src="../images/fs6.jpg" alt="Fire show">
           </div>
         </div>
-      </div>
-    </div>
 
-    <!-- LIELĀ BILDE (tik pat plata kā video, augstums dabiskais) -->
-    <div class="fire-inner-wrap fire-big-wrap">
-      <div style="border-radius: 6px; overflow: hidden; box-shadow: 0 4px 18px rgba(44,36,22,0.08);">
-        <img src="../images/bigfire1.jpg" alt="Fire show" style="width: 100%; height: auto; display: block;">
+        <!-- LIELĀ BILDE (pilnā platumā) -->
+        <div class="fire-big-wrap">
+          <div style="border-radius: 6px; overflow: hidden; box-shadow: 0 4px 18px rgba(44,36,22,0.08);">
+            <img src="../images/bigfire1.jpg" alt="Fire show" style="width: 100%; height: auto; display: block;">
+          </div>
+        </div>
       </div>
     </div>
   </section>
