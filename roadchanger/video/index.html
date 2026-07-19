@@ -42,19 +42,13 @@
       display: grid;
       grid-template-columns: minmax(0, 0.82fr) minmax(0, 1.18fr);
       gap: 2.25rem;
-      align-items: center;
+      align-items: start;
       background: #FFFBF5;
       border: 0.5px solid #E0CCA4;
       border-radius: 14px;
       box-shadow: 0 4px 18px rgba(44, 36, 22, 0.08);
       padding: clamp(1.5rem, 2.5vw, 2.25rem);
       overflow: hidden;
-    }
-    .vcard-num {
-      display: block;
-      font-family: 'Libre Baskerville', Georgia, serif;
-      font-size: 14px; font-weight: 700; letter-spacing: 0.15em;
-      color: #B07320; margin-bottom: 0.9rem;
     }
     .vcard-title {
       font-family: 'Libre Baskerville', Georgia, serif;
@@ -91,14 +85,15 @@
     .play svg { width: 24px; height: 24px; margin-left: 3px; fill: #fff; }
     .facade:focus-visible { outline: 3px solid #8F5C15; outline-offset: 3px; }
 
-    /* Footer — Roadchanger wordmark + company line */
-    footer { border-top: 0.5px solid #EAD9B8; padding: 2rem; text-align: center; }
+    /* Footer — dark band, matching the other pages */
+    footer { background: #1D1810; padding: 2.5rem 0; }
+    .footer-inner { max-width: 1080px; margin: 0 auto; padding: 0 2rem; }
     .footer-logo {
       font-family: 'Libre Baskerville', Georgia, serif;
-      font-size: 16px; font-weight: 700; letter-spacing: 0.08em;
-      color: #2C2416; text-transform: uppercase; margin-bottom: 0.4rem;
+      font-size: 22px; font-weight: 700; letter-spacing: 0.1em;
+      color: #BEA171; text-transform: uppercase; margin-bottom: 0.55rem;
     }
-    .footer-sub { font-size: 12px; font-weight: 300; color: #7A5C38; letter-spacing: 0.02em; }
+    .footer-sub { font-size: 13px; font-weight: 300; color: #6B5239; letter-spacing: 0.02em; }
 
     /* Mobile: text on top, video full width below (like the main page cards) */
     @media (max-width: 768px) {
@@ -108,6 +103,9 @@
       .vcard-text { padding: 1.75rem 1.5rem 1.5rem; }
       .vcard-title { font-size: 22px; }
       .frame { border-radius: 0; }
+      footer { padding: 2rem 0; }
+      .footer-inner { padding: 0 1.5rem; }
+      .footer-logo { font-size: 20px; }
     }
 
     @media (prefers-reduced-motion: reduce) {
@@ -126,9 +124,8 @@
 
     <article class="vcard">
       <div class="vcard-text">
-        <span class="vcard-num">01</span>
         <h2 class="vcard-title">Monk Echo</h2>
-        <p class="vcard-desc">A slow-building live set — hypnotic, meditative grooves that rise from a calm opening into full-room energy.</p>
+        <p class="vcard-desc">This is video I made for company who sells music instrument. I made story, directed, filmed, edited.</p>
       </div>
       <div class="frame">
         <button class="facade" type="button" data-id="-5ydRSSxoSk" aria-label="Play Monk Echo">
@@ -142,9 +139,8 @@
 
     <article class="vcard">
       <div class="vcard-text">
-        <span class="vcard-num">02</span>
         <h2 class="vcard-title">Iron Haya 3x3</h2>
-        <p class="vcard-desc">High-energy and precise, driven by a relentless rhythm. A bold, percussive performance made for peak moments.</p>
+        <p class="vcard-desc">This is video I made for company who made a vehicle. I made story, directed, filmed, edited.</p>
       </div>
       <div class="frame">
         <button class="facade" type="button" data-id="BzWU7PHq4dk" aria-label="Play Iron Haya 3x3">
@@ -159,8 +155,10 @@
   </main>
 
   <footer>
-    <div class="footer-logo">Roadchanger</div>
-    <div class="footer-sub">SIA Mumbai · PVN Nr: LV40203627024 · Reģ. Nr: 40203627024</div>
+    <div class="footer-inner">
+      <div class="footer-logo">Roadchanger</div>
+      <div class="footer-sub">SIA Mumbai · PVN Nr: LV40203627024 · Reģ. Nr: 40203627024</div>
+    </div>
   </footer>
 
   <script>
