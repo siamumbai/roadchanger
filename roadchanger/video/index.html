@@ -1,188 +1,166 @@
 <!DOCTYPE html>
-<html lang="lv">
+<html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Emīls Ašmanis video portfolio</title>
-  <meta name="description" content="Emīla Ašmaņa video portfolio — roadchanger.com" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>roadchanger video</title>
+  <meta name="description" content="Video portfolio — Roadchanger." />
 
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,400;9..144,500&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=Lato:wght@300;400&display=swap" rel="stylesheet" />
 
   <style>
-    :root{
-      --bg:#F4EEE4;
-      --ink:#2A241E;
-      --muted:#7A6C5C;
-      --accent:#B07320;
-      --accent-dark:#8F5C15;
-      --line:rgba(42,36,30,.12);
-      --shadow:0 18px 40px -18px rgba(42,36,30,.35);
-      --radius:14px;
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body { background: #FFFBF5; color: #2C2416; font-family: 'Lato', Arial, sans-serif; }
+
+    /* Header — same as /rider/ (logo only, links home) */
+    nav {
+      display: flex;
+      align-items: center;
+      padding: 1.25rem 3rem;
+      background: #FFFBF5;
+      border-bottom: 0.5px solid #EAD9B8;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    .nav-logo {
+      font-family: 'Libre Baskerville', Georgia, serif;
+      font-size: 16px; font-weight: 700; letter-spacing: 0.08em;
+      color: #2C2416; text-transform: uppercase; text-decoration: none;
     }
 
-    *,*::before,*::after{ box-sizing:border-box; }
+    /* Video cards */
+    .videos {
+      max-width: 1080px; margin: 0 auto;
+      padding: 2.75rem 2rem 3.5rem;
+      display: flex; flex-direction: column; gap: 2rem;
+    }
+    .vcard {
+      display: grid;
+      grid-template-columns: minmax(0, 0.82fr) minmax(0, 1.18fr);
+      gap: 2.25rem;
+      align-items: center;
+      background: #FFFBF5;
+      border: 0.5px solid #E0CCA4;
+      border-radius: 14px;
+      box-shadow: 0 4px 18px rgba(44, 36, 22, 0.08);
+      padding: clamp(1.5rem, 2.5vw, 2.25rem);
+      overflow: hidden;
+    }
+    .vcard-num {
+      display: block;
+      font-family: 'Libre Baskerville', Georgia, serif;
+      font-size: 14px; font-weight: 700; letter-spacing: 0.15em;
+      color: #B07320; margin-bottom: 0.9rem;
+    }
+    .vcard-title {
+      font-family: 'Libre Baskerville', Georgia, serif;
+      font-size: 28px; font-weight: 700; color: #2C2416;
+      line-height: 1.2; margin-bottom: 0.75rem;
+    }
+    .vcard-desc { font-size: 15px; font-weight: 300; color: #7A5C38; line-height: 1.75; }
 
-    /* Root font scales gently with the viewport, and everything below is in
-       rem — so the whole layout keeps the same proportions across screen
-       sizes and browser zoom, instead of just reflowing. */
-    html{
-      font-size: clamp(15px, 0.5vw + 13.2px, 18px);
-      -webkit-text-size-adjust:100%;
+    /* Video frame — plays in-page, never leaves for YouTube */
+    .frame {
+      position: relative; aspect-ratio: 16 / 9; width: 100%;
+      border-radius: 10px; overflow: hidden; background: #000;
     }
+    .frame iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; display: block; }
 
-    body{
-      margin:0;
-      background:var(--bg);
-      color:var(--ink);
-      font-family:"Inter",system-ui,-apple-system,"Segoe UI",sans-serif;
-      line-height:1.55;
-      -webkit-font-smoothing:antialiased;
+    .facade {
+      position: absolute; inset: 0; width: 100%; height: 100%;
+      margin: 0; padding: 0; border: 0; cursor: pointer; background: #000; display: block;
     }
+    .facade img {
+      position: absolute; inset: 0; width: 100%; height: 100%;
+      object-fit: cover; display: block;
+      transition: transform .5s ease, opacity .3s ease;
+    }
+    .facade:hover img { transform: scale(1.04); opacity: .85; }
+    .play {
+      position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+      width: 64px; height: 64px; border-radius: 50%;
+      background: #B07320; display: grid; place-items: center;
+      box-shadow: 0 10px 30px -6px rgba(0, 0, 0, .5);
+      transition: transform .25s ease, background .25s ease;
+    }
+    .facade:hover .play { transform: translate(-50%, -50%) scale(1.08); background: #8F5C15; }
+    .play svg { width: 24px; height: 24px; margin-left: 3px; fill: #fff; }
+    .facade:focus-visible { outline: 3px solid #8F5C15; outline-offset: 3px; }
 
-    a{ color:inherit; }
+    /* Footer — Roadchanger wordmark + company line */
+    footer { border-top: 0.5px solid #EAD9B8; padding: 2rem; text-align: center; }
+    .footer-logo {
+      font-family: 'Libre Baskerville', Georgia, serif;
+      font-size: 16px; font-weight: 700; letter-spacing: 0.08em;
+      color: #2C2416; text-transform: uppercase; margin-bottom: 0.4rem;
+    }
+    .footer-sub { font-size: 12px; font-weight: 300; color: #7A5C38; letter-spacing: 0.02em; }
 
-    .wrap{ width:min(92%,68rem); margin-inline:auto; }
-
-    /* Header */
-    .site-head{ padding: clamp(1.1rem,2.5vw,1.8rem) 0; }
-    .brand{
-      display:inline-flex; align-items:center; gap:.5rem;
-      font-weight:600; letter-spacing:.14em; text-transform:uppercase;
-      font-size:.78rem; text-decoration:none; color:var(--muted);
-      transition:color .2s ease;
-    }
-    .brand::before{ content:"←"; font-size:.9em; }
-    .brand:hover{ color:var(--accent); }
-
-    /* Intro */
-    .intro{
-      padding: clamp(1.6rem,5vw,4rem) 0 clamp(1.6rem,4vw,3rem);
-      border-bottom:1px solid var(--line);
-    }
-    .eyebrow{
-      margin:0 0 clamp(.6rem,1.5vw,1rem);
-      font-weight:600; letter-spacing:.32em; text-transform:uppercase;
-      font-size:clamp(.64rem,1.4vw,.72rem); color:var(--accent);
-    }
-    .name{
-      margin:0;
-      font-family:"Fraunces",Georgia,serif;
-      font-weight:400;
-      font-size:clamp(2.6rem,8vw,5.4rem);
-      line-height:1.02; letter-spacing:-.01em;
-    }
-
-    /* Gallery */
-    .gallery{ padding: clamp(1.8rem,5vw,3.6rem) 0 clamp(2.5rem,7vw,5rem); }
-    .video-grid{
-      display:grid;
-      grid-template-columns:repeat(auto-fit,minmax(min(100%,28rem),1fr));
-      gap: clamp(1.2rem,3vw,2.4rem);
-    }
-    .video{ margin:0; }
-
-    .frame{
-      position:relative;
-      aspect-ratio:16/9;      /* keeps every video proportional at any size */
-      width:100%;
-      border-radius:var(--radius);
-      overflow:hidden;
-      background:#000;
-      box-shadow:var(--shadow);
-    }
-    .frame iframe{
-      position:absolute; inset:0; width:100%; height:100%; border:0; display:block;
-    }
-
-    /* Click-to-play cover — video plays here on the page, not on YouTube */
-    .facade{
-      position:absolute; inset:0; width:100%; height:100%;
-      margin:0; padding:0; border:0; cursor:pointer; background:#000; display:block;
-    }
-    .facade img{
-      position:absolute; inset:0; width:100%; height:100%;
-      object-fit:cover; display:block;
-      transition:transform .5s ease, opacity .3s ease;
-    }
-    .facade:hover img{ transform:scale(1.04); opacity:.85; }
-    .play{
-      position:absolute; top:50%; left:50%; transform:translate(-50%,-50%);
-      width:clamp(3.6rem,9vw,4.8rem); aspect-ratio:1; border-radius:50%;
-      background:var(--accent); display:grid; place-items:center;
-      box-shadow:0 10px 30px -6px rgba(0,0,0,.5);
-      transition:transform .25s ease, background .25s ease;
-    }
-    .facade:hover .play{ transform:translate(-50%,-50%) scale(1.08); background:var(--accent-dark); }
-    .play svg{ width:38%; height:38%; margin-left:8%; fill:#fff; }
-    .facade:focus-visible{ outline:3px solid var(--accent-dark); outline-offset:3px; }
-
-    /* Footer */
-    footer{
-      padding: clamp(1.4rem,3vw,2.2rem) 0 clamp(2rem,4vw,3rem);
-      border-top:1px solid var(--line);
-      font-size:.8rem; color:var(--muted); letter-spacing:.02em;
+    /* Mobile: text on top, video full width below (like the main page cards) */
+    @media (max-width: 768px) {
+      nav { padding: 0.75rem 1rem; }
+      .videos { padding: 1.5rem 1rem 2.5rem; gap: 1.5rem; }
+      .vcard { grid-template-columns: 1fr; gap: 0; padding: 0; }
+      .vcard-text { padding: 1.75rem 1.5rem 1.5rem; }
+      .vcard-title { font-size: 22px; }
+      .frame { border-radius: 0; }
     }
 
-    @media (prefers-reduced-motion:reduce){
-      *{ transition:none !important; }
-      .facade:hover img{ transform:none; }
+    @media (prefers-reduced-motion: reduce) {
+      * { transition: none !important; }
+      .facade:hover img { transform: none; }
     }
   </style>
 </head>
 <body>
-  <header class="site-head">
-    <div class="wrap">
-      <a class="brand" href="/">roadchanger.com</a>
-    </div>
-  </header>
 
-  <main>
-    <section class="intro">
-      <div class="wrap">
-        <p class="eyebrow">Video portfolio</p>
-        <h1 class="name">Emīls Ašmanis</h1>
+  <nav>
+    <a href="https://roadchanger.com/" class="nav-logo">Roadchanger</a>
+  </nav>
+
+  <main class="videos">
+
+    <article class="vcard">
+      <div class="vcard-text">
+        <span class="vcard-num">01</span>
+        <h2 class="vcard-title">Monk Echo</h2>
+        <p class="vcard-desc">A slow-building live set — hypnotic, meditative grooves that rise from a calm opening into full-room energy.</p>
       </div>
-    </section>
-
-    <section class="gallery">
-      <div class="wrap">
-        <div class="video-grid">
-
-          <figure class="video">
-            <div class="frame">
-              <button class="facade" type="button" data-id="-5ydRSSxoSk" aria-label="Atskaņot 1. video">
-                <img src="https://i.ytimg.com/vi/-5ydRSSxoSk/maxresdefault.jpg"
-                     onerror="this.onerror=null;this.src='https://i.ytimg.com/vi/-5ydRSSxoSk/hqdefault.jpg';"
-                     alt="Video priekšskatījums" loading="lazy" />
-                <span class="play" aria-hidden="true">
-                  <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
-                </span>
-              </button>
-            </div>
-          </figure>
-
-          <figure class="video">
-            <div class="frame">
-              <button class="facade" type="button" data-id="BzWU7PHq4dk" aria-label="Atskaņot 2. video">
-                <img src="https://i.ytimg.com/vi/BzWU7PHq4dk/maxresdefault.jpg"
-                     onerror="this.onerror=null;this.src='https://i.ytimg.com/vi/BzWU7PHq4dk/hqdefault.jpg';"
-                     alt="Video priekšskatījums" loading="lazy" />
-                <span class="play" aria-hidden="true">
-                  <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
-                </span>
-              </button>
-            </div>
-          </figure>
-
-        </div>
+      <div class="frame">
+        <button class="facade" type="button" data-id="-5ydRSSxoSk" aria-label="Play Monk Echo">
+          <img src="https://i.ytimg.com/vi/-5ydRSSxoSk/maxresdefault.jpg"
+               onerror="this.onerror=null;this.src='https://i.ytimg.com/vi/-5ydRSSxoSk/hqdefault.jpg';"
+               alt="Monk Echo — video preview" loading="lazy" />
+          <span class="play" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></span>
+        </button>
       </div>
-    </section>
+    </article>
+
+    <article class="vcard">
+      <div class="vcard-text">
+        <span class="vcard-num">02</span>
+        <h2 class="vcard-title">Iron Haya 3x3</h2>
+        <p class="vcard-desc">High-energy and precise, driven by a relentless rhythm. A bold, percussive performance made for peak moments.</p>
+      </div>
+      <div class="frame">
+        <button class="facade" type="button" data-id="BzWU7PHq4dk" aria-label="Play Iron Haya 3x3">
+          <img src="https://i.ytimg.com/vi/BzWU7PHq4dk/maxresdefault.jpg"
+               onerror="this.onerror=null;this.src='https://i.ytimg.com/vi/BzWU7PHq4dk/hqdefault.jpg';"
+               alt="Iron Haya 3x3 — video preview" loading="lazy" />
+          <span class="play" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></span>
+        </button>
+      </div>
+    </article>
+
   </main>
 
   <footer>
-    <div class="wrap">© <span id="yr"></span> roadchanger.com</div>
+    <div class="footer-logo">Roadchanger</div>
+    <div class="footer-sub">SIA Mumbai · PVN Nr: LV40203627024 · Reģ. Nr: 40203627024</div>
   </footer>
 
   <script>
@@ -196,13 +174,12 @@
         iframe.setAttribute('allow',
           'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share');
         iframe.setAttribute('allowfullscreen', '');
-        var frame = btn.parentNode;   // .frame
+        var frame = btn.parentNode;
         frame.innerHTML = '';
         frame.appendChild(iframe);
       });
     });
-
-    document.getElementById('yr').textContent = new Date().getFullYear();
   </script>
+
 </body>
 </html>
