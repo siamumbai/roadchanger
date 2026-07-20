@@ -85,15 +85,14 @@
     .play svg { width: 24px; height: 24px; margin-left: 3px; fill: #fff; }
     .facade:focus-visible { outline: 3px solid #8F5C15; outline-offset: 3px; }
 
-    /* Footer — dark band, matching the other pages */
-    footer { background: #1D1810; padding: 2.5rem 0; }
-    .footer-inner { max-width: 1080px; margin: 0 auto; padding: 0 2rem; }
+    /* Footer — dark band, wordmark tucked to the edge like the other pages */
+    footer { background: #1D1810; padding: 1.75rem 3rem; }
     .footer-logo {
       font-family: 'Libre Baskerville', Georgia, serif;
-      font-size: 22px; font-weight: 700; letter-spacing: 0.1em;
-      color: #BEA171; text-transform: uppercase; margin-bottom: 0.55rem;
+      font-size: 15px; font-weight: 700; letter-spacing: 0.1em;
+      color: #BEA171; text-transform: uppercase; margin-bottom: 0.35rem;
     }
-    .footer-sub { font-size: 13px; font-weight: 300; color: #6B5239; letter-spacing: 0.02em; }
+    .footer-sub { font-size: 11px; font-weight: 300; color: #6B5239; letter-spacing: 0.02em; }
 
     /* Mobile: text on top, video full width below (like the main page cards) */
     @media (max-width: 768px) {
@@ -103,9 +102,8 @@
       .vcard-text { padding: 1.75rem 1.5rem 1.5rem; }
       .vcard-title { font-size: 22px; }
       .frame { border-radius: 0; }
-      footer { padding: 2rem 0; }
-      .footer-inner { padding: 0 1.5rem; }
-      .footer-logo { font-size: 20px; }
+      footer { padding: 1.5rem 1.5rem; }
+      .footer-logo { font-size: 14px; }
     }
 
     @media (prefers-reduced-motion: reduce) {
@@ -152,25 +150,44 @@
       </div>
     </article>
 
+    <article class="vcard">
+      <div class="vcard-text">
+        <h2 class="vcard-title">Realestate: Santa Barbara, California</h2>
+        <p class="vcard-desc">This is video I made for a real estate company. I made story, directed, filmed, edited.</p>
+      </div>
+      <div class="frame">
+        <button class="facade" type="button" data-vimeo="983088624" data-h="d37214fada" aria-label="Play Realestate: Santa Barbara, California">
+          <img src="https://i.vimeocdn.com/video/1898493756-4fceb3754e88bf1c85d7761e46f0fc45d058f57955260c9aee2fa0e62d2ad127-d_1280?region=us"
+               onerror="this.onerror=null;this.src='https://i.vimeocdn.com/video/1898493756-4fceb3754e88bf1c85d7761e46f0fc45d058f57955260c9aee2fa0e62d2ad127-d_2400?region=us';"
+               alt="Realestate: Santa Barbara, California — video preview" loading="lazy" />
+          <span class="play" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></span>
+        </button>
+      </div>
+    </article>
+
   </main>
 
   <footer>
-    <div class="footer-inner">
-      <div class="footer-logo">Roadchanger</div>
-      <div class="footer-sub">SIA Mumbai · PVN Nr: LV40203627024 · Reģ. Nr: 40203627024</div>
-    </div>
+    <div class="footer-logo">Roadchanger</div>
+    <div class="footer-sub">SIA Mumbai · PVN Nr: LV40203627024 · Reģ. Nr: 40203627024</div>
   </footer>
 
   <script>
     document.querySelectorAll('.facade').forEach(function (btn) {
       btn.addEventListener('click', function () {
-        var id = btn.getAttribute('data-id');
         var iframe = document.createElement('iframe');
-        iframe.src = 'https://www.youtube-nocookie.com/embed/' + id +
-                     '?autoplay=1&rel=0&modestbranding=1&playsinline=1';
+        var vimeo = btn.getAttribute('data-vimeo');
+        if (vimeo) {
+          iframe.src = 'https://player.vimeo.com/video/' + vimeo +
+                       '?h=' + btn.getAttribute('data-h') +
+                       '&autoplay=1&title=0&byline=0&portrait=0';
+        } else {
+          iframe.src = 'https://www.youtube-nocookie.com/embed/' + btn.getAttribute('data-id') +
+                       '?autoplay=1&rel=0&modestbranding=1&playsinline=1';
+        }
         iframe.setAttribute('title', 'Video');
         iframe.setAttribute('allow',
-          'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share');
+          'accelerometer; autoplay; clipboard-write; encrypted-media; fullscreen; gyroscope; picture-in-picture; web-share');
         iframe.setAttribute('allowfullscreen', '');
         var frame = btn.parentNode;
         frame.innerHTML = '';
