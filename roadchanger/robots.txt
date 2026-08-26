@@ -1,0 +1,9 @@
+# roadchanger.com — search engines and AI crawlers are welcome.
+# /video/ and /thanks are private pages, please do not index them.
+
+User-agent: *
+Allow: /
+Disallow: /video/
+Disallow: /thanks
+
+Sitemap: https://roadchanger.com/sitemap.xml

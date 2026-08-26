@@ -47,7 +47,7 @@
 - `/fire/` — fire show lapa (6 bilžu režģis + lielā bilde `bigfire1.jpg`, Get in touch).
 - `/rider/` — "Technical Rider": headeris tikai ar Roadchanger logo (→ /), virsraksts, bilde `rider1.jpg`, zem bildes centrēts "If you have any questions please call +371 20031578" (zvanāms `tel:` links).
 - `/lights/` — aparatūras lapa (Sound System, lights, smoke machines, DJ table, wireless microphones).
-- `/video/` — video portfolio (2 YouTube kartiņas: "Monk Echo" un "Iron Haya 3x3", iegultie atskaņotāji ar youtube-nocookie, headeris/footeris kā /rider/). Pārbaudīts 2026-08-13: jaunākā versija IR dzīvajā lapā; linka galvenajā navigācijā joprojām nav.
+- `/video/` — video portfolio (2 YouTube kartiņas: "Monk Echo" un "Iron Haya 3x3", iegultie atskaņotāji ar youtube-nocookie, headeris/footeris kā /rider/). **SLĒPTA lapa pēc lietotāja lēmuma (2026-08-26): nav linka navigācijā, `noindex` meta, izslēgta no sitemap, aizliegta robots.txt.** Lietotājs to sūta klientiem pats kā privātu portfolio — nekad nelikt navigācijā un neindeksēt.
 - `/thanks` — pateicības lapa pēc formas nosūtīšanas ("Thanks! The form was submitted successfully..." + Go back poga uz galveno lapu).
 
 ## Navigācija (galvenā lapa)
@@ -70,6 +70,13 @@ Logo "Roadchanger" → `/` · DJ sets → `/dj/` · Fire show → `/fire/` · Ab
 
 hero.jpg · ddj1.jpg · m-ddj1.1.jpg · m-ddj1.2.jpg · ddj2.jpg · fire1.jpg · fire3.jpg · piano1.jpg · piano2.jpg · characters1.jpg · characters2.jpg · eyes1.jpg · eyes2.jpg · paint1.jpg · paint2.jpg · about.jpg · rider1.jpg · bigfire1.jpg
 Jaunām bildēm nosaukumus dod lietotājs — vienmēr pajautā vai apstiprini precīzu faila nosaukumu.
+
+## SEO un AI redzamība (uzlikts 2026-08-26)
+
+- Katrai lapai `<head>` daļā: pilnvērtīgs `<title>`, canonical, Open Graph tagi; galvenajai lapai arī JSON-LD (`LocalBusiness`). Redzamo dizainu un tekstus tas nemaina.
+- Saknē: `robots.txt` (atļauj visus rāpuļus, aizliedz /video/ un /thanks), `sitemap.xml` (visas lapas bez /video/ un /thanks), `llms.txt` (faktu kopsavilkums AI rīkiem).
+- `/video/` un `/thanks` ir `noindex` — tā tam jāpaliek.
+- Google Search Console verifikācijas meta tags ir galvenajā, /dj/ un /fire/ lapā.
 
 ## Hostings un publicēšana
 
