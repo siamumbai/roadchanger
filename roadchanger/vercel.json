@@ -1,0 +1,15 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "redirects": [
+    {
+      "source": "/review",
+      "destination": "https://g.page/r/CZjQXSVaRA0PEBM/review",
+      "statusCode": 307
+    },
+    {
+      "source": "/review/",
+      "destination": "https://g.page/r/CZjQXSVaRA0PEBM/review",
+      "statusCode": 307
+    }
+  ]
+}

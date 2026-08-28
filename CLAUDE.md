@@ -48,7 +48,7 @@
 - `/rider/` — "Technical Rider": headeris tikai ar Roadchanger logo (→ /), virsraksts, bilde `rider1.jpg`, zem bildes centrēts "If you have any questions please call +371 20031578" (zvanāms `tel:` links).
 - `/lights/` — aparatūras lapa (Sound System, lights, smoke machines, DJ table, wireless microphones).
 - `/video/` — video portfolio (2 YouTube kartiņas: "Monk Echo" un "Iron Haya 3x3", iegultie atskaņotāji ar youtube-nocookie, headeris/footeris kā /rider/). **SLĒPTA lapa pēc lietotāja lēmuma (2026-08-26): nav linka navigācijā, `noindex` meta, izslēgta no sitemap, aizliegta robots.txt.** Lietotājs to sūta klientiem pats kā privātu portfolio — nekad nelikt navigācijā un neindeksēt.
-- `/review/` — **īsā saite atsauksmēm.** Tikai redirects uz Google atsauksmes formu (meta refresh + poga + JS — visas trīs saites identiskas). `noindex`, nav sitemap. Šo saiti lietotājs sūta klientiem pēc pasākuma.
+- `/review/` — **īsā saite atsauksmēm.** Pāradresē uz Google atsauksmes formu ar **HTTP 307** (`roadchanger/vercel.json`). `review/index.html` paliek kā rezerves slānis (meta refresh + poga + JS), ja konfigurācija kādreiz pazustu — Vercel redirects nostrādā pirms failiem, tāpēc parasti to nemaz nepasniedz. `noindex`, nav sitemap. Šo saiti lietotājs sūta klientiem pēc pasākuma.
 - `/reviews/` — atlasītas Google atsauksmes kā **statisks HTML** + poga uz pilno Google profilu + poga uz `/review/`.
 - `/projects/` — projektu saraksts; katrs projekts savā mapē `/projects/<slug>/index.html`.
 - `/thanks` — pateicības lapa pēc formas nosūtīšanas ("Thanks! The form was submitted successfully..." + Go back poga uz galveno lapu).
@@ -98,7 +98,7 @@ Perplexity tās var izlasīt.
 
 | Kur | Saite |
 |---|---|
-| Atsauksmes forma | `https://g.page/r/CZjQXSVaRA0PEBM/review` — `review/index.html`, 3 vietas (meta refresh, poga, JS). Visām trim jābūt identiskām. |
+| Atsauksmes forma | `https://g.page/r/CZjQXSVaRA0PEBM/review` — **4 vietas:** `roadchanger/vercel.json` (307, galvenais ceļš) + `review/index.html` 3 vietas (meta refresh, poga, JS — rezerves slānis). Mainot saiti, jāmaina visas 4. |
 | Profils | `https://www.google.com/maps?cid=1084598239230808216` — `reviews/index.html` 3 vietas (JSON-LD `sameAs`, atsauksmes šablona avota links, CTA poga) un `llms.txt`. |
 
 Place ID (ftid): `0x683462df9b5d4397:0xf0d445a255dd098` → CID decimālā: `1084598239230808216`.
@@ -126,6 +126,11 @@ un pastāvīgs, īsinājums ir redirect. Abi noved uz to pašu profilu.
 - **Vercel** ar custom domēnu `roadchanger.com` (apex bez www; `www` pāradresējas caur `cname.vercel-dns.com`). Pārbaudīts 2026-08-13 — lapa VAIRS NAV GitHub Pages.
 - Vercel automātiski publicē no GitHub repo `siamumbai/roadchanger` `main` branch (saturs — `roadchanger/` apakšmapē).
 - Tātad publicēšana = `git push` uz `main`. Nekādu papildu deploy soļu nav.
+- **`vercel.json` dzīvo `roadchanger/vercel.json`, NE repo saknē.** Vercel Root Directory ir
+  `roadchanger/` — saknē liktu failu Vercel vienkārši neredzētu (pārbaudīts: roadchanger.com/CLAUDE.md → 404).
+- Tajā ir tikai `redirects` (nekādu `cleanUrls`/`trailingSlash` — tie mainītu esošo URL uzvedību).
+- Atsauksmju pāradresācija ir **307**, nevis 301/308. Pastāvīgu pāradresāciju pārlūki kešo ilgi:
+  ja Google saite kādreiz mainītos, klienti ar iekešotu 301 uz jauno vairs netiktu.
 
 ## Darba rutīna katrai sesijai
 
