@@ -121,6 +121,24 @@ un pastāvīgs, īsinājums ir redirect. Abi noved uz to pašu profilu.
 2. Aizvietot visas `<...>` vietas ar īsto saturu. Tekstus dod lietotājs — neizdomāt.
 3. Atjaunot 4 vietas: `projects/index.html` (kartiņa + ItemList JSON-LD), `sitemap.xml`, `llms.txt`.
 
+## Favikons (uzlikts 2026-08-28)
+
+Avots: `~/Desktop/Google Business bildes/diskobumba.jpg` — spoguļbumba, ChatGPT ģenerēta,
+PNG ar caurspīdīgu fonu (neskatoties uz `.jpg` nosaukumu). Oriģināls repo netiek glabāts.
+
+Saknē: `favicon.ico` (16+32+48), `icon-192.png`, `icon-512.png`, `apple-touch-icon.png` (180).
+Visās HTML lapās `<head>` pēc viewport meta ir trīs `<link>` tagi.
+
+Ģenerēšanas nianses, ja kādreiz jāpārtaisa:
+- Attēls apgriezts tieši uz bumbas malu, tad uzlikta **cieta apļa alfa maska** — oriģināla
+  mala ir mīksta un mazajos izmēros izplūst.
+- Izmēriem ≤48 px kontrasts palielināts ×1.45; bez tā 32 px kļūst par pelēku plankumu.
+- `apple-touch-icon` ir ar **necaurspīdīgu `#2C2416` fonu** un 14 px rezervi — iOS caurspīdīgumu
+  pārvērš melnā, tāpēc fons jāuzliek apzināti.
+- 16 px izskatās vāji jebkurā variantā; tas ir pieņemts apzināti, jo retina ekrāni ņem 32 px avotu.
+- `site.webmanifest` NAV likts apzināti — `theme_color` un `display` mainītu redzamo uzvedību
+  Android pārlūkā. Ikonas strādā arī bez tā.
+
 ## Hostings un publicēšana
 
 - **Vercel** ar custom domēnu `roadchanger.com` (apex bez www; `www` pāradresējas caur `cname.vercel-dns.com`). Pārbaudīts 2026-08-13 — lapa VAIRS NAV GitHub Pages.
