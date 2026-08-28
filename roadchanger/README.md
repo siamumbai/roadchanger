@@ -3,7 +3,9 @@
 ## Files
 - `index.html` — Main homepage (roadchanger.com)
 - `book.html` — QR card landing page (roadchanger.com/book)
-- `reviews.html` — Reviews page with Google sign-in (roadchanger.com/reviews)
+- `review/` — Short link that redirects straight to the Google review form (roadchanger.com/review)
+- `reviews/` — Selected client reviews, quoted from Google (roadchanger.com/reviews)
+- `projects/` — Write-ups of individual events (roadchanger.com/projects)
 - `images/` — Put your photos here (see below)
 
 ---
@@ -22,17 +24,18 @@ Then uncomment the `<img>` tags in each file (remove the `<!-- -->` comment mark
 
 ---
 
-## Setting up the Reviews page (Google sign-in)
+## Reviews
 
-The reviews page uses Firebase (free). Do this once:
+Reviews are collected in the **Google Business Profile** — not on this site. There is no
+database, no sign-in and no Firebase any more.
 
-1. Go to https://console.firebase.google.com
-2. Click "Add project" → name it `roadchanger` → click through
-3. In the left menu go to **Authentication** → Get started → Google → Enable → Save
-4. In the left menu go to **Firestore Database** → Create database → Start in test mode → Choose a region
-5. Click the gear icon ⚙️ → Project settings → scroll down to "Your apps" → click `</>` (Web)
-6. Register the app (any name) → copy the `firebaseConfig` object
-7. Open `reviews.html` and replace the `firebaseConfig` section with your values
+- `review/index.html` redirects visitors straight to the Google review form.
+  The link appears three times in that file (meta refresh, button, JS) — keep them identical.
+- `reviews/index.html` shows selected reviews as **static HTML**. Never use an embedded
+  Google/Trustpilot widget: those load via JS in an iframe and AI crawlers cannot read them.
+  Copy each review verbatim and also add it to the JSON-LD block in that file's `<head>`.
+
+See `CLAUDE.md` in the repo root for the exact steps.
 
 ---
 

@@ -48,6 +48,9 @@
 - `/rider/` — "Technical Rider": headeris tikai ar Roadchanger logo (→ /), virsraksts, bilde `rider1.jpg`, zem bildes centrēts "If you have any questions please call +371 20031578" (zvanāms `tel:` links).
 - `/lights/` — aparatūras lapa (Sound System, lights, smoke machines, DJ table, wireless microphones).
 - `/video/` — video portfolio (2 YouTube kartiņas: "Monk Echo" un "Iron Haya 3x3", iegultie atskaņotāji ar youtube-nocookie, headeris/footeris kā /rider/). **SLĒPTA lapa pēc lietotāja lēmuma (2026-08-26): nav linka navigācijā, `noindex` meta, izslēgta no sitemap, aizliegta robots.txt.** Lietotājs to sūta klientiem pats kā privātu portfolio — nekad nelikt navigācijā un neindeksēt.
+- `/review/` — **īsā saite atsauksmēm.** Tikai redirects uz Google atsauksmes formu (meta refresh + poga + JS — visas trīs saites identiskas). `noindex`, nav sitemap. Šo saiti lietotājs sūta klientiem pēc pasākuma.
+- `/reviews/` — atlasītas Google atsauksmes kā **statisks HTML** + poga uz pilno Google profilu + poga uz `/review/`.
+- `/projects/` — projektu saraksts; katrs projekts savā mapē `/projects/<slug>/index.html`.
 - `/thanks` — pateicības lapa pēc formas nosūtīšanas ("Thanks! The form was submitted successfully..." + Go back poga uz galveno lapu).
 
 ## Navigācija (galvenā lapa)
@@ -74,9 +77,49 @@ Jaunām bildēm nosaukumus dod lietotājs — vienmēr pajautā vai apstiprini p
 ## SEO un AI redzamība (uzlikts 2026-08-26)
 
 - Katrai lapai `<head>` daļā: pilnvērtīgs `<title>`, canonical, Open Graph tagi; galvenajai lapai arī JSON-LD (`LocalBusiness`). Redzamo dizainu un tekstus tas nemaina.
-- Saknē: `robots.txt` (atļauj visus rāpuļus, aizliedz /video/ un /thanks), `sitemap.xml` (visas lapas bez /video/ un /thanks), `llms.txt` (faktu kopsavilkums AI rīkiem).
+- Saknē: `robots.txt` (atļauj visus rāpuļus + atsevišķs nosaukts bloks AI rāpuļiem — GPTBot, ClaudeBot, PerplexityBot u.c.; aizliedz /video/ un /thanks), `sitemap.xml` (visas lapas bez /video/ un /thanks), `llms.txt` (faktu kopsavilkums AI rīkiem).
 - `/video/` un `/thanks` ir `noindex` — tā tam jāpaliek.
 - Google Search Console verifikācijas meta tags ir galvenajā, /dj/ un /fire/ lapā.
+
+## Atsauksmes un projekti (uzlikts 2026-08-28)
+
+**Princips: vākt Google, rādīt savā lapā.** Visas oriģinālās atsauksmes dzīvo Google
+Business Profile. roadchanger.com tās tikai atkārto, lai Google, ChatGPT, Claude un
+Perplexity tās var izlasīt.
+
+- **NEKAD neizmantot iegultus Google/Trustpilot widgetus.** Tie ielādējas caur JS iframe,
+  un AI rāpuļi tos neredz. Atsauksmju teksts vienmēr ir tiešs HTML `/reviews/index.html` failā.
+- Atsauksmes tekstu kopē no Google **burtiski** — nelabot, nesaīsināt, netulkot.
+- Vecā `reviews.html` (Firebase + Google sign-in + izdomātas demo atsauksmes) ir **izdzēsta**
+  2026-08-28. Neatjaunot — pašbūvēta atsauksmju sistēma AI acīs sver mazāk nekā viena
+  īsta Google atsauksme, un izdomātas atsauksmes dzīvajā lapā ir risks.
+
+### Google saites (atrisinātas 2026-08-28)
+
+| Kur | Saite |
+|---|---|
+| Atsauksmes forma | `https://g.page/r/CZjQXSVaRA0PEBM/review` — `review/index.html`, 3 vietas (meta refresh, poga, JS). Visām trim jābūt identiskām. |
+| Profils | `https://www.google.com/maps?cid=1084598239230808216` — `reviews/index.html` 3 vietas (JSON-LD `sameAs`, atsauksmes šablona avota links, CTA poga) un `llms.txt`. |
+
+Place ID (ftid): `0x683462df9b5d4397:0xf0d445a255dd098` → CID decimālā: `1084598239230808216`.
+
+Profila saitei lieto `maps?cid=` formu, nevis `share.google/...` īsinājumu: `cid` ir kanonisks
+un pastāvīgs, īsinājums ir redirect. Abi noved uz to pašu profilu.
+
+### Kā pievienot atsauksmi
+
+1. `roadchanger/reviews/index.html` → atrast komentāru "ATSAUKSMJU SARAKSTS", nokopēt šablonu,
+   aizpildīt (vārds, amats/uzņēmums, pasākums, zvaigznes, teksts, datums).
+2. Izņemt `<p class="reviews-empty">…</p>`, kad ir vismaz viena atsauksme.
+3. Tajā pašā failā `<head>` JSON-LD blokā pievienot `review` ierakstu un atjaunot
+   `aggregateRating` (ratingValue + reviewCount) **atbilstoši īstajam Google profilam**.
+
+### Kā pievienot projektu
+
+1. `mkdir roadchanger/projects/<slug>` un nokopēt tur `_project-template.html` kā `index.html`
+   (šablons ir **repo saknē**, netiek publicēts — pārbaudīts, Vercel publicē tikai `roadchanger/`).
+2. Aizvietot visas `<...>` vietas ar īsto saturu. Tekstus dod lietotājs — neizdomāt.
+3. Atjaunot 4 vietas: `projects/index.html` (kartiņa + ItemList JSON-LD), `sitemap.xml`, `llms.txt`.
 
 ## Hostings un publicēšana
 

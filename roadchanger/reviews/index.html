@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Reviews — DJ Roadchanger | Riga, Latvia</title>
+  <meta name="description" content="Reviews from event organisers and private clients who booked DJ Roadchanger for weddings, corporate events and private parties in Riga and across Europe." />
+  <link rel="canonical" href="https://roadchanger.com/reviews/" />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="DJ Roadchanger" />
+  <meta property="og:title" content="Reviews — DJ Roadchanger | Riga, Latvia" />
+  <meta property="og:description" content="Reviews from event organisers and private clients who booked DJ Roadchanger for weddings, corporate events and private parties in Riga and across Europe." />
+  <meta property="og:url" content="https://roadchanger.com/reviews/" />
+  <meta property="og:image" content="https://roadchanger.com/images/hero.jpg" />
+  <meta name="twitter:card" content="summary_large_image" />
+
+  <!-- ============================================================
+       JSON-LD. Tas pats @id kā galvenajā lapā, lai Google un AI
+       rīki saprot, ka tas ir VIENS uzņēmums, nevis divi.
+
+       KAD PIEVIENO ĪSTU ATSAUKSMI: pievieno objektu "review" masīvā
+       UN atjauno "aggregateRating" (ratingValue + reviewCount) tā,
+       lai tie atbilst īstajam Google profilam. Nekad neizdomāt skaitļus.
+       ============================================================ -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "LocalBusiness",
+    "@id": "https://roadchanger.com/#business",
+    "name": "DJ Roadchanger",
+    "url": "https://roadchanger.com/",
+    "image": "https://roadchanger.com/images/hero.jpg",
+    "telephone": "+371 20031578",
+    "email": "e.asmanis@gmail.com",
+    "address": { "@type": "PostalAddress", "addressLocality": "Riga", "addressCountry": "LV" },
+    "areaServed": "Europe",
+    "sameAs": ["https://www.google.com/maps?cid=1084598239230808216"]
+  }
+  </script>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=Lato:wght@300;400&display=swap" rel="stylesheet" />
+
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body { background: #FFFBF5; color: #2C2416; font-family: 'Lato', Arial, sans-serif; }
+
+    /* Header — tāds pats kā /lights/ un /projects/ */
+    nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1.25rem 3rem;
+      background: #FFFBF5;
+      border-bottom: 0.5px solid #EAD9B8;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    .nav-logo { font-family: 'Libre Baskerville', Georgia, serif; font-size: 16px; font-weight: 700; letter-spacing: 0.08em; color: #2C2416; text-transform: uppercase; text-decoration: none; }
+    .nav-links { display: flex; gap: 2.5rem; }
+    .nav-links a { font-size: 13px; color: #8A6840; text-decoration: none; letter-spacing: 0.05em; }
+    .nav-links a:hover { color: #B07320; }
+
+    /* Lapas galva */
+    .page-header { background: #FDF5E6; padding: 4rem 3rem 3rem; border-bottom: 0.5px solid #EAD9B8; }
+    .page-header-inner { max-width: 1100px; margin: 0 auto; }
+    .section-tag { font-size: 11px; letter-spacing: 0.2em; color: #B07320; text-transform: uppercase; margin-bottom: 0.75rem; }
+    .page-title { font-family: 'Libre Baskerville', Georgia, serif; font-size: 36px; font-weight: 700; color: #2C2416; margin-bottom: 0.75rem; line-height: 1.2; }
+    .page-sub { font-size: 15px; color: #6B5035; font-weight: 300; line-height: 1.8; max-width: 560px; }
+
+    /* Atsauksmju režģis */
+    .reviews-section { max-width: 1100px; margin: 0 auto; padding: 4rem 3rem; }
+    .reviews-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 1.5rem; }
+    .review-card {
+      background: #FDF5E6;
+      border: 0.5px solid #E0CCA4;
+      border-radius: 8px;
+      padding: 1.75rem;
+      box-shadow: 0 4px 18px rgba(44,36,22,0.07);
+      display: flex;
+      flex-direction: column;
+    }
+    .review-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 1rem; margin-bottom: 1rem; }
+    .review-name { font-size: 14px; color: #2C2416; font-weight: 400; }
+    .review-event { font-size: 12px; color: #A08060; line-height: 1.6; margin-top: 2px; }
+    .review-stars { color: #C4850A; font-size: 13px; letter-spacing: 2px; white-space: nowrap; flex-shrink: 0; }
+    .review-text {
+      font-family: 'Libre Baskerville', Georgia, serif;
+      font-size: 14px;
+      font-style: italic;
+      color: #5C4028;
+      line-height: 1.85;
+      flex: 1;
+    }
+    .review-foot {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      margin-top: 1.25rem;
+      padding-top: 1rem;
+      border-top: 0.5px solid #EAD9B8;
+    }
+    .review-date { font-size: 11px; color: #A08060; letter-spacing: 0.04em; }
+    .review-src { font-size: 11px; color: #8A6840; text-decoration: none; letter-spacing: 0.04em; }
+    .review-src:hover { color: #B07320; text-decoration: underline; }
+
+    /* Tukšais stāvoklis — rāda tikai tad, ja vēl nav nevienas atsauksmes lapā */
+    .reviews-empty { font-size: 15px; color: #7A5C38; font-weight: 300; line-height: 1.8; }
+
+    /* Apakšējais bloks ar pogām */
+    .reviews-cta { margin-top: 3rem; padding-top: 2.5rem; border-top: 0.5px solid #EAD9B8; text-align: center; }
+    .cta-title { font-family: 'Libre Baskerville', Georgia, serif; font-size: 22px; font-weight: 700; color: #2C2416; margin-bottom: 0.6rem; }
+    .cta-sub { font-size: 14px; color: #7A5C38; font-weight: 300; line-height: 1.75; margin-bottom: 1.75rem; }
+    .cta-actions { display: flex; gap: 1.25rem; align-items: center; justify-content: center; flex-wrap: wrap; }
+    .btn-dark { display: inline-block; background: #2C2416; color: #F5ECD8; font-size: 14px; padding: 13px 30px; border-radius: 3px; text-decoration: none; letter-spacing: 0.05em; }
+    .btn-dark:hover { background: #3D3020; }
+    .btn-outline-light { font-size: 14px; color: #8A6840; text-decoration: none; border-bottom: 1px solid #C4A06A; padding-bottom: 2px; }
+    .btn-outline-light:hover { color: #B07320; }
+
+    footer { background: #1E1810; padding: 2rem 3rem; border-top: 0.5px solid #3D3020; margin: 0; }
+    .footer-logo { font-family: 'Libre Baskerville', Georgia, serif; font-size: 14px; font-weight: 700; letter-spacing: 0.1em; color: #C4A06A; text-transform: uppercase; }
+    .footer-sub { font-size: 12px; color: #6B5035; margin-top: 0.5rem; }
+
+    @media (max-width: 768px) {
+      nav { padding: 0.75rem 1rem; }
+      .nav-links { display: none; }
+      .page-header { padding: 2.5rem 1.25rem 2rem; }
+      .page-title { font-size: 26px; }
+      .page-sub { font-size: 14px; }
+      .reviews-section { padding: 2rem 1.25rem 2.5rem; }
+      .reviews-grid { grid-template-columns: 1fr; gap: 1rem; }
+      .review-card { padding: 1.35rem; }
+      .cta-title { font-size: 19px; }
+      footer { padding: 1.5rem 1.25rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <nav>
+    <a href="/" class="nav-logo">Roadchanger</a>
+    <div class="nav-links">
+      <a href="/dj/">DJ sets</a>
+      <a href="/fire/">Fire show</a>
+      <a href="/projects/">Projects</a>
+      <a href="/#about">About</a>
+    </div>
+  </nav>
+
+  <div class="page-header">
+    <div class="page-header-inner">
+      <p class="section-tag">Reviews</p>
+      <h1 class="page-title">What clients say</h1>
+      <p class="page-sub">Every review below is a real, verified Google review left by an event organiser or a private client. Nothing here is written by me.</p>
+    </div>
+  </div>
+
+  <div class="reviews-section">
+
+    <div class="reviews-grid">
+      <!-- ============================================================
+           ATSAUKSMJU SARAKSTS — TIKAI STATISKS HTML.
+
+           SVARĪGI: nekad neizmantot Google/Trustpilot iegultos widgetus.
+           Tie ielādējas caur JS/iframe, un AI rāpuļi (GPTBot, ClaudeBot,
+           PerplexityBot) tos NEREDZ. Teksts jāraksta tieši šeit.
+
+           Katru atsauksmi pārkopē no Google profila BURTISKI — nelabot,
+           nesaīsināt, netulkot. Vienlaikus pievieno to arī JSON-LD blokā
+           lapas <head> daļā.
+
+           ŠABLONS (nokopē, aizpildi, ieliec virs šī komentāra):
+
+      <article class="review-card">
+        <div class="review-head">
+          <div>
+            <div class="review-name">Vārds Uzvārds</div>
+            <div class="review-event">Amats, Uzņēmums &middot; Pasākums, Pilsēta</div>
+          </div>
+          <div class="review-stars" aria-label="5 out of 5">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
+        </div>
+        <p class="review-text">&ldquo;Atsauksmes teksts burtiski no Google.&rdquo;</p>
+        <div class="review-foot">
+          <time class="review-date" datetime="2026-03">March 2026</time>
+          <a class="review-src" href="https://www.google.com/maps?cid=1084598239230808216" target="_blank" rel="noopener nofollow">Google review &rarr;</a>
+        </div>
+      </article>
+
+           ============================================================ -->
+
+      <p class="reviews-empty">The first reviews are being collected right now. In the meantime, you can read everything on the Google profile below.</p>
+    </div>
+
+    <div class="reviews-cta">
+      <p class="cta-title">Worked with me?</p>
+      <p class="cta-sub">A review takes less than a minute and helps other organisers know what to expect.</p>
+      <div class="cta-actions">
+        <a class="btn-dark" href="/review/">Leave a review</a>
+        <a class="btn-outline-light" href="https://www.google.com/maps?cid=1084598239230808216" target="_blank" rel="noopener">Read all reviews on Google</a>
+      </div>
+    </div>
+
+  </div>
+
+  <footer>
+    <div class="footer-logo">Roadchanger</div>
+    <div class="footer-sub">SIA Mumbai &middot; PVN Nr: LV40203627024 &middot; Reģ. Nr: 40203627024</div>
+  </footer>
+
+</body>
+</html>

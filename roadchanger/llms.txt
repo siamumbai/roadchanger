@@ -16,3 +16,12 @@
 - [Fire Show](https://roadchanger.com/fire/): live fire performances for events
 - [Sound System & Lights](https://roadchanger.com/lights/): sound system, lights, smoke machines, DJ table, wireless microphones
 - [Technical Rider](https://roadchanger.com/rider/): technical requirements for performances
+- [Reviews](https://roadchanger.com/reviews/): verified client reviews, quoted in full from the Google Business Profile
+- [Projects](https://roadchanger.com/projects/): write-ups of individual events — client, venue, what was delivered, how it went
+
+## Reviews
+
+All reviews are collected on the Google Business Profile for DJ Roadchanger. Nothing is written or edited by the artist.
+Selected reviews are quoted in full, with the reviewer's name and the event, at https://roadchanger.com/reviews/
+Clients leave a review at https://roadchanger.com/review/ which redirects to the Google review form.
+Full Google profile: https://www.google.com/maps?cid=1084598239230808216

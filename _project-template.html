@@ -1,0 +1,217 @@
+<!-- ================================================================
+     ŠABLONS vienam projektam: /projects/<slug>/index.html
+
+     ŠIS FAILS ATRODAS REPO SAKNĒ UN NETIEK PUBLICĒTS.
+     (Vercel publicē tikai `roadchanger/` apakšmapi — pārbaudīts.)
+
+     KĀ LIETOT
+     1. mkdir roadchanger/projects/<slug>
+     2. nokopē šo failu uz roadchanger/projects/<slug>/index.html
+     3. aizvieto VISAS <...> vietas ar īsto saturu
+     4. atjauno: projects/index.html (kartiņa + ItemList), sitemap.xml, llms.txt
+
+     NOTEIKUMS: tekstus raksta lietotājs. Neizdomāt aprakstus, skaitļus,
+     klientu nosaukumus vai citātus.
+     ================================================================ -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title><Pasākuma nosaukums> — DJ Roadchanger</title>
+  <meta name="description" content="<1–2 teikumi par pasākumu: kas, kur, kad, ko Roadchanger darīja.>" />
+  <link rel="canonical" href="https://roadchanger.com/projects/<slug>/" />
+  <meta property="og:type" content="article" />
+  <meta property="og:site_name" content="DJ Roadchanger" />
+  <meta property="og:title" content="<Pasākuma nosaukums> — DJ Roadchanger" />
+  <meta property="og:description" content="<tas pats apraksts>" />
+  <meta property="og:url" content="https://roadchanger.com/projects/<slug>/" />
+  <meta property="og:image" content="https://roadchanger.com/images/<hero-bilde>.jpg" />
+  <meta name="twitter:card" content="summary_large_image" />
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Event",
+    "name": "<Pasākuma nosaukums>",
+    "url": "https://roadchanger.com/projects/<slug>/",
+    "startDate": "<GGGG-MM-DD>",
+    "eventStatus": "https://schema.org/EventScheduled",
+    "eventAttendanceMode": "https://schema.org/OfflineEventAttendanceMode",
+    "image": "https://roadchanger.com/images/<hero-bilde>.jpg",
+    "description": "<apraksts>",
+    "location": {
+      "@type": "Place",
+      "name": "<Norises vieta>",
+      "address": { "@type": "PostalAddress", "addressLocality": "<Pilsēta>", "addressCountry": "<LV>" }
+    },
+    "performer": { "@id": "https://roadchanger.com/#business" },
+    "organizer": { "@type": "Organization", "name": "<Pasūtītājs / rīkotājs>" }
+  }
+  </script>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=Lato:wght@300;400&display=swap" rel="stylesheet" />
+
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body { background: #FFFBF5; color: #2C2416; font-family: 'Lato', Arial, sans-serif; }
+
+    nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1.25rem 3rem;
+      background: #FFFBF5;
+      border-bottom: 0.5px solid #EAD9B8;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    .nav-logo { font-family: 'Libre Baskerville', Georgia, serif; font-size: 16px; font-weight: 700; letter-spacing: 0.08em; color: #2C2416; text-transform: uppercase; text-decoration: none; }
+    .nav-links { display: flex; gap: 2.5rem; }
+    .nav-links a { font-size: 13px; color: #8A6840; text-decoration: none; letter-spacing: 0.05em; }
+    .nav-links a:hover { color: #B07320; }
+
+    .page-header { background: #FDF5E6; padding: 4rem 3rem 3rem; border-bottom: 0.5px solid #EAD9B8; }
+    .page-header-inner { max-width: 900px; margin: 0 auto; }
+    .breadcrumb { font-size: 12px; color: #A08060; margin-bottom: 1.25rem; }
+    .breadcrumb a { color: #8A6840; text-decoration: none; }
+    .breadcrumb a:hover { color: #B07320; }
+    .section-tag { font-size: 11px; letter-spacing: 0.2em; color: #B07320; text-transform: uppercase; margin-bottom: 0.75rem; }
+    .page-title { font-family: 'Libre Baskerville', Georgia, serif; font-size: 36px; font-weight: 700; color: #2C2416; margin-bottom: 0.75rem; line-height: 1.2; }
+    .page-sub { font-size: 15px; color: #6B5035; font-weight: 300; line-height: 1.8; max-width: 620px; }
+
+    .project-section { max-width: 900px; margin: 0 auto; padding: 3rem 3rem 4rem; }
+
+    /* Fakti par pasākumu */
+    .facts { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 1.25rem; padding-bottom: 2.5rem; margin-bottom: 2.5rem; border-bottom: 0.5px solid #EAD9B8; }
+    .fact-label { font-size: 11px; letter-spacing: 0.14em; color: #B07320; text-transform: uppercase; margin-bottom: 0.35rem; }
+    .fact-val { font-size: 14px; color: #2C2416; line-height: 1.6; }
+
+    .prose p { font-size: 15px; color: #5C4028; line-height: 1.9; font-weight: 300; margin-bottom: 1.25rem; }
+    .prose h2 { font-family: 'Libre Baskerville', Georgia, serif; font-size: 22px; font-weight: 700; color: #2C2416; margin: 2.5rem 0 1rem; line-height: 1.3; }
+
+    .tags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 1rem; }
+    .tag { font-size: 11px; color: #854F0B; background: #FAEEDA; padding: 4px 10px; border-radius: 3px; letter-spacing: 0.03em; }
+
+    .gallery { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1rem; margin: 2.5rem 0; }
+    .gallery-item { border-radius: 8px; overflow: hidden; border: 0.5px solid #E0CCA4; box-shadow: 0 4px 18px rgba(44,36,22,0.07); }
+    .gallery-item img { width: 100%; height: 100%; object-fit: cover; display: block; }
+
+    /* Citāts no šī pasākuma (tas pats teksts, kas /reviews/ lapā) */
+    .quote-card { background: #FDF5E6; border: 0.5px solid #E0CCA4; border-radius: 8px; padding: 2rem; margin: 2.5rem 0; }
+    .quote-text { font-family: 'Libre Baskerville', Georgia, serif; font-size: 16px; font-style: italic; color: #5C4028; line-height: 1.9; margin-bottom: 1rem; }
+    .quote-who { font-size: 13px; color: #7A5C38; }
+    .quote-src { font-size: 11px; color: #8A6840; text-decoration: none; letter-spacing: 0.04em; display: inline-block; margin-top: 0.5rem; }
+    .quote-src:hover { color: #B07320; text-decoration: underline; }
+
+    .project-cta { margin-top: 3rem; padding-top: 2.5rem; border-top: 0.5px solid #EAD9B8; text-align: center; }
+    .cta-title { font-family: 'Libre Baskerville', Georgia, serif; font-size: 22px; font-weight: 700; color: #2C2416; margin-bottom: 0.6rem; }
+    .cta-sub { font-size: 14px; color: #7A5C38; font-weight: 300; line-height: 1.75; margin-bottom: 1.75rem; }
+    .cta-actions { display: flex; gap: 1.25rem; align-items: center; justify-content: center; flex-wrap: wrap; }
+    .btn-dark { display: inline-block; background: #2C2416; color: #F5ECD8; font-size: 14px; padding: 13px 30px; border-radius: 3px; text-decoration: none; letter-spacing: 0.05em; }
+    .btn-dark:hover { background: #3D3020; }
+    .btn-outline-light { font-size: 14px; color: #8A6840; text-decoration: none; border-bottom: 1px solid #C4A06A; padding-bottom: 2px; }
+    .btn-outline-light:hover { color: #B07320; }
+
+    footer { background: #1E1810; padding: 2rem 3rem; border-top: 0.5px solid #3D3020; margin: 0; }
+    .footer-logo { font-family: 'Libre Baskerville', Georgia, serif; font-size: 14px; font-weight: 700; letter-spacing: 0.1em; color: #C4A06A; text-transform: uppercase; }
+    .footer-sub { font-size: 12px; color: #6B5035; margin-top: 0.5rem; }
+
+    @media (max-width: 768px) {
+      nav { padding: 0.75rem 1rem; }
+      .nav-links { display: none; }
+      .page-header { padding: 2.5rem 1.25rem 2rem; }
+      .page-title { font-size: 26px; }
+      .page-sub { font-size: 14px; }
+      .project-section { padding: 2rem 1.25rem 2.5rem; }
+      .facts { gap: 1rem; padding-bottom: 1.75rem; margin-bottom: 1.75rem; }
+      .prose p { font-size: 14px; }
+      .prose h2 { font-size: 19px; margin: 1.75rem 0 0.75rem; }
+      .gallery { grid-template-columns: 1fr; gap: 0.75rem; margin: 1.75rem 0; }
+      .quote-card { padding: 1.35rem; }
+      .quote-text { font-size: 15px; }
+      .cta-title { font-size: 19px; }
+      footer { padding: 1.5rem 1.25rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <nav>
+    <a href="/" class="nav-logo">Roadchanger</a>
+    <div class="nav-links">
+      <a href="/dj/">DJ sets</a>
+      <a href="/fire/">Fire show</a>
+      <a href="/reviews/">Reviews</a>
+      <a href="/#about">About</a>
+    </div>
+  </nav>
+
+  <div class="page-header">
+    <div class="page-header-inner">
+      <p class="breadcrumb"><a href="/projects/">Projects</a> &rarr; <Pasākuma nosaukums></p>
+      <p class="section-tag"><Pasākuma veids> &middot; <Gads></p>
+      <h1 class="page-title"><Pasākuma nosaukums></h1>
+      <p class="page-sub"><1–2 teikumi: kas tas bija un ko Roadchanger tur darīja.></p>
+    </div>
+  </div>
+
+  <div class="project-section">
+
+    <div class="facts">
+      <div><p class="fact-label">Client</p><p class="fact-val"><Pasūtītājs></p></div>
+      <div><p class="fact-label">Venue</p><p class="fact-val"><Vieta, pilsēta></p></div>
+      <div><p class="fact-label">Date</p><p class="fact-val"><Mēnesis, gads></p></div>
+      <div><p class="fact-label">Guests</p><p class="fact-val"><Skaits></p></div>
+    </div>
+
+    <div class="prose">
+      <h2>The brief</h2>
+      <p><Ko klients prasīja.></p>
+
+      <h2>What we did</h2>
+      <p><Ko tu izdarīji — programma, aparatūra, sadarbības mākslinieki.></p>
+      <div class="tags">
+        <span class="tag"><piem. DJ set></span>
+        <span class="tag"><piem. Live saxophone></span>
+        <span class="tag"><piem. Fire show></span>
+      </div>
+
+      <h2>The night</h2>
+      <p><Kā aizgāja.></p>
+    </div>
+
+    <div class="gallery">
+      <div class="gallery-item"><img src="/images/<bilde-1>.jpg" alt="<apraksts>" loading="lazy" decoding="async" /></div>
+      <div class="gallery-item"><img src="/images/<bilde-2>.jpg" alt="<apraksts>" loading="lazy" decoding="async" /></div>
+    </div>
+
+    <!-- Citāts tikai tad, ja par šo pasākumu TIEŠĀM ir Google atsauksme. Teksts burtiski. -->
+    <div class="quote-card">
+      <p class="quote-text">&ldquo;<Atsauksmes teksts burtiski no Google.>&rdquo;</p>
+      <p class="quote-who"><Vārds Uzvārds> &middot; <Amats, Uzņēmums></p>
+      <a class="quote-src" href="/reviews/">All reviews &rarr;</a>
+    </div>
+
+    <div class="project-cta">
+      <p class="cta-title">Planning something like this?</p>
+      <p class="cta-sub">Tell me about the event and I will come back with what it would take.</p>
+      <div class="cta-actions">
+        <a class="btn-dark" href="/#booking">Get in touch</a>
+        <a class="btn-outline-light" href="/projects/">See other projects</a>
+      </div>
+    </div>
+
+  </div>
+
+  <footer>
+    <div class="footer-logo">Roadchanger</div>
+    <div class="footer-sub">SIA Mumbai &middot; PVN Nr: LV40203627024 &middot; Reģ. Nr: 40203627024</div>
+  </footer>
+
+</body>
+</html>
