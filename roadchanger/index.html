@@ -514,13 +514,15 @@
       <form class="booking-form" id="booking-form" onsubmit="submitForm(event)">
         <input type="text" name="name" placeholder="Your name" required />
         <input type="email" name="email" placeholder="Email address" required />
+        <input type="tel" name="phone" placeholder="Phone number" />
         <input type="text" name="date" placeholder="Event date" />
         <select name="type">
           <option value="">Type of event</option>
+          <option>Private party</option>
+          <option>Office party</option>
           <option>Wedding</option>
           <option>Corporate event</option>
-          <option>Private party</option>
-          <option>Club</option>
+          <option>Club or Bar</option>
           <option>Other</option>
         </select>
         <textarea name="message" placeholder="Tell me about the event — location, vibe, number of guests..."></textarea>
