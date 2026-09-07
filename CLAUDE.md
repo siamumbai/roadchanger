@@ -159,6 +159,16 @@ Visās HTML lapās `<head>` pēc viewport meta ir trīs `<link>` tagi.
 
 ## Atvērtie darbi
 
-- [x] Pārbaudīt /video/ lapu — jaunākā versija (kartiņas "Monk Echo", "Iron Haya 3x3") IR uzlikta un dzīva (pārbaudīts 2026-08-13). Links navigācijā joprojām nav pievienots — tikai ar lietotāja apstiprinājumu.
-- [ ] Attēlu optimizācija: WebP, cache headers (apspriests, bet nav apstiprināts, ka izdarīts — pārbaudīt repo).
-- [ ] Gala pārbaude visām lapām dažādos ekrānos un zoom līmeņos.
+**Aktuālais saraksts dzīvo Obsidian vault, jaunākajā piezīmē** — šobrīd
+`2026-09-07 Booking forma, pasts un DNS.md`. Šeit tikai tas, kas skar kodu:
+
+- [ ] `roadchanger/api/booking` funkcija (Vercel + Resend), lai forma neietu caur Formspree.
+      Formspree NEIZSLĒGT, kamēr jaunais nav pārbaudīts dzīvajā.
+- [ ] Navigācijas linki uz `/reviews/` un `/projects/` — REDZAMA izmaiņa visās lapās,
+      vajag lietotāja apstiprinājumu. Bez tiem abas lapas ir nesasniedzamas.
+- [ ] Atsauksmju teksti `/reviews/` lapā + JSON-LD `review` / `aggregateRating`.
+- [ ] Projektu lapas `/projects/<slug>/` no `_project-template.html`.
+- [ ] Attēlu optimizācija: WebP, cache headers (sens, neapstiprināts).
+
+**Forma STRĀDĀ** — Formspree Reply-To ir pareizs, pārbaudīts ar īstu klientu 2026-08-31.
+Problēma bija tikai paziņojuma vēstules izskats, nevis funkcionalitāte. Nesākt to "labot".
