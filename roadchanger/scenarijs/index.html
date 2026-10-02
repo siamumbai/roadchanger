@@ -12,6 +12,8 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:wght@400;700&family=Lato:wght@300;400;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
 
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -96,8 +98,66 @@
     .danger-link { font-size: 0.82rem; color: #A33A2A; text-decoration: underline; text-underline-offset: 3px; }
     .btn-danger { background: #A33A2A; color: #fff; }
 
-    /* ---------- Klienta skats (nākamais solis) ---------- */
-    .client-title { font-family: 'Libre Baskerville', Georgia, serif; font-size: clamp(1.4rem, 2.2vw, 1.8rem); font-weight: 400; }
+    .nav-back { font-size: 14px; letter-spacing: 0.05em; color: #8A6840; }
+    .nav-back:hover { color: #B07320; }
+
+    /* ---------- Scenārijs ---------- */
+    .sheet-wrap { display: grid; grid-template-columns: minmax(0, 1fr) clamp(14rem, 19vw, 17rem); gap: 1.75rem; padding: 2rem 3rem 4rem; align-items: start; }
+    .venue { display: grid; grid-template-columns: minmax(0, 1fr) clamp(16rem, 30vw, 24rem); gap: 1.5rem; margin-bottom: 2rem; align-items: start; }
+    .venue-text { display: flex; flex-direction: column; gap: 0.5rem; min-width: 0; }
+    .venue-label { font-size: 0.75rem; letter-spacing: 0.08em; text-transform: uppercase; color: #7A5C38; }
+    .plain { width: 100%; border: 0.5px solid transparent; border-radius: 6px; background: transparent; padding: 0.3rem 0.45rem; margin-left: -0.45rem; }
+    .plain:not([readonly]):hover { border-color: #EAD9B8; background: #fff; }
+    .plain:not([readonly]):focus { outline: none; border-color: #B07320; background: #fff; }
+    .plain[readonly] { cursor: default; }
+    .venue-name { font-family: 'Libre Baskerville', Georgia, serif; font-size: clamp(1.5rem, 2.4vw, 2rem); }
+    .venue-addr { font-size: 1rem; color: #6B5035; }
+    .addr-row { display: flex; gap: 0.5rem; align-items: center; }
+    .addr-row .plain { flex: 1; min-width: 0; }
+    #map { width: 100%; aspect-ratio: 4 / 3; border-radius: 10px; border: 0.5px solid #E0CCA4; background: #FEF9F2; z-index: 0; }
+
+    .toolbar { display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.75rem; }
+    .toolbar .spacer { flex: 1; }
+
+    .sheet { background: #fff; border: 0.5px solid #E0CCA4; border-radius: 10px; box-shadow: 0 4px 18px rgba(44, 36, 22, 0.07); overflow: hidden; }
+    .srow { display: grid; grid-template-columns: 2.25rem 7.5rem minmax(0, 1.2fr) minmax(0, 1fr) 2.25rem; border-bottom: 0.5px solid #EAD9B8; transition: opacity 0.15s, background 0.15s; }
+    .srow:last-child { border-bottom: none; }
+    .srow > * { min-width: 0; }
+    .shead { background: #FEF9F2; font-size: 0.75rem; letter-spacing: 0.08em; text-transform: uppercase; color: #7A5C38; }
+    .shead > div { padding: 0.65rem 0.6rem; }
+    .cell { width: 100%; border: none; background: transparent; padding: 0.65rem 0.6rem; font-size: 0.95rem; line-height: 1.45; resize: none; overflow: hidden; display: block; }
+    .cell:focus { outline: none; background: #FFFBF5; box-shadow: inset 0 0 0 1.5px #B07320; }
+    .cell[readonly] { cursor: default; }
+    .cell[readonly]:focus { background: transparent; box-shadow: none; }
+    .c-time { font-variant-numeric: tabular-nums; font-weight: 700; }
+    .c-note { color: #6B5035; border-left: 0.5px solid #F2E6CF; }
+    .tags { display: flex; flex-wrap: wrap; gap: 0.3rem; padding: 0 0.6rem 0.55rem; }
+    .tags:empty { display: none; }
+    .tag { font-size: 0.7rem; letter-spacing: 0.03em; padding: 0.1rem 0.45rem; border-radius: 999px; background: #FBE7CC; color: #8A5410; }
+    .mark, .del { display: flex; align-items: flex-start; justify-content: center; padding-top: 0.75rem; color: #C4A06A; }
+    .mark span { width: 1.05rem; height: 1.05rem; border-radius: 50%; border: 1.5px solid #E08A1E; display: block; }
+    .mark.on span { background: #E08A1E; }
+    .mark:disabled, .del:disabled { visibility: hidden; }
+    .del { font-size: 1.1rem; line-height: 1; }
+    .del:hover { color: #A33A2A; }
+    .srow.hl { background: #FDEBD3; box-shadow: inset 3px 0 0 #E08A1E; }
+    .srow.dim { opacity: 0.4; }
+    .sheet-empty { padding: 1.25rem; color: #7A5C38; font-size: 0.9rem; }
+
+    .cats { background: #fff; border: 0.5px solid #E0CCA4; border-radius: 12px; box-shadow: 0 4px 18px rgba(44, 36, 22, 0.07); padding: 1.1rem; position: sticky; top: 5.5rem; }
+    .cats h3 { font-family: 'Libre Baskerville', Georgia, serif; font-size: 1.05rem; font-weight: 400; margin-bottom: 0.8rem; }
+    .cat-list { display: flex; flex-direction: column; gap: 0.4rem; }
+    .cat { display: flex; align-items: center; gap: 0.4rem; }
+    .cat-btn { flex: 1; min-width: 0; display: flex; align-items: center; gap: 0.5rem; text-align: left; padding: 0.5rem 0.7rem; border-radius: 8px; border: 0.5px solid #E0CCA4; background: #FFFBF5; font-size: 0.9rem; }
+    .cat-btn:hover { border-color: #E08A1E; }
+    .cat-btn .n { margin-left: auto; font-size: 0.75rem; color: #7A5C38; }
+    .cat-btn .nm { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .cat.sel .cat-btn { background: #E08A1E; border-color: #E08A1E; color: #fff; }
+    .cat.sel .cat-btn .n { color: #fff; }
+    .cat-x { flex: none; width: 1.8rem; height: 1.8rem; border-radius: 50%; color: #A33A2A; font-size: 1rem; }
+    .cat-x:hover { background: #F6E3DF; }
+    .cat-add { display: flex; gap: 0.4rem; margin-top: 0.8rem; }
+    .cat-add .field { padding: 0.5rem 0.65rem; font-size: 0.88rem; }
 
     .toast {
       position: fixed; left: 50%; bottom: 2rem; transform: translateX(-50%); z-index: 100;
@@ -110,6 +170,17 @@
       .wrap { padding: 1.75rem 1.25rem 3rem; }
       .projects { grid-template-columns: minmax(0, 1fr); }
       .pw-label { width: 7rem; }
+      .sheet-wrap { grid-template-columns: minmax(0, 1fr); padding: 1.5rem 1.25rem 3rem; gap: 1.25rem; }
+      .sheet-wrap aside { order: -1; }
+      .venue { grid-template-columns: minmax(0, 1fr); }
+      .cats { position: static; }
+      .cat-list { flex-direction: row; flex-wrap: wrap; }
+      .cat-btn { flex: none; }
+      .srow { grid-template-columns: 2.25rem 5.5rem minmax(0, 1fr) 2.25rem; }
+      .srow .c-ev { grid-column: 3; }
+      .srow .c-note { grid-column: 2 / 4; grid-row: 2; border-left: none; padding-top: 0; }
+      .srow .del { grid-column: 4; grid-row: 1; }
+      .shead .h-note { display: none; }
     }
   </style>
 </head>
@@ -145,15 +216,51 @@
     </main>
   </div>
 
-  <!-- Klients (tabula būs nākamajā solī) -->
-  <div id="client" hidden>
+  <!-- Scenārijs (klients un admins) -->
+  <div id="sheet" hidden>
     <nav class="topnav">
       <a class="nav-logo" href="/">Roadchanger</a>
-      <button class="nav-user" data-logout>Iziet / Log out</button>
+      <button class="nav-back" id="back-btn" hidden>← Projekti</button>
+      <button class="nav-user" data-logout data-t="logout"></button>
     </nav>
-    <main class="wrap">
-      <h1 class="client-title" id="client-title"></h1>
-    </main>
+    <div class="sheet-wrap">
+      <main>
+        <section class="venue">
+          <div class="venue-text">
+            <span class="venue-label" data-t="venue"></span>
+            <input class="plain venue-name" id="v-name" maxlength="200" />
+            <span class="venue-label" style="margin-top:0.6rem" data-t="address"></span>
+            <div class="addr-row">
+              <input class="plain venue-addr" id="v-addr" maxlength="300" />
+              <button class="btn btn-line btn-sm" id="v-find" data-t="find"></button>
+            </div>
+          </div>
+          <div id="map"></div>
+        </section>
+
+        <div class="toolbar">
+          <span class="spacer"></span>
+          <button class="btn btn-line btn-sm" id="edit-btn"></button>
+        </div>
+        <div class="sheet" id="rows">
+          <div class="srow shead">
+            <div></div><div data-t="time"></div><div data-t="event"></div><div class="h-note" data-t="note"></div><div></div>
+          </div>
+        </div>
+        <div class="toolbar" style="margin-top:0.75rem">
+          <button class="btn btn-dark btn-sm" id="add-row" data-t="addRow"></button>
+        </div>
+      </main>
+
+      <aside class="cats">
+        <h3 data-t="cats"></h3>
+        <div class="cat-list" id="cat-list"></div>
+        <form class="cat-add" id="cat-add">
+          <input class="field" id="cat-name" maxlength="40" />
+          <button class="btn btn-line btn-sm" type="submit">+</button>
+        </form>
+      </aside>
+    </div>
   </div>
 
   <!-- Projekta forma -->
@@ -202,8 +309,8 @@
     import { initializeApp } from 'https://www.gstatic.com/firebasejs/12.19.0/firebase-app.js';
     import { getAuth, onAuthStateChanged, signInAnonymously, signOut } from 'https://www.gstatic.com/firebasejs/12.19.0/firebase-auth.js';
     import {
-      getFirestore, doc, getDoc, setDoc, deleteDoc, collection, query, where, orderBy,
-      onSnapshot, getDocs, writeBatch, serverTimestamp
+      getFirestore, doc, getDoc, setDoc, updateDoc, deleteDoc, addDoc, collection, query, where, orderBy,
+      onSnapshot, getDocs, writeBatch, serverTimestamp, arrayUnion, arrayRemove
     } from 'https://www.gstatic.com/firebasejs/12.19.0/firebase-firestore.js';
 
     const app = initializeApp({
@@ -219,17 +326,35 @@
 
     const ROLES = ['rw', 'ro', 'dj'];
     const ROLE_LABEL = { rw: 'Lasīt / rakstīt', ro: 'Tikai lasīt', dj: 'Lasīt + DJ' };
-    const DEFAULT_CATS = [
-      { id: 'dj', name: 'DJ' },
-      { id: 'vaditajs', name: 'Vadītājs' },
-      { id: 'skana', name: 'Skaņa/Gaisma' },
-      { id: 'keiterings', name: 'Keiterings' },
-      { id: 'dekoracijas', name: 'Dekorācijas' }
-    ];
+    const DEFAULT_CATS = {
+      lv: [
+        { id: 'dj', name: 'DJ' },
+        { id: 'vaditajs', name: 'Vadītājs' },
+        { id: 'skana', name: 'Skaņa/Gaisma' },
+        { id: 'keiterings', name: 'Keiterings' },
+        { id: 'dekoracijas', name: 'Dekorācijas' }
+      ],
+      en: [
+        { id: 'dj', name: 'DJ' },
+        { id: 'vaditajs', name: 'Host' },
+        { id: 'skana', name: 'Sound/Lights' },
+        { id: 'keiterings', name: 'Catering' },
+        { id: 'dekoracijas', name: 'Decorations' }
+      ]
+    };
+    // Scenārija teksti projekta valodā (valodu izvēlas admins).
+    const T = {
+      lv: { logout: 'Iziet', venue: 'Vieta', address: 'Adrese', find: 'Atrast kartē', time: 'Laiks', event: 'Notikums',
+            note: 'Komentārs', addRow: '+ Rinda', cats: 'Kategorijas', edit: 'Labot', done: 'Gatavs', newCat: 'Jauna kategorija',
+            empty: 'Vēl nav nevienas rindas.', notFound: 'Adrese nav atrasta' },
+      en: { logout: 'Log out', venue: 'Venue', address: 'Address', find: 'Find on map', time: 'Time', event: 'Event',
+            note: 'Comment', addRow: '+ Row', cats: 'Categories', edit: 'Edit', done: 'Done', newCat: 'New category',
+            empty: 'No rows yet.', notFound: 'Address not found' }
+    };
     const SID_KEY = 'rc-scenarijs-sid';
 
     const $ = id => document.getElementById(id);
-    const screens = ['gate', 'admin', 'client'];
+    const screens = ['gate', 'admin', 'sheet'];
     function show(name) { screens.forEach(s => { $(s).hidden = s !== name; }); }
 
     let toastTimer;
@@ -263,7 +388,7 @@
       if (sid) {
         try {
           const m = await getDoc(doc(db, 'scenarios', sid, 'members', user.uid));
-          if (m.exists()) { await openClient(sid, m.data().role); return; }
+          if (m.exists()) { openScenario(sid, m.data().role); return; }
         } catch {}
       }
       show('gate');
@@ -286,7 +411,7 @@
           try { await deleteDoc(mref); } catch {}
           await setDoc(mref, { pw, role, at: serverTimestamp() });
           lsSet(SID_KEY, sid);
-          await openClient(sid, role);
+          openScenario(sid, role);
         } else {
           await setDoc(doc(db, 'scnAdmins', user.uid), { pw, at: serverTimestamp() });
           openAdmin();
@@ -305,6 +430,7 @@
 
     document.querySelectorAll('[data-logout]').forEach(b => b.addEventListener('click', async () => {
       if (unsubProjects) { unsubProjects(); unsubProjects = null; }
+      closeScenario();
       const uid = auth.currentUser?.uid;
       if (uid) { try { await deleteDoc(doc(db, 'scnAdmins', uid)); } catch {} }
       lsSet(SID_KEY, null);
@@ -312,18 +438,266 @@
       show('gate');
     }));
 
-    // ---------- Klients ----------
-    async function openClient(sid, role) {
-      const s = await getDoc(doc(db, 'scenarios', sid));
-      if (!s.exists()) { lsSet(SID_KEY, null); show('gate'); return; }
-      $('client-title').textContent = s.data().name;
-      document.documentElement.lang = s.data().lang || 'lv';
-      show('client');
+    // ---------- Scenārijs ----------
+    // S = atvērtais scenārijs. role: 'admin' | 'rw' | 'ro' | 'dj'.
+    let S = null;
+    let map = null, marker = null;
+    const tr = k => (T[S?.data?.lang] || T.lv)[k];
+    const canWrite = () => S && (S.role === 'admin' || S.role === 'rw');
+    const canRow = r => canWrite() || (S.role === 'dj' && (r.cats || []).includes('dj'));
+    const sref = () => doc(db, 'scenarios', S.sid);
+    const rref = id => doc(db, 'scenarios', S.sid, 'rows', id);
+
+    // Rakstīšana ar nelielu aizturi, lai katrs burts nav atsevišķs ieraksts.
+    const timers = new Map();
+    function later(key, fn) {
+      clearTimeout(timers.get(key));
+      timers.set(key, setTimeout(() => { timers.delete(key); fn(); }, 400));
     }
+    const fail = e => { console.error(e); toast('Neizdevās saglabāt / Could not save'); };
+
+    function closeScenario() {
+      if (!S) return;
+      S.unsubs.forEach(u => u());
+      S = null;
+    }
+
+    function openScenario(sid, role) {
+      closeScenario();
+      S = { sid, role, data: null, rows: new Map(), els: new Map(), sel: null, edit: false, centered: false, unsubs: [] };
+      $('back-btn').hidden = role !== 'admin';
+      $('rows').querySelectorAll('.srow:not(.shead), .sheet-empty').forEach(el => el.remove());
+      show('sheet');
+      ensureMap();
+
+      S.unsubs.push(onSnapshot(sref(), snap => {
+        if (!snap.exists()) {
+          lsSet(SID_KEY, null);
+          role === 'admin' ? openAdmin() : show('gate');
+          return;
+        }
+        S.data = snap.data();
+        renderAll();
+      }, err => { console.error(err); show('gate'); }));
+
+      S.unsubs.push(onSnapshot(collection(db, 'scenarios', sid, 'rows'), snap => {
+        snap.docChanges().forEach(ch => {
+          if (ch.type === 'removed') S.rows.delete(ch.doc.id);
+          else S.rows.set(ch.doc.id, ch.doc.data());
+        });
+        renderRows();
+      }, err => console.error(err)));
+    }
+
+    $('back-btn').addEventListener('click', () => openAdmin());
+
+    function renderAll() {
+      const lang = S.data.lang || 'lv';
+      document.documentElement.lang = lang;
+      document.querySelectorAll('#sheet [data-t]').forEach(el => { el.textContent = tr(el.dataset.t); });
+      $('cat-name').placeholder = tr('newCat');
+      renderVenue();
+      renderCats();
+      renderRows();
+    }
+
+    // ----- Vieta, adrese, karte -----
+    function setVal(el, v) { if (document.activeElement !== el && el.value !== (v || '')) el.value = v || ''; }
+    function renderVenue() {
+      const w = canWrite();
+      for (const id of ['v-name', 'v-addr']) $(id).readOnly = !w;
+      setVal($('v-name'), S.data.place);
+      setVal($('v-addr'), S.data.address);
+      $('v-find').hidden = !w;
+      $('v-name').placeholder = w ? tr('venue') : '';
+      $('v-addr').placeholder = w ? tr('address') : '';
+      renderMarker();
+    }
+    $('v-name').addEventListener('input', e => later('place', () =>
+      updateDoc(sref(), { place: e.target.value, updatedAt: serverTimestamp() }).catch(fail)));
+    $('v-addr').addEventListener('input', e => later('address', () =>
+      updateDoc(sref(), { address: e.target.value, updatedAt: serverTimestamp() }).catch(fail)));
+
+    function ensureMap() {
+      if (map || !window.L) { map && setTimeout(() => map.invalidateSize(), 50); return; }
+      map = L.map('map', { scrollWheelZoom: false }).setView([56.88, 24.6], 6);
+      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        maxZoom: 19, attribution: '© OpenStreetMap'
+      }).addTo(map);
+      map.on('click', e => {
+        if (!canWrite()) return;
+        updateDoc(sref(), { lat: e.latlng.lat, lng: e.latlng.lng, updatedAt: serverTimestamp() }).catch(fail);
+      });
+    }
+    function renderMarker() {
+      if (!map) return;
+      const { lat, lng } = S.data;
+      if (lat == null || lng == null) {
+        if (marker) { marker.remove(); marker = null; }
+        if (!S.centered) { map.setView([56.88, 24.6], 6); S.centered = true; }
+        return;
+      }
+      if (!marker) marker = L.circleMarker([lat, lng], { radius: 9, color: '#fff', weight: 2.5, fillColor: '#B07320', fillOpacity: 1 }).addTo(map);
+      else marker.setLatLng([lat, lng]);
+      if (!S.centered) { map.setView([lat, lng], 13); S.centered = true; }
+    }
+    $('v-find').addEventListener('click', async () => {
+      const q = $('v-addr').value.trim();
+      if (!q) return;
+      try {
+        const res = await fetch('https://nominatim.openstreetmap.org/search?format=json&limit=1&countrycodes=lv&q=' + encodeURIComponent(q));
+        const [hit] = await res.json();
+        if (!hit) { toast(tr('notFound')); return; }
+        const lat = +hit.lat, lng = +hit.lon;
+        map.setView([lat, lng], 14);
+        await updateDoc(sref(), { address: q, lat, lng, updatedAt: serverTimestamp() });
+      } catch (e) { fail(e); }
+    });
+
+    // ----- Kategorijas -----
+    function renderCats() {
+      const box = $('cat-list');
+      box.replaceChildren();
+      const cats = S.data.cats || [];
+      if (S.sel && !cats.some(c => c.id === S.sel)) S.sel = null;
+      for (const c of cats) {
+        const n = [...S.rows.values()].filter(r => (r.cats || []).includes(c.id)).length;
+        const wrap = document.createElement('div');
+        wrap.className = 'cat' + (S.sel === c.id ? ' sel' : '');
+        const b = document.createElement('button'); b.className = 'cat-btn'; b.type = 'button';
+        const nm = document.createElement('span'); nm.className = 'nm'; nm.textContent = c.name;
+        const cnt = document.createElement('span'); cnt.className = 'n'; cnt.textContent = n || '';
+        b.append(nm, cnt);
+        b.addEventListener('click', () => { S.sel = S.sel === c.id ? null : c.id; renderCats(); renderRows(); });
+        wrap.append(b);
+        // Dzēst var tikai "Labot" režīmā. DJ paliek vienmēr — uz to balstās "lasīt + DJ" parole.
+        if (S.edit && canWrite() && c.id !== 'dj') {
+          const x = document.createElement('button'); x.className = 'cat-x'; x.type = 'button'; x.textContent = '×';
+          x.addEventListener('click', () => deleteCat(c.id));
+          wrap.append(x);
+        }
+        box.append(wrap);
+      }
+      $('cat-add').hidden = !canWrite();
+      $('edit-btn').hidden = !canWrite();
+      $('edit-btn').textContent = S.edit ? tr('done') : tr('edit');
+      $('add-row').hidden = !canWrite();
+    }
+
+    $('cat-add').addEventListener('submit', e => {
+      e.preventDefault();
+      const name = $('cat-name').value.trim();
+      if (!name) return;
+      const id = slug(name) + '-' + Math.random().toString(36).slice(2, 6);
+      $('cat-name').value = '';
+      updateDoc(sref(), { cats: [...(S.data.cats || []), { id, name }], updatedAt: serverTimestamp() }).catch(fail);
+    });
+
+    async function deleteCat(id) {
+      try {
+        await updateDoc(sref(), { cats: (S.data.cats || []).filter(c => c.id !== id), updatedAt: serverTimestamp() });
+        const b = writeBatch(db);
+        for (const [rid, r] of S.rows) if ((r.cats || []).includes(id)) b.update(rref(rid), { cats: arrayRemove(id) });
+        await b.commit();
+      } catch (e) { fail(e); }
+    }
+
+    $('edit-btn').addEventListener('click', () => { S.edit = !S.edit; renderCats(); renderRows(); });
+
+    // ----- Rindas -----
+    function autosize(t) { t.style.height = 'auto'; t.style.height = t.scrollHeight + 'px'; }
+    window.addEventListener('resize', () => document.querySelectorAll('#rows textarea').forEach(autosize));
+
+    function makeRow(id) {
+      const el = document.createElement('div');
+      el.className = 'srow';
+      el.innerHTML = '<button class="mark" type="button"><span></span></button>'
+        + '<input class="cell c-time" maxlength="20" />'
+        + '<div class="c-ev"><textarea class="cell" rows="1" maxlength="2000"></textarea><div class="tags"></div></div>'
+        + '<textarea class="cell c-note" rows="1" maxlength="2000"></textarea>'
+        + '<button class="del" type="button">×</button>';
+      const [time, ev, note] = [el.querySelector('.c-time'), el.querySelector('.c-ev textarea'), el.querySelector('.c-note')];
+      const bind = (input, field) => input.addEventListener('input', () => {
+        if (input.tagName === 'TEXTAREA') autosize(input);
+        later(id + field, () => updateDoc(rref(id), { [field]: input.value }).catch(fail));
+      });
+      bind(time, 't'); bind(ev, 'ev'); bind(note, 'note');
+      el.querySelector('.mark').addEventListener('click', () => {
+        const r = S.rows.get(id);
+        if (!r || !S.sel) return;
+        const on = (r.cats || []).includes(S.sel);
+        updateDoc(rref(id), { cats: on ? arrayRemove(S.sel) : arrayUnion(S.sel) }).catch(fail);
+      });
+      el.querySelector('.del').addEventListener('click', () => deleteDoc(rref(id)).catch(fail));
+      el._f = { time, ev, note, tags: el.querySelector('.tags'), mark: el.querySelector('.mark'), del: el.querySelector('.del') };
+      return el;
+    }
+
+    let pendingFocus = null;
+    function renderRows() {
+      if (!S || !S.data) return;
+      const box = $('rows');
+      const names = Object.fromEntries((S.data.cats || []).map(c => [c.id, c.name]));
+      const list = [...S.rows.entries()].sort((a, b) => (a[1].order || 0) - (b[1].order || 0));
+
+      for (const [id, el] of S.els) if (!S.rows.has(id)) { el.remove(); S.els.delete(id); }
+      box.querySelector('.sheet-empty')?.remove();
+      if (!list.length) {
+        const p = document.createElement('div'); p.className = 'sheet-empty'; p.textContent = tr('empty');
+        box.append(p);
+      }
+
+      list.forEach(([id, r], i) => {
+        let el = S.els.get(id);
+        if (!el) { el = makeRow(id); S.els.set(id, el); }
+        const f = el._f;
+        const editable = canRow(r);
+        for (const [input, v] of [[f.time, r.t], [f.ev, r.ev], [f.note, r.note]]) {
+          input.readOnly = !editable;
+          setVal(input, v);
+        }
+        f.time.placeholder = editable ? '00:00' : '';
+        const cats = r.cats || [];
+        f.tags.replaceChildren(...cats.filter(c => names[c]).map(c => {
+          const s = document.createElement('span'); s.className = 'tag'; s.textContent = names[c]; return s;
+        }));
+        f.mark.disabled = !(S.sel && canWrite());
+        f.mark.classList.toggle('on', !!S.sel && cats.includes(S.sel));
+        f.del.disabled = !(S.edit && canWrite());
+        el.classList.toggle('hl', !!S.sel && cats.includes(S.sel));
+        el.classList.toggle('dim', !!S.sel && !cats.includes(S.sel));
+        // Kārtība: pārvieto tikai, ja rinda nav savā vietā (lai nepazūd fokuss).
+        const at = box.children[i + 1];
+        if (at !== el) box.insertBefore(el, at || null);
+      });
+      requestAnimationFrame(() => box.querySelectorAll('textarea').forEach(autosize));
+      if (pendingFocus && S.els.has(pendingFocus)) { S.els.get(pendingFocus)._f.time.focus(); pendingFocus = null; }
+      renderCatCounts();
+    }
+    function renderCatCounts() {
+      const cats = S.data.cats || [];
+      $('cat-list').querySelectorAll('.cat').forEach((wrap, i) => {
+        const c = cats[i]; if (!c) return;
+        const n = [...S.rows.values()].filter(r => (r.cats || []).includes(c.id)).length;
+        wrap.querySelector('.n').textContent = n || '';
+      });
+    }
+
+    $('add-row').addEventListener('click', async () => {
+      const last = Math.max(0, ...[...S.rows.values()].map(r => r.order || 0));
+      try {
+        const ref = await addDoc(collection(db, 'scenarios', S.sid, 'rows'), {
+          t: '', ev: '', note: '', cats: S.sel ? [S.sel] : [], order: last + 1000
+        });
+        pendingFocus = ref.id;
+        renderRows();
+      } catch (e) { fail(e); }
+    });
 
     // ---------- Admin: saraksts ----------
     const keysCache = new Map();
     function openAdmin() {
+      closeScenario();
       show('admin');
       if (unsubProjects) return;
       unsubProjects = onSnapshot(query(collection(db, 'scenarios'), orderBy('createdAt', 'desc')), async snap => {
@@ -366,7 +740,9 @@
         const actions = document.createElement('div'); actions.className = 'proj-actions';
         const edit = document.createElement('button'); edit.className = 'btn btn-line btn-sm'; edit.textContent = 'Labot';
         edit.addEventListener('click', () => openModal(p));
-        actions.append(edit);
+        const open = document.createElement('button'); open.className = 'btn btn-dark btn-sm'; open.textContent = 'Atvērt';
+        open.addEventListener('click', () => openScenario(p.id, 'admin'));
+        actions.append(edit, open);
 
         card.append(top, list, actions);
         box.append(card);
@@ -433,7 +809,7 @@
           b.update(doc(db, 'scenarios', sid), { name, lang, updatedAt: serverTimestamp() });
         } else {
           b.set(doc(db, 'scenarios', sid), {
-            name, lang, place: '', address: '', lat: null, lng: null, cats: DEFAULT_CATS,
+            name, lang, place: '', address: '', lat: null, lng: null, cats: DEFAULT_CATS[lang] || DEFAULT_CATS.lv,
             createdAt: serverTimestamp(), updatedAt: serverTimestamp()
           });
         }

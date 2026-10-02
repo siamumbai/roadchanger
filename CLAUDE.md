@@ -52,7 +52,7 @@
 - `/reviews/` — atlasītas Google atsauksmes kā **statisks HTML** + poga uz pilno Google profilu + poga uz `/review/`.
 - `/projects/` — projektu saraksts; katrs projekts savā mapē `/projects/<slug>/index.html`.
 - `/kalendars/` — **privāts kalendārs sadarbības māksliniekiem** (uzlikts 2026-10-02). `noindex`, robots.txt aizliegts, nav sitemap, nav navigācijā. Sk. sadaļu "Kalendārs" zemāk.
-- `/scenarijs/` — **privāti pasākumu scenāriji klientiem** (uzlikts 2026-10-02, 1. solis: paroles logs + Admin). `noindex`, robots.txt aizliegts, nav sitemap, nav navigācijā. Sk. sadaļu "Scenārijs" zemāk.
+- `/scenarijs/` — **privāti pasākumu scenāriji klientiem** (uzlikts 2026-10-02/03: paroles logs, Admin, scenārija tabula ar karti un kategorijām; PDF vēl nav). `noindex`, robots.txt aizliegts, nav sitemap, nav navigācijā. Sk. sadaļu "Scenārijs" zemāk.
 - `/thanks` — pateicības lapa pēc formas nosūtīšanas ("Thanks! The form was submitted successfully..." + Go back poga uz galveno lapu).
 
 ## Navigācija (galvenā lapa)
@@ -150,6 +150,11 @@ un pastāvīgs, īsinājums ir redirect. Abi noved uz to pašu profilu.
 - Katram projektam 3 paroles: `rw` lasīt/rakstīt, `ro` tikai lasīt, `dj` lasīt + rakstīt tikai rindas ar DJ kategoriju. Parolēm jābūt unikālām visos projektos.
 - Dati: `scenarios/{sid}` (name, lang, place, address, lat, lng, cats[]), `scenarios/{sid}/keys/main` (paroles, lasa tikai admins),
   `scenarios/{sid}/members/{uid}` (kas ar kuru paroli ienācis), `scenarios/{sid}/rows/{rid}`, `scnIndex/{sha256('scn:'+parole)}` → {sid, role}, `scnAdmins/{uid}`.
+- Scenārija skats: augšā Vieta + Adrese + karte (Leaflet + OpenStreetMap, adreses meklēšana caur Nominatim, vai klikšķis kartē),
+  tabula Laiks | Notikums | Komentārs (rindas `order` secībā, labojas reālā laikā), labajā pusē kategorijas.
+  Uzspiežot kategoriju: tās rindas oranžas, pārējās blāvas; rakstītāji ar apli rindas sākumā atzīmē/noņem.
+  "Labot" atklāj rindu un kategoriju dzēšanu. DJ kategoriju (`id: 'dj'`) dzēst nevar — uz to balstās "lasīt + DJ" parole.
+  Scenārija teksti (LV/EN) — `T` objekts failā; kategoriju sākuma nosaukumi pēc projekta valodas.
 - Mainot paroli, Admin izmet visus, kas ienāca ar veco. Valodu (`lang`) maina tikai admins.
 - Lietotāja lēmumi: iekrāsošana pagaidām oranža visiem; rindai var būt vairākas kategorijas; kategorijas var pievienot/dzēst (dzēst — paslēpts aiz "Labot");
   PDF: galvenais + 1 kategorija; valoda katram projektam, maina tikai admins.
