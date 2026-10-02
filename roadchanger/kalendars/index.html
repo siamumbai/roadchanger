@@ -620,6 +620,9 @@
       if (panel && panel.mode === 'edit' && !getEv(panel.id)) closePanel();
     }
     const getEv = (id) => events.get(id) || upcoming.get(id);
+    // Pasākuma krāsa kalendārā: sarkans "Aizņemts", zaļš "Apstiprināts", oranžs "Interesējas"/"Rezervēts"
+    const evColor = (e, c) => calById(c)?.busy ? '#D32F2F' : e.status === 'apstiprinats' ? '#3E8E41' : '#E08A1E';
+    const busyOnly = (ids) => ids.length > 0 && ids.every((id) => calById(id)?.busy);
 
     // ---------- Nākošie pasākumi (kreisajā pusē) ----------
     let upcoming = new Map();
@@ -650,7 +653,7 @@
         const d = parseYmd(e.date);
         const cals = (e.cals || []).filter((c) => visible.has(c) && calById(c)).map((c) => {
           const cal = calById(c);
-          return `<span style="--c:${esc(cal.color)}"><span class="dot st-${esc(e.status)}"></span>${esc(cal.name)}</span>`;
+          return `<span style="--c:${evColor(e, c)}">${esc(cal.name)}</span>`;
         }).join('');
         const end = e.dateEnd && e.dateEnd !== e.date ? parseYmd(e.dateEnd) : null;
         const dd = end ? `${d.getDate()}.–${end.getDate()}.` : `${d.getDate()}.`;
@@ -760,7 +763,7 @@
           for (const { e, c } of items) {
             const cal = calById(c);
             const act = panel && panel.mode === 'edit' && panel.id === e.id ? ' active' : '';
-            html += `<button class="ev${act}" data-ev="${esc(e.id)}" style="--c:${esc(cal.color)}" type="button" title="${esc(cal.name)}${e.title ? ' · ' + esc(e.title) : ''}${e.from ? ' · ' + esc(e.from) : ''}${e.place ? ' · ' + esc(e.place) : ''}"><span class="dot st-${esc(e.status)}"></span><span class="lbl">${esc(cal.name)}</span></button>`;
+            html += `<button class="ev${act}" data-ev="${esc(e.id)}" style="--c:${evColor(e, c)}" type="button" title="${esc(cal.name)}${e.title ? ' · ' + esc(e.title) : ''}${e.from ? ' · ' + esc(e.from) : ''}${e.place ? ' · ' + esc(e.place) : ''}"><span class="lbl">${esc(cal.name)}</span></button>`;
           }
           html += `</div>`;
         }
@@ -878,7 +881,7 @@
         p.innerHTML = head + `
           <div class="two-col">
             <div><span class="flabel">Kalendāri</span><div class="opts">${names}</div></div>
-            <div><span class="flabel">Statuss</span><div class="opts"><span class="opt"><span class="dot st-${esc(e.status)}"></span>${esc(st ? st[1] : '')}</span></div></div>
+            ${busyOnly(e.cals || []) ? '' : `<div><span class="flabel">Statuss</span><div class="opts"><span class="opt"><span class="dot st-${esc(e.status)}"></span>${esc(st ? st[1] : '')}</span></div></div>`}
           </div>
           <span class="flabel">Nosaukums</span><p class="ro ${e.title ? '' : 'muted'}">${esc(e.title || '—')}</p>
           <span class="flabel">Laiks</span><p class="ro ${e.from || e.to ? '' : 'muted'}">${esc([e.from, e.to].filter(Boolean).join(' – ') || '—')}</p>
@@ -904,7 +907,7 @@
         <form id="ev-form">
           <div class="two-col">
             <div><span class="flabel">Kalendāri</span><div class="opts" id="f-cals">${calOpts}</div></div>
-            <div><span class="flabel">Statuss</span><div class="opts" id="f-st">${stOpts}</div></div>
+            <div id="st-col" ${busyOnly(checked) ? 'hidden' : ''}><span class="flabel">Statuss</span><div class="opts" id="f-st">${stOpts}</div></div>
           </div>
           <span class="flabel">Nosaukums</span><input class="field" type="text" id="f-title" maxlength="300" value="${esc(e?.title || '')}" />
           <span class="flabel">Datums no – līdz</span>
@@ -932,7 +935,12 @@
     $('panel').addEventListener('click', async (ev) => {
       if (ev.target.closest('[data-close]')) { closePanel(); return; }
       const c = ev.target.closest('[data-cal]');
-      if (c) { c.classList.toggle('on'); return; }
+      if (c) {
+        c.classList.toggle('on');
+        // Tikai "Aizņemts" — statuss nav vajadzīgs
+        $('st-col').hidden = busyOnly([...$('f-cals').querySelectorAll('.opt.on')].map((o) => o.dataset.cal));
+        return;
+      }
       const s = ev.target.closest('[data-st]');
       if (s) { $('f-st').querySelectorAll('.opt').forEach((o) => o.classList.toggle('on', o === s)); return; }
       const del = ev.target.closest('#f-del');
@@ -954,7 +962,8 @@
       const st = $('f-st').querySelector('.opt.on');
       const date = $('f-date').value;
       if (!cals.length) { msg.textContent = 'Izvēlies kalendāru.'; return; }
-      if (!st) { msg.textContent = 'Izvēlies statusu.'; return; }
+      const noStatus = busyOnly(cals);
+      if (!st && !noStatus) { msg.textContent = 'Izvēlies statusu.'; return; }
       if (!date) { msg.textContent = 'Izvēlies datumu.'; return; }
       let dateEnd = $('f-end').value || '';
       if (dateEnd && dateEnd < date) { msg.textContent = 'Beigu datums ir pirms sākuma.'; return; }
@@ -962,7 +971,7 @@
       const old = panel.mode === 'edit' ? getEv(panel.id) : null;
       const id = old ? old.id : doc(collection(db, 'calendars', cals[0], 'events')).id;
       const data = {
-        date, dateEnd, cals, status: st.dataset.st,
+        date, dateEnd, cals, status: st ? st.dataset.st : 'apstiprinats',
         from: $('f-from').value || '', to: $('f-to').value || '',
         title: $('f-title').value.trim(), place: $('f-place').value.trim(), address: $('f-address').value.trim(),
         notes: $('f-notes').value.trim(),
