@@ -80,8 +80,35 @@
     /* Kalendārs vidū; labajā pusē vienmēr rezervēta vieta formai, kreisajā tikpat plata tukša josla —
        atverot formu, kalendāra izmērs nemainās */
     .cal-wrap { --side: clamp(17rem, 22vw, 24rem); display: grid; grid-template-columns: var(--side) minmax(0, 1fr) var(--side); gap: 1.75rem; padding: 0 3rem 3rem; align-items: start; }
+    .side { grid-column: 1; position: sticky; top: calc(var(--navh, 0px) + 1.25rem); margin-top: 1.25rem;
+      max-height: calc(100vh - var(--navh, 0px) - 2.5rem); overflow-y: auto; }
     .cal-main { grid-column: 2; }
     .panel { grid-column: 3; }
+    .side .filters { position: static; flex-direction: column; flex-wrap: nowrap; align-items: stretch; padding: 0; border: none; background: none; gap: 0.4rem; }
+    .side .fchip { justify-content: flex-start; }
+    .side h4 { font-size: 0.72rem; letter-spacing: 0.1em; text-transform: uppercase; color: #7A5C38; font-weight: 400; margin: 1.75rem 0 0.6rem; }
+    .upc { display: flex; flex-direction: column; gap: 0.45rem; }
+    .upc-item { display: grid; grid-template-columns: 3.4rem minmax(0, 1fr); gap: 0.6rem; align-items: start; text-align: left; width: 100%;
+      background: #fff; border: 0.5px solid #E0CCA4; border-radius: 8px; padding: 0.55rem 0.65rem; }
+    .upc-item:hover { border-color: #B07320; }
+    .upc-date { font-family: 'Libre Baskerville', Georgia, serif; font-size: 0.95rem; line-height: 1.2; }
+    .upc-date small { display: block; font-family: 'Lato', Arial, sans-serif; font-size: 0.68rem; color: #7A5C38; text-transform: uppercase; letter-spacing: 0.05em; margin-top: 0.15rem; }
+    .upc-cals { display: flex; flex-wrap: wrap; gap: 0.25rem; }
+    .upc-cals > span { display: inline-flex; align-items: center; gap: 0.3rem; font-size: 0.75rem; padding: 0.1rem 0.4rem; border-radius: 4px;
+      background: color-mix(in srgb, var(--c) 14%, #fff); border-left: 3px solid var(--c); }
+    .upc-cals .dot { display: inline-block; flex: none; width: 0.45rem; height: 0.45rem; border-radius: 50%; }
+    .upc-place { font-size: 0.78rem; color: #7A5C38; margin-top: 0.25rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .upc-empty { font-size: 0.9rem; color: #9A8466; }
+    /* Mēnešu pogas galvenē */
+    .mchips { display: flex; gap: 0.4rem; flex-wrap: wrap; }
+    .mchip { padding: 0.45rem 0.9rem; border-radius: 999px; border: 0.5px solid #E0CCA4; background: #fff; font-size: 0.85rem; white-space: nowrap; }
+    .mchip:hover { border-color: #B07320; color: #B07320; }
+    .mchip.on { background: #2C2416; border-color: #2C2416; color: #F5ECD8; }
+    .mchip small { font-size: 0.7rem; opacity: 0.7; margin-left: 0.25rem; }
+    /* Formā kalendāri un statuss divās kolonnās */
+    .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; }
+    .two-col .opts { flex-direction: column; align-items: flex-start; flex-wrap: nowrap; }
+    .panel .two-col + .flabel { margin-top: 1.1rem; }
     .cal-sticky { position: sticky; top: calc(var(--navh, 0px) + var(--filh, 0px)); z-index: 30; background: #FFFBF5; padding-top: 1.25rem; border-bottom: 0.5px solid #EAD9B8; }
     .cal-head { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 0.9rem; position: relative; }
     .arrow { flex: none; width: 2.25rem; height: 2.25rem; border-radius: 50%; border: 0.5px solid #E0CCA4; background: #fff; font-size: 1.1rem; color: #6B5035; }
@@ -119,7 +146,10 @@
     .day:hover { background: #FEF9F2; }
     .day.sel { box-shadow: inset 0 0 0 2px #B07320; }
     .num { font-size: 0.8rem; color: #6B5035; width: 1.6rem; height: 1.6rem; display: flex; align-items: center; justify-content: center; border-radius: 50%; }
-    .day.today { background: color-mix(in srgb, #B07320 12%, #fff); box-shadow: inset 0 0 0 2px #B07320; }
+    .day.today { background: color-mix(in srgb, #B07320 12%, #fff); }
+    /* Pagājušās dienas viegli pārsvītrotas */
+    .day.past { background: linear-gradient(to top right, transparent calc(50% - 0.5px), #EAD9B8 50%, transparent calc(50% + 0.5px)), #FDFBF7; }
+    .day.past .num { color: #B9A584; }
     .day.today:hover { background: color-mix(in srgb, #B07320 18%, #fff); }
     .day.today .num { background: #B07320; color: #fff; font-weight: 700; font-size: 0.9rem; width: 1.9rem; height: 1.9rem; }
     .ev {
@@ -228,7 +258,12 @@
       .nav-user .who { display: none; }
       .filters { padding: 0.75rem 1rem; flex-wrap: nowrap; overflow-x: auto; -webkit-overflow-scrolling: touch; }
       .cal-wrap { grid-template-columns: minmax(0, 1fr); padding: 0 0.5rem 2rem; }
-      .cal-main, .panel { grid-column: auto; }
+      .cal-main, .panel, .side { grid-column: auto; }
+      .side { position: sticky; top: var(--navh, 0px); z-index: 45; margin: 0 -0.5rem; max-height: none; overflow: visible; background: #FEF9F2; border-bottom: 0.5px solid #EAD9B8; }
+      .side h4, .upc { display: none; }
+      .side .filters { position: static; flex-direction: row; overflow-x: auto; padding: 0.75rem 1rem; }
+      .mchips { flex-wrap: nowrap; overflow-x: auto; }
+      .mchip { padding: 0.4rem 0.7rem; font-size: 0.8rem; }
       .cal-head { padding: 0 0.5rem; gap: 0.4rem; }
       .month-title { min-width: 0; font-size: 1.15rem; padding: 0.2rem 0.3rem; }
       .today-btn { padding: 0.5rem 0.8rem; font-size: 0.8rem; }
@@ -299,16 +334,17 @@
     </nav>
 
     <div id="view-cal">
-      <div class="filters" id="filters"></div>
       <div class="cal-wrap" id="cal-wrap">
+        <aside class="side" id="side">
+          <div class="filters" id="filters"></div>
+          <h4>Nākošie pasākumi</h4>
+          <div class="upc" id="upcoming"></div>
+        </aside>
         <div class="cal-main">
           <div class="cal-sticky" id="cal-sticky">
           <div class="cal-head">
-            <button class="arrow" id="prev" type="button" aria-label="Iepriekšējais mēnesis">‹</button>
-            <button class="month-title" id="month-title" type="button"></button>
-            <button class="arrow" id="next" type="button" aria-label="Nākamais mēnesis">›</button>
+            <div class="mchips" id="mchips"></div>
             <button class="btn btn-line today-btn" id="today" type="button">Šodien</button>
-            <div class="picker" id="picker" hidden></div>
           </div>
           <div class="dow"><span>P</span><span>O</span><span>T</span><span>C</span><span>Pk</span><span>S</span><span>Sv</span></div>
           </div>
@@ -358,7 +394,7 @@
     } from 'https://www.gstatic.com/firebasejs/12.19.0/firebase-auth.js';
     import {
       getFirestore, doc, getDoc, setDoc, updateDoc, deleteDoc, collection, query, where, orderBy,
-      onSnapshot, getDocs, writeBatch, serverTimestamp, Timestamp
+      onSnapshot, getDocs, writeBatch, serverTimestamp, Timestamp, limit
     } from 'https://www.gstatic.com/firebasejs/12.19.0/firebase-firestore.js';
 
     const app = initializeApp({
@@ -397,6 +433,8 @@
     const ymd = (d) => `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
     const parseYmd = (s) => { const [y, m, d] = s.split('-').map(Number); return new Date(y, m - 1, d); };
     const fmtLong = (s) => { const d = parseYmd(s); return `${WEEKDAYS[d.getDay()]}, ${d.getDate()}. ${MONTHS_GEN[d.getMonth()]} ${d.getFullYear()}`; };
+    const fmtShort = (s) => { const d = parseYmd(s); return `${d.getDate()}. ${MONTHS_GEN[d.getMonth()]} ${d.getFullYear()}`; };
+    const fmtRange = (a, b) => b && b > a ? `${fmtShort(a)} – ${fmtShort(b)}` : fmtLong(a);
     const fmtTs = (t) => { if (!t || !t.toDate) return ''; const d = t.toDate(); return `${d.getDate()}.${pad(d.getMonth() + 1)}.${d.getFullYear()} ${pad(d.getHours())}:${pad(d.getMinutes())}`; };
 
     function toast(text, err = false) {
@@ -501,6 +539,7 @@
     function stopAll() {
       eventUnsubs.forEach((u) => u()); eventUnsubs = [];
       otherUnsubs.forEach((u) => u()); otherUnsubs = [];
+      upcUnsubs.forEach((u) => u()); upcUnsubs = []; upcoming = new Map();
       perCal = {}; events = new Map(); calendars = []; profile = {}; users = [];
       selected = new Set(); panel = null; selDate = null;
       didInitialScroll = false; rangeFrom = curMi - 2; rangeTo = curMi + 6;
@@ -522,6 +561,7 @@
         renderFilters();
         measureSticky();
         subscribeEvents();
+        subscribeUpcoming();
         if (!didInitialScroll) { scrollToMonth(curMi, false); didInitialScroll = true; }
         if (tab === 'admin' && isAdmin) { renderCalList(); renderUsers(); }
       };
@@ -558,7 +598,8 @@
       eventUnsubs.forEach((u) => u()); eventUnsubs = [];
       const ids = viewIds();
       for (const k of Object.keys(perCal)) if (!ids.includes(k)) delete perCal[k];
-      const a = ymd(miDate(rangeFrom, 1)), b = ymd(miDate(rangeTo + 1, 0));
+      // Sāk 2 mēnešus agrāk, lai redzētu arī vairāku dienu pasākumus, kas sākušies pirms pirmā mēneša
+      const a = ymd(miDate(rangeFrom - 2, 1)), b = ymd(miDate(rangeTo + 1, 0));
       for (const cal of ids) {
         const q = query(collection(db, 'calendars', cal, 'events'), where('date', '>=', a), where('date', '<=', b));
         eventUnsubs.push(onSnapshot(q, (snap) => {
@@ -572,14 +613,63 @@
       events = new Map();
       for (const list of Object.values(perCal)) for (const e of list) if (!e.deleted) events.set(e.id, e);
       renderGrid();
-      if (panel && panel.mode === 'edit' && !events.has(panel.id)) closePanel();
+      if (panel && panel.mode === 'edit' && !getEv(panel.id)) closePanel();
     }
+    const getEv = (id) => events.get(id) || upcoming.get(id);
+
+    // ---------- Nākošie pasākumi (kreisajā pusē) ----------
+    let upcoming = new Map();
+    let upcPerCal = {};
+    let upcUnsubs = [];
+    function subscribeUpcoming() {
+      upcUnsubs.forEach((u) => u()); upcUnsubs = []; upcPerCal = {};
+      const today = ymd(new Date());
+      for (const cal of viewIds()) {
+        const q = query(collection(db, 'calendars', cal, 'events'), where('date', '>=', today), orderBy('date'), limit(25));
+        upcUnsubs.push(onSnapshot(q, (snap) => {
+          upcPerCal[cal] = snap.docs.map((d) => ({ id: d.id, ...d.data() }));
+          upcoming = new Map();
+          for (const list of Object.values(upcPerCal)) for (const e of list) if (!e.deleted) upcoming.set(e.id, e);
+          renderUpcoming();
+        }, (err) => console.error(err)));
+      }
+      renderUpcoming();
+    }
+    function renderUpcoming() {
+      const visible = new Set(selected.size ? [...selected] : viewIds());
+      const list = [...upcoming.values()]
+        .filter((e) => (e.cals || []).some((c) => visible.has(c) && calById(c)))
+        .sort((a, b) => a.date.localeCompare(b.date) || (a.from || '').localeCompare(b.from || ''))
+        .slice(0, 15);
+      if (!list.length) { $('upcoming').innerHTML = '<p class="upc-empty">—</p>'; return; }
+      $('upcoming').innerHTML = list.map((e) => {
+        const d = parseYmd(e.date);
+        const cals = (e.cals || []).filter((c) => visible.has(c) && calById(c)).map((c) => {
+          const cal = calById(c);
+          return `<span style="--c:${esc(cal.color)}"><span class="dot st-${esc(e.status)}"></span>${esc(cal.name)}</span>`;
+        }).join('');
+        const end = e.dateEnd && e.dateEnd !== e.date ? parseYmd(e.dateEnd) : null;
+        const dd = end ? `${d.getDate()}.–${end.getDate()}.` : `${d.getDate()}.`;
+        const mon = end && end.getMonth() !== d.getMonth() ? `${MONTHS_GEN[d.getMonth()].slice(0, 3)}–${MONTHS_GEN[end.getMonth()].slice(0, 3)}` : MONTHS_GEN[d.getMonth()].slice(0, 3);
+        return `<button class="upc-item" data-upc="${esc(e.id)}" type="button">
+          <span class="upc-date">${dd}<small>${mon}</small></span>
+          <span><span class="upc-cals">${cals}</span>${e.place ? `<span class="upc-place" style="display:block">${esc(e.place)}</span>` : ''}</span>
+        </button>`;
+      }).join('');
+    }
+    $('upcoming').addEventListener('click', (ev) => {
+      const b = ev.target.closest('[data-upc]'); if (!b) return;
+      const e = getEv(b.dataset.upc); if (!e) return;
+      const d = parseYmd(e.date);
+      openEdit(e.id);
+      scrollToMonth(d.getFullYear() * 12 + d.getMonth());
+    });
 
     // Sticky galvenes augstumi, lai mēneša virsraksts neieslīd zem tām
     function measureSticky() {
       const r = document.documentElement.style;
       r.setProperty('--navh', document.querySelector('.topnav').offsetHeight + 'px');
-      r.setProperty('--filh', $('filters').offsetHeight + 'px');
+      r.setProperty('--filh', (matchMedia('(max-width: 768px)').matches ? $('side').offsetHeight : 0) + 'px');
       r.setProperty('--calh', $('cal-sticky').offsetHeight + 'px');
     }
     window.addEventListener('resize', measureSticky);
@@ -609,7 +699,7 @@
       if (id === '*') selected = new Set();
       else if (selected.has(id)) selected.delete(id);
       else selected.add(id);
-      renderFilters(); renderGrid();
+      renderFilters(); renderGrid(); renderUpcoming();
     });
 
     // ---------- Mēneši (ritināms saraksts) ----------
@@ -620,9 +710,13 @@
       const order = new Map(calendars.map((c, i) => [c.id, i]));
       const byDate = {};
       for (const e of events.values()) {
+        // Vairāku dienu pasākums parādās katrā dienā no "date" līdz "dateEnd"
+        const days = [];
+        const end = e.dateEnd && e.dateEnd > e.date ? e.dateEnd : e.date;
+        for (let d = parseYmd(e.date), n = 0; ymd(d) <= end && n < 366; d.setDate(d.getDate() + 1), n++) days.push(ymd(d));
         for (const c of e.cals || []) {
           if (!visible.has(c) || !calById(c)) continue;
-          (byDate[e.date] ||= []).push({ e, c });
+          for (const k of days) (byDate[k] ||= []).push({ e, c });
         }
       }
       let html = '';
@@ -639,6 +733,7 @@
           if (d <= 7) cls.push('bt');
           if ((lead + d - 1) % 7 === 0 || d === 1) cls.push('bl');
           if (key === today) cls.push('today');
+          if (key < today) cls.push('past');
           if (key === selDate) cls.push('sel');
           html += `<div class="${cls.join(' ')}" data-date="${key}"><span class="num">${d}</span>`;
           for (const { e, c } of items) {
@@ -667,9 +762,21 @@
       for (const sec of $('months').children) {
         if (sec.getBoundingClientRect().top <= limit) mi = Number(sec.dataset.mi); else break;
       }
-      visibleMi = mi;
-      $('month-title').textContent = `${MONTHS[mi % 12]} ${Math.floor(mi / 12)}`;
+      if (mi !== visibleMi || !$('mchips').children.length) { visibleMi = mi; renderMonthChips(); }
     }
+
+    // Mēnešu pogas: šis mēnesis + 5 nākamie
+    function renderMonthChips() {
+      let html = '';
+      for (let mi = curMi; mi <= curMi + 5; mi++) {
+        const y = Math.floor(mi / 12);
+        html += `<button class="mchip ${mi === visibleMi ? 'on' : ''}" data-mi="${mi}" type="button">${MONTHS[mi % 12]}${y !== now.getFullYear() ? `<small>${y}</small>` : ''}</button>`;
+      }
+      $('mchips').innerHTML = html;
+    }
+    $('mchips').addEventListener('click', (e) => {
+      const b = e.target.closest('[data-mi]'); if (b) scrollToMonth(Number(b.dataset.mi));
+    });
 
     // Pievieno mēnešus augšā vai apakšā; pievienojot augšā, saglabā skatu tajā pašā vietā
     function extendRange(before, after) {
@@ -693,7 +800,7 @@
     }, { passive: true });
 
     function scrollToMonth(mi, smooth = true) {
-      $('picker').hidden = true;
+      if (Math.abs(mi - visibleMi) > 3) smooth = false;
       if (mi < rangeFrom - 12 || mi > rangeTo + 12) { rangeFrom = mi - 2; rangeTo = mi + 6; renderGrid(); subscribeEvents(); }
       else if (mi < rangeFrom || mi > rangeTo) { rangeFrom = Math.min(rangeFrom, mi - 2); rangeTo = Math.max(rangeTo, mi + 6); renderGrid(); subscribeEvents(); }
       const el = $('months').querySelector(`[data-mi="${mi}"]`);
@@ -702,33 +809,7 @@
       el.scrollIntoView({ behavior: smooth ? 'smooth' : 'auto', block: 'start' });
       setTimeout(() => { extending = false; updateTitle(); }, smooth ? 800 : 50);
     }
-    $('prev').addEventListener('click', () => scrollToMonth(visibleMi - 1));
-    $('next').addEventListener('click', () => scrollToMonth(visibleMi + 1));
     $('today').addEventListener('click', () => scrollToMonth(curMi));
-
-    // Mēneša izvēle, uzklikšķinot uz nosaukuma
-    function renderPicker() {
-      let html = `<div class="picker-year"><button type="button" data-py="-1">‹</button><span>${pickerYear}</span><button type="button" data-py="1">›</button></div><div class="picker-months">`;
-      MONTHS.forEach((name, i) => {
-        const cur = pickerYear * 12 + i === visibleMi ? 'cur' : '';
-        html += `<button type="button" class="${cur}" data-pm="${i}">${name.slice(0, 3)}</button>`;
-      });
-      $('picker').innerHTML = html + '</div>';
-    }
-    $('month-title').addEventListener('click', () => {
-      const p = $('picker');
-      if (!p.hidden) { p.hidden = true; return; }
-      pickerYear = Math.floor(visibleMi / 12); renderPicker(); p.hidden = false;
-    });
-    $('picker').addEventListener('click', (e) => {
-      const py = e.target.closest('[data-py]');
-      if (py) { pickerYear += Number(py.dataset.py); renderPicker(); return; }
-      const pm = e.target.closest('[data-pm]');
-      if (pm) scrollToMonth(pickerYear * 12 + Number(pm.dataset.pm));
-    });
-    document.addEventListener('click', (e) => {
-      if (!$('picker').hidden && !e.target.closest('#picker') && !e.target.closest('#month-title')) $('picker').hidden = true;
-    });
 
     // ---------- Labās puses forma ----------
     function openNew(date) {
@@ -736,7 +817,7 @@
       renderPanel(); renderGrid();
     }
     function openEdit(id) {
-      const e = events.get(id); if (!e) return;
+      const e = getEv(id); if (!e) return;
       panel = { mode: 'edit', id }; selDate = e.date;
       renderPanel(); renderGrid();
     }
@@ -761,10 +842,11 @@
         return;
       }
 
-      const e = panel.mode === 'edit' ? events.get(panel.id) : null;
+      const e = panel.mode === 'edit' ? getEv(panel.id) : null;
       const editable = !e || (e.cals || []).every((c) => edit.includes(c));
       const date = e ? e.date : panel.date;
-      const head = `<div class="panel-head"><h2>${esc(fmtLong(date))}</h2><button class="x" data-close type="button" aria-label="Aizvērt">×</button></div>`;
+      const dateEnd = e && e.dateEnd > e.date ? e.dateEnd : '';
+      const head = `<div class="panel-head"><h2>${esc(fmtRange(date, dateEnd))}</h2><button class="x" data-close type="button" aria-label="Aizvērt">×</button></div>`;
 
       if (!editable) {
         const names = (e.cals || []).filter((c) => calById(c) && viewIds().includes(c)).map((c) => {
@@ -773,8 +855,10 @@
         }).join('');
         const st = STATUSES.find(([k]) => k === e.status);
         p.innerHTML = head + `
-          <span class="flabel">Kalendāri</span><div class="opts">${names}</div>
-          <span class="flabel">Statuss</span><div class="opts"><span class="opt"><span class="dot st-${esc(e.status)}"></span>${esc(st ? st[1] : '')}</span></div>
+          <div class="two-col">
+            <div><span class="flabel">Kalendāri</span><div class="opts">${names}</div></div>
+            <div><span class="flabel">Statuss</span><div class="opts"><span class="opt"><span class="dot st-${esc(e.status)}"></span>${esc(st ? st[1] : '')}</span></div></div>
+          </div>
           <span class="flabel">Laiks</span><p class="ro ${e.from || e.to ? '' : 'muted'}">${esc([e.from, e.to].filter(Boolean).join(' – ') || '—')}</p>
           <span class="flabel">Vieta</span><p class="ro ${e.place ? '' : 'muted'}">${esc(e.place || '—')}</p>
           <span class="flabel">Piezīmes</span><p class="ro ${e.notes ? '' : 'muted'}">${esc(e.notes || '—')}</p>
@@ -795,9 +879,12 @@
 
       p.innerHTML = head + `
         <form id="ev-form">
-          <span class="flabel">Kalendāri</span><div class="opts" id="f-cals">${calOpts}</div>
-          <span class="flabel">Statuss</span><div class="opts" id="f-st">${stOpts}</div>
-          <span class="flabel">Datums</span><input class="field" type="date" id="f-date" value="${esc(date)}" required />
+          <div class="two-col">
+            <div><span class="flabel">Kalendāri</span><div class="opts" id="f-cals">${calOpts}</div></div>
+            <div><span class="flabel">Statuss</span><div class="opts" id="f-st">${stOpts}</div></div>
+          </div>
+          <span class="flabel">Datums no – līdz</span>
+          <div class="row2"><input class="field" type="date" id="f-date" value="${esc(date)}" required /><input class="field" type="date" id="f-end" value="${esc(dateEnd)}" min="${esc(date)}" /></div>
           <span class="flabel">Laiks</span>
           <div class="row2"><input class="field" type="time" id="f-from" value="${esc(e?.from || '')}" /><input class="field" type="time" id="f-to" value="${esc(e?.to || '')}" /></div>
           <span class="flabel">Vieta</span><input class="field" type="text" id="f-place" maxlength="300" value="${esc(e?.place || '')}" />
@@ -830,6 +917,11 @@
         setTimeout(() => { if (del.isConnected) { delete del.dataset.confirm; del.textContent = 'Dzēst'; } }, 4000);
       }
     });
+    $('panel').addEventListener('change', (ev) => {
+      if (ev.target.id !== 'f-date') return;
+      const end = $('f-end'); end.min = ev.target.value;
+      if (end.value && end.value < ev.target.value) end.value = '';
+    });
     $('panel').addEventListener('submit', async (ev) => {
       ev.preventDefault();
       const msg = $('f-msg');
@@ -839,10 +931,13 @@
       if (!cals.length) { msg.textContent = 'Izvēlies kalendāru.'; return; }
       if (!st) { msg.textContent = 'Izvēlies statusu.'; return; }
       if (!date) { msg.textContent = 'Izvēlies datumu.'; return; }
-      const old = panel.mode === 'edit' ? events.get(panel.id) : null;
+      let dateEnd = $('f-end').value || '';
+      if (dateEnd && dateEnd < date) { msg.textContent = 'Beigu datums ir pirms sākuma.'; return; }
+      if (dateEnd === date) dateEnd = '';
+      const old = panel.mode === 'edit' ? getEv(panel.id) : null;
       const id = old ? old.id : doc(collection(db, 'calendars', cals[0], 'events')).id;
       const data = {
-        date, cals, status: st.dataset.st,
+        date, dateEnd, cals, status: st.dataset.st,
         from: $('f-from').value || '', to: $('f-to').value || '',
         place: $('f-place').value.trim(), notes: $('f-notes').value.trim(),
         createdBy: old ? old.createdBy : me,
@@ -865,7 +960,7 @@
     });
 
     async function deleteEvent() {
-      const e = events.get(panel.id); if (!e) return;
+      const e = getEv(panel.id); if (!e) return;
       const b = writeBatch(db);
       for (const c of e.cals || []) b.update(doc(db, 'calendars', c, 'events', e.id), {
         deleted: true, deletedAt: serverTimestamp(), deletedBy: me, updatedBy: me, updatedAt: serverTimestamp()
