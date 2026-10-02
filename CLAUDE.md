@@ -162,7 +162,7 @@ un pastāvīgs, īsinājums ir redirect. Abi noved uz to pašu profilu.
 - Jaunam scenārijam uzreiz 4 tukšas rindas. Laiku izvēlas ar klikšķiem (stundas 00–23, minūtes ik pa 5), bez rakstīšanas.
 - Dati: `scenarios/{sid}` (name, lang, place, address, lat, lng, cats[]), `scenarios/{sid}/keys/main` ({rw, ro, cats:{catId: parole}}, lasa tikai admins),
   `scenarios/{sid}/members/{uid}` (kas ar kuru paroli ienācis), `scenarios/{sid}/rows/{rid}`, `scnIndex/{sha256('scn:'+parole)}` → {sid, role: rw|ro|cat, cat?}, `scnAdmins/{uid}`.
-- Scenārija skats: augšā Vieta + Adrese + karte (Leaflet + OpenStreetMap, adreses meklēšana caur Nominatim, vai klikšķis kartē),
+- Scenārija skats: augšā pasākuma virsraksts (`title`, piem. "Printful Event"), zem tā Vieta + Adrese + karte (Leaflet + OpenStreetMap, adreses meklēšana caur Nominatim, vai klikšķis kartē),
   tabula Laiks | Notikums | Komentārs (rindas `order` secībā, labojas reālā laikā), labajā pusē kategorijas.
   Uzspiežot kategoriju: tās rindas oranžas, pārējās blāvas; rakstītāji ar apli rindas sākumā atzīmē/noņem.
   "Labot" atklāj rindu un kategoriju dzēšanu (×, vienmēr ar "Izdzēst? Jā / Nē"). "+" rindas labajā pusē ieliek tukšu rindu zem tās.
