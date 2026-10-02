@@ -141,6 +141,10 @@ un pastāvīgs, īsinājums ir redirect. Abi noved uz to pašu profilu.
 - Kalendāra skats: **mēneši viens zem otra, ritināmi** (ritinot pievienojas vēl). Katrs mēnesis ar savu virsrakstu un TIKAI savām dienām — tukšās vietas pirms 1. datuma bez līnijām, nākamā mēneša dienas nerāda. Augšā sticky josla ar ‹ mēnesis › un "Šodien".
 - Admin: ķekši bloķēti, kamēr rindā nav nospiests **"Labot"** (tad poga = "Gatavs"). Dzēst e-pastu: klikšķis uz e-pasta → parādās **"Izdzēst"**. "Dzēstie (30 dienas)" salocīti ar ķeksi.
 - Piekļuves noņemšana neko neizdzēš — ieraksti glabājas kalendārā, ne pie cilvēka; atdodot piekļuvi, viss atkal redzams.
+- (2026-10-03) Izkārtojums 3 kolonnās: **kreisajā** kalendāru filtri vertikāli + "Nākošie pasākumi" (līdz 15, no šodienas); **vidū** mēneši; **labajā** vienmēr rezervēta vieta formai. Augšā mēnešu pogas (šis + 5 nākamie) un "Šodien" — bultas ‹ › un mēneša nosaukums noņemti.
+- Šodiena tikai iekrāsota (bez kvadrāta); pagājušās dienas viegli pārsvītrotas pa diagonāli.
+- Pasākumam var būt vairākas dienas: lauks `dateEnd` (tukšs = viena diena). Formā "Datums no – līdz"; kalendāri un statuss divās kolonnās.
+- Telefonā: filtri + mēnešu pogas lipīgi augšā, "Nākošie pasākumi" paslēpti.
 
 ## Scenārijs `/scenarijs/` (uzlikts 2026-10-02)
 
