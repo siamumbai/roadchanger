@@ -144,6 +144,7 @@ un pastāvīgs, īsinājums ir redirect. Abi noved uz to pašu profilu.
 - (2026-10-03) Izkārtojums 3 kolonnās: **kreisajā** kalendāru filtri vertikāli + "Nākošie pasākumi" (līdz 15, no šodienas); **vidū** mēneši; **labajā** vienmēr rezervēta vieta formai. Augšā mēnešu pogas (šis + 5 nākamie) un "Šodien" — bultas ‹ › un mēneša nosaukums noņemti.
 - Šodiena tikai iekrāsota (bez kvadrāta); pagājušās dienas viegli pārsvītrotas pa diagonāli.
 - Pasākumam var būt vairākas dienas: lauks `dateEnd` (tukšs = viena diena). Formā "Datums no – līdz"; kalendāri un statuss divās kolonnās.
+- Formas secība: Kalendāri | Statuss → **Nosaukums** (`title`, piem. uzņēmums) → Datums no – līdz → Laiks → Vieta (`place`) → **Adrese** (`address`) → Piezīmes. Lauki tukši, bez parauga teksta.
 - Telefonā: filtri + mēnešu pogas lipīgi augšā, "Nākošie pasākumi" paslēpti.
 - Filtrs (2026-10-03): var izvēlēties **tikai vienu** kalendāru; atkārtots klikšķis vai "Visi" → redzami visi.
 - **"Aizņemts"** kalendārs (`calendars/c3ctw0kt2yPFC9hqyzMC`, lauks `busy: true`, sarkans `#D32F2F`; agrāk "Personīgais"): filtros atsevišķi virs svītras, ieslēgts pēc noklusējuma, rādās kopā ar jebkuru izvēlēto kalendāru; tā dienas iekrāsotas sarkanas. Piekļuvi dod Admin tāpat kā citiem.

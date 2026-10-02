@@ -657,7 +657,7 @@
         const mon = end && end.getMonth() !== d.getMonth() ? `${MONTHS_GEN[d.getMonth()].slice(0, 3)}–${MONTHS_GEN[end.getMonth()].slice(0, 3)}` : MONTHS_GEN[d.getMonth()].slice(0, 3);
         return `<button class="upc-item" data-upc="${esc(e.id)}" type="button">
           <span class="upc-date">${dd}<small>${mon}</small></span>
-          <span><span class="upc-cals">${cals}</span>${e.place ? `<span class="upc-place" style="display:block">${esc(e.place)}</span>` : ''}</span>
+          <span><span class="upc-cals">${cals}</span>${[e.title, e.place].filter(Boolean).map((t) => `<span class="upc-place" style="display:block">${esc(t)}</span>`).join('')}</span>
         </button>`;
       }).join('');
     }
@@ -760,7 +760,7 @@
           for (const { e, c } of items) {
             const cal = calById(c);
             const act = panel && panel.mode === 'edit' && panel.id === e.id ? ' active' : '';
-            html += `<button class="ev${act}" data-ev="${esc(e.id)}" style="--c:${esc(cal.color)}" type="button" title="${esc(cal.name)}${e.from ? ' · ' + esc(e.from) : ''}${e.place ? ' · ' + esc(e.place) : ''}"><span class="dot st-${esc(e.status)}"></span><span class="lbl">${esc(cal.name)}</span></button>`;
+            html += `<button class="ev${act}" data-ev="${esc(e.id)}" style="--c:${esc(cal.color)}" type="button" title="${esc(cal.name)}${e.title ? ' · ' + esc(e.title) : ''}${e.from ? ' · ' + esc(e.from) : ''}${e.place ? ' · ' + esc(e.place) : ''}"><span class="dot st-${esc(e.status)}"></span><span class="lbl">${esc(cal.name)}</span></button>`;
           }
           html += `</div>`;
         }
@@ -880,8 +880,10 @@
             <div><span class="flabel">Kalendāri</span><div class="opts">${names}</div></div>
             <div><span class="flabel">Statuss</span><div class="opts"><span class="opt"><span class="dot st-${esc(e.status)}"></span>${esc(st ? st[1] : '')}</span></div></div>
           </div>
+          <span class="flabel">Nosaukums</span><p class="ro ${e.title ? '' : 'muted'}">${esc(e.title || '—')}</p>
           <span class="flabel">Laiks</span><p class="ro ${e.from || e.to ? '' : 'muted'}">${esc([e.from, e.to].filter(Boolean).join(' – ') || '—')}</p>
           <span class="flabel">Vieta</span><p class="ro ${e.place ? '' : 'muted'}">${esc(e.place || '—')}</p>
+          <span class="flabel">Adrese</span><p class="ro ${e.address ? '' : 'muted'}">${esc(e.address || '—')}</p>
           <span class="flabel">Piezīmes</span><p class="ro ${e.notes ? '' : 'muted'}">${esc(e.notes || '—')}</p>
           ${metaHtml(e)}`;
         return;
@@ -904,11 +906,13 @@
             <div><span class="flabel">Kalendāri</span><div class="opts" id="f-cals">${calOpts}</div></div>
             <div><span class="flabel">Statuss</span><div class="opts" id="f-st">${stOpts}</div></div>
           </div>
+          <span class="flabel">Nosaukums</span><input class="field" type="text" id="f-title" maxlength="300" value="${esc(e?.title || '')}" />
           <span class="flabel">Datums no – līdz</span>
           <div class="row2"><input class="field" type="date" id="f-date" value="${esc(date)}" required /><input class="field" type="date" id="f-end" value="${esc(dateEnd)}" min="${esc(date)}" /></div>
           <span class="flabel">Laiks</span>
           <div class="row2"><input class="field" type="time" id="f-from" value="${esc(e?.from || '')}" /><input class="field" type="time" id="f-to" value="${esc(e?.to || '')}" /></div>
           <span class="flabel">Vieta</span><input class="field" type="text" id="f-place" maxlength="300" value="${esc(e?.place || '')}" />
+          <span class="flabel">Adrese</span><input class="field" type="text" id="f-address" maxlength="300" value="${esc(e?.address || '')}" />
           <span class="flabel">Piezīmes</span><textarea class="field" id="f-notes" maxlength="5000">${esc(e?.notes || '')}</textarea>
           <div class="panel-actions">
             <button class="btn btn-brown" type="submit">Saglabāt</button>
@@ -960,7 +964,8 @@
       const data = {
         date, dateEnd, cals, status: st.dataset.st,
         from: $('f-from').value || '', to: $('f-to').value || '',
-        place: $('f-place').value.trim(), notes: $('f-notes').value.trim(),
+        title: $('f-title').value.trim(), place: $('f-place').value.trim(), address: $('f-address').value.trim(),
+        notes: $('f-notes').value.trim(),
         createdBy: old ? old.createdBy : me,
         createdAt: old ? (old.createdAt || serverTimestamp()) : serverTimestamp(),
         updatedBy: me, updatedAt: serverTimestamp(),
