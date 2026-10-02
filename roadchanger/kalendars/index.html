@@ -150,6 +150,9 @@
     /* Pagājušās dienas viegli pārsvītrotas */
     .day.past { background: linear-gradient(to top right, transparent calc(50% - 0.5px), #EAD9B8 50%, transparent calc(50% + 0.5px)), #FDFBF7; }
     .day.past .num { color: #B9A584; }
+    .day.busy { background-color: color-mix(in srgb, #D32F2F 16%, #fff); }
+    .day.busy:hover { background-color: color-mix(in srgb, #D32F2F 22%, #fff); }
+    .fdiv { border: none; border-top: 0.5px solid #E0CCA4; margin: 0.35rem 0; }
     .day.today:hover { background: color-mix(in srgb, #B07320 18%, #fff); }
     .day.today .num { background: #B07320; color: #fff; font-weight: 700; font-size: 0.9rem; width: 1.9rem; height: 1.9rem; }
     .ev {
@@ -262,6 +265,7 @@
       .side { position: sticky; top: var(--navh, 0px); z-index: 45; margin: 0 -0.5rem; max-height: none; overflow: visible; background: #FEF9F2; border-bottom: 0.5px solid #EAD9B8; }
       .side h4, .upc { display: none; }
       .side .filters { position: static; flex-direction: row; overflow-x: auto; padding: 0.75rem 1rem; }
+      .side .fdiv { border-top: none; border-left: 0.5px solid #E0CCA4; margin: 0 0.25rem; align-self: stretch; }
       .mchips { flex-wrap: nowrap; overflow-x: auto; }
       .mchip { padding: 0.4rem 0.7rem; font-size: 0.8rem; }
       .cal-head { padding: 0 0.5rem; gap: 0.4rem; }
@@ -636,7 +640,7 @@
       renderUpcoming();
     }
     function renderUpcoming() {
-      const visible = new Set(selected.size ? [...selected] : viewIds());
+      const visible = visibleSet();
       const list = [...upcoming.values()]
         .filter((e) => (e.cals || []).some((c) => visible.has(c) && calById(c)))
         .sort((a, b) => a.date.localeCompare(b.date) || (a.from || '').localeCompare(b.from || ''))
@@ -683,10 +687,25 @@
     });
 
     // ---------- Kalendāru josla ----------
+    // "Aizņemts" kalendārs (busy: true) stāv atsevišķi virs svītras un rādās kopā ar jebkuru izvēlēto kalendāru
+    let showBusy = true;
+    const busyId = () => (calendars.find((c) => c.busy && viewIds().includes(c.id)) || {}).id;
+    function visibleSet() {
+      const b = busyId();
+      const set = new Set(selected.size ? [...selected] : viewIds().filter((id) => id !== b));
+      if (b && showBusy) set.add(b);
+      return set;
+    }
     function renderFilters() {
       const f = $('filters');
-      const ids = viewIds();
-      let html = `<button class="fchip ${selected.size === 0 ? 'on' : ''}" data-f="*" style="--c:#2C2416" type="button"><span class="box"></span>Visi</button>`;
+      const b = busyId();
+      const ids = viewIds().filter((id) => id !== b);
+      let html = '';
+      if (b) {
+        const c = calById(b);
+        html += `<button class="fchip ${showBusy ? 'on' : ''}" data-busy style="--c:${esc(c.color)}" type="button"><span class="box"></span>${esc(c.name)}</button><hr class="fdiv">`;
+      }
+      html += `<button class="fchip ${selected.size === 0 ? 'on' : ''}" data-f="*" style="--c:#2C2416" type="button"><span class="box"></span>Visi</button>`;
       for (const id of ids) {
         const c = calById(id);
         html += `<button class="fchip ${selected.has(id) ? 'on' : ''}" data-f="${esc(id)}" style="--c:${esc(c.color)}" type="button"><span class="box"></span>${esc(c.name)}</button>`;
@@ -694,6 +713,7 @@
       f.innerHTML = html;
     }
     $('filters').addEventListener('click', (e) => {
+      if (e.target.closest('[data-busy]')) { showBusy = !showBusy; renderFilters(); renderGrid(); renderUpcoming(); return; }
       const b = e.target.closest('[data-f]'); if (!b) return;
       const id = b.dataset.f;
       // Var izvēlēties tikai vienu kalendāru; atkārtots klikšķis vai "Visi" rāda visus
@@ -706,7 +726,7 @@
     // Katrs mēnesis rāda tikai savas dienas; tukšās vietas pirms 1. datuma ir bez līnijām.
     function renderGrid() {
       const today = ymd(new Date());
-      const visible = new Set(selected.size ? [...selected] : viewIds());
+      const visible = visibleSet();
       const order = new Map(calendars.map((c, i) => [c.id, i]));
       const byDate = {};
       for (const e of events.values()) {
@@ -734,6 +754,7 @@
           if ((lead + d - 1) % 7 === 0 || d === 1) cls.push('bl');
           if (key === today) cls.push('today');
           if (key < today) cls.push('past');
+          if (items.some((x) => calById(x.c)?.busy)) cls.push('busy');
           if (key === selDate) cls.push('sel');
           html += `<div class="${cls.join(' ')}" data-date="${key}"><span class="num">${d}</span>`;
           for (const { e, c } of items) {
