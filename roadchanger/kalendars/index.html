@@ -77,8 +77,11 @@
 
     /* ---------- Kalendārs ---------- */
     html { overflow-anchor: none; }
-    .cal-wrap { display: grid; grid-template-columns: minmax(0, 1fr); gap: 1.75rem; padding: 0 3rem 3rem; align-items: start; }
-    .cal-wrap.with-panel { grid-template-columns: minmax(0, 1fr) clamp(19rem, 26vw, 24rem); }
+    /* Kalendārs vidū; labajā pusē vienmēr rezervēta vieta formai, kreisajā tikpat plata tukša josla —
+       atverot formu, kalendāra izmērs nemainās */
+    .cal-wrap { --side: clamp(17rem, 22vw, 24rem); display: grid; grid-template-columns: var(--side) minmax(0, 1fr) var(--side); gap: 1.75rem; padding: 0 3rem 3rem; align-items: start; }
+    .cal-main { grid-column: 2; }
+    .panel { grid-column: 3; }
     .cal-sticky { position: sticky; top: calc(var(--navh, 0px) + var(--filh, 0px)); z-index: 30; background: #FFFBF5; padding-top: 1.25rem; border-bottom: 0.5px solid #EAD9B8; }
     .cal-head { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 0.9rem; position: relative; }
     .arrow { flex: none; width: 2.25rem; height: 2.25rem; border-radius: 50%; border: 0.5px solid #E0CCA4; background: #fff; font-size: 1.1rem; color: #6B5035; }
@@ -116,7 +119,9 @@
     .day:hover { background: #FEF9F2; }
     .day.sel { box-shadow: inset 0 0 0 2px #B07320; }
     .num { font-size: 0.8rem; color: #6B5035; width: 1.6rem; height: 1.6rem; display: flex; align-items: center; justify-content: center; border-radius: 50%; }
-    .day.today .num { background: #B07320; color: #fff; font-weight: 700; }
+    .day.today { background: color-mix(in srgb, #B07320 12%, #fff); box-shadow: inset 0 0 0 2px #B07320; }
+    .day.today:hover { background: color-mix(in srgb, #B07320 18%, #fff); }
+    .day.today .num { background: #B07320; color: #fff; font-weight: 700; font-size: 0.9rem; width: 1.9rem; height: 1.9rem; }
     .ev {
       display: flex; align-items: center; gap: 0.35rem; width: 100%;
       padding: 0.2rem 0.4rem; border-radius: 4px; text-align: left;
@@ -222,7 +227,8 @@
       .topnav { padding: 0.9rem 1rem; gap: 1rem; flex-wrap: wrap; }
       .nav-user .who { display: none; }
       .filters { padding: 0.75rem 1rem; flex-wrap: nowrap; overflow-x: auto; -webkit-overflow-scrolling: touch; }
-      .cal-wrap, .cal-wrap.with-panel { grid-template-columns: minmax(0, 1fr); padding: 0 0.5rem 2rem; }
+      .cal-wrap { grid-template-columns: minmax(0, 1fr); padding: 0 0.5rem 2rem; }
+      .cal-main, .panel { grid-column: auto; }
       .cal-head { padding: 0 0.5rem; gap: 0.4rem; }
       .month-title { min-width: 0; font-size: 1.15rem; padding: 0.2rem 0.3rem; }
       .today-btn { padding: 0.5rem 0.8rem; font-size: 0.8rem; }
@@ -232,6 +238,7 @@
       .picker { left: 0.5rem; }
       .day { min-height: 4.6rem; padding: 0.2rem; gap: 0.15rem; }
       .num { font-size: 0.72rem; width: 1.35rem; height: 1.35rem; }
+      .day.today .num { font-size: 0.75rem; width: 1.5rem; height: 1.5rem; }
       .ev { font-size: 0.6rem; padding: 0.1rem 0.2rem; border-left-width: 2px; gap: 0.2rem; }
       .ev .dot { width: 0.35rem; height: 0.35rem; }
       .dow span { padding-left: 0.25rem; font-size: 0.65rem; }
