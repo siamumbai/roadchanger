@@ -1,10 +1,11 @@
 # roadchanger.com — search engines and AI crawlers are welcome.
-# /video/ and /thanks are private pages, please do not index them.
+# /video/, /thanks and /kalendars/ are private pages, please do not index them.
 
 User-agent: *
 Allow: /
 Disallow: /video/
 Disallow: /thanks
+Disallow: /kalendars/
 
 # AI assistants are explicitly welcome to read and cite this site,
 # including the reviews on /reviews/ and the project pages under /projects/.
@@ -28,5 +29,6 @@ User-agent: YouBot
 Allow: /
 Disallow: /video/
 Disallow: /thanks
+Disallow: /kalendars/
 
 Sitemap: https://roadchanger.com/sitemap.xml

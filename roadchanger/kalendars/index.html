@@ -1,0 +1,979 @@
+<!DOCTYPE html>
+<html lang="lv">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="icon" href="/favicon.ico" sizes="32x32" />
+  <link rel="icon" type="image/png" href="/icon-192.png" sizes="192x192" />
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+  <title>Roadchanger kalendārs</title>
+  <meta name="robots" content="noindex, nofollow" />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:wght@400;700&family=Lato:wght@300;400;700&display=swap" rel="stylesheet" />
+
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    [hidden] { display: none !important; }
+    body { background: #FFFBF5; color: #2C2416; font-family: 'Lato', Arial, sans-serif; zoom: 0.9; min-height: 100vh; }
+    button, input, textarea, select { font: inherit; color: inherit; }
+    button { cursor: pointer; background: none; border: none; }
+
+    /* ---------- Pieteikšanās / gaidīšana ---------- */
+    .center-screen { min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 2rem 1rem; }
+    .card {
+      width: 100%; max-width: 26rem; background: #FFFBF5;
+      border: 0.5px solid #E0CCA4; border-radius: 12px;
+      box-shadow: 0 4px 18px rgba(44, 36, 22, 0.07);
+      padding: clamp(1.75rem, 4vw, 2.5rem);
+      text-align: center;
+    }
+    .card-logo { font-family: 'Libre Baskerville', Georgia, serif; font-size: 14px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: #2C2416; text-decoration: none; }
+    .card h1 { font-family: 'Libre Baskerville', Georgia, serif; font-size: 1.6rem; font-weight: 400; margin: 1.25rem 0 1.5rem; }
+    .card p { font-size: 0.95rem; line-height: 1.6; color: #6B5035; }
+    .field { width: 100%; padding: 0.75rem 0.9rem; border: 0.5px solid #E0CCA4; border-radius: 8px; background: #fff; font-size: 0.95rem; }
+    .field:focus { outline: none; border-color: #B07320; }
+    .btn { display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem; padding: 0.75rem 1.25rem; border-radius: 8px; font-size: 0.9rem; letter-spacing: 0.04em; }
+    .btn-dark { background: #2C2416; color: #F5ECD8; }
+    .btn-dark:hover { background: #3D3020; }
+    .btn-brown { background: #B07320; color: #fff; }
+    .btn-brown:hover { background: #9A6418; }
+    .btn-line { border: 0.5px solid #E0CCA4; background: #fff; }
+    .btn-line:hover { border-color: #B07320; }
+    .btn-wide { width: 100%; }
+    .or { display: flex; align-items: center; gap: 0.75rem; margin: 1.25rem 0; font-size: 0.8rem; color: #7A5C38; }
+    .or::before, .or::after { content: ''; flex: 1; border-top: 0.5px solid #E0CCA4; }
+    .msg { margin-top: 1rem; font-size: 0.9rem; color: #6B5035; min-height: 1.2em; }
+    .msg.err { color: #A33A2A; }
+    .login-form { display: flex; flex-direction: column; gap: 0.75rem; }
+
+    /* ---------- Navigācija ---------- */
+    .topnav {
+      display: flex; align-items: center; gap: clamp(1rem, 3vw, 2.5rem);
+      padding: 1.1rem 3rem; background: #FFFBF5;
+      border-bottom: 0.5px solid #EAD9B8; position: sticky; top: 0; z-index: 50;
+    }
+    .nav-logo { font-family: 'Libre Baskerville', Georgia, serif; font-size: 16px; font-weight: 700; letter-spacing: 0.08em; color: #2C2416; text-transform: uppercase; text-decoration: none; }
+    .tabs { display: flex; gap: 1.75rem; }
+    .tab { font-size: 14px; letter-spacing: 0.05em; color: #8A6840; padding: 0.25rem 0; border-bottom: 2px solid transparent; }
+    .tab:hover { color: #B07320; }
+    .tab.active { color: #2C2416; border-bottom-color: #B07320; }
+    .badge { display: inline-block; min-width: 1.3em; padding: 0 0.35em; margin-left: 0.3em; border-radius: 1em; background: #B07320; color: #fff; font-size: 11px; line-height: 1.5; text-align: center; }
+    .nav-user { margin-left: auto; display: flex; align-items: center; gap: 1rem; font-size: 13px; color: #7A5C38; }
+    .nav-user button { font-size: 13px; color: #8A6840; text-decoration: underline; text-underline-offset: 3px; }
+
+    /* ---------- Kalendāru josla ---------- */
+    .filters { display: flex; flex-wrap: wrap; gap: 0.5rem; padding: 1rem 3rem; border-bottom: 0.5px solid #EAD9B8; background: #FEF9F2; }
+    .fchip {
+      display: inline-flex; align-items: center; gap: 0.5rem;
+      padding: 0.45rem 0.85rem; border-radius: 999px;
+      border: 0.5px solid #E0CCA4; background: #fff; font-size: 0.85rem; white-space: nowrap;
+    }
+    .fchip .box { width: 0.95rem; height: 0.95rem; border-radius: 3px; border: 1.5px solid var(--c, #2C2416); display: inline-flex; align-items: center; justify-content: center; color: #fff; font-size: 0.65rem; line-height: 1; }
+    .fchip.on { border-color: var(--c, #2C2416); }
+    .fchip.on .box { background: var(--c, #2C2416); }
+    .fchip.on .box::after { content: '✓'; }
+
+    /* ---------- Kalendārs ---------- */
+    .cal-wrap { display: grid; grid-template-columns: minmax(0, 1fr); gap: 1.75rem; padding: 1.75rem 3rem 3rem; align-items: start; }
+    .cal-wrap.with-panel { grid-template-columns: minmax(0, 1fr) clamp(19rem, 26vw, 24rem); }
+    .cal-head { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1rem; position: relative; }
+    .arrow { width: 2.25rem; height: 2.25rem; border-radius: 50%; border: 0.5px solid #E0CCA4; background: #fff; font-size: 1.1rem; color: #6B5035; }
+    .arrow:hover { border-color: #B07320; color: #B07320; }
+    .month-title { font-family: 'Libre Baskerville', Georgia, serif; font-size: clamp(1.3rem, 2vw, 1.6rem); padding: 0.2rem 0.5rem; border-radius: 6px; min-width: 12ch; text-align: center; }
+    .month-title:hover { background: #FDF5E6; }
+    .today-btn { margin-left: auto; }
+
+    .picker {
+      position: absolute; top: 2.9rem; left: 2.6rem; z-index: 20; width: 18rem;
+      background: #fff; border: 0.5px solid #E0CCA4; border-radius: 10px;
+      box-shadow: 0 8px 24px rgba(44, 36, 22, 0.12); padding: 0.9rem;
+    }
+    .picker-year { display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.6rem; font-family: 'Libre Baskerville', Georgia, serif; }
+    .picker-year button { width: 2rem; height: 2rem; border-radius: 50%; color: #6B5035; }
+    .picker-year button:hover { background: #FDF5E6; }
+    .picker-months { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.35rem; }
+    .picker-months button { padding: 0.55rem 0; border-radius: 6px; font-size: 0.85rem; }
+    .picker-months button:hover { background: #FDF5E6; }
+    .picker-months button.cur { background: #2C2416; color: #F5ECD8; }
+
+    .dow { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); font-size: 0.75rem; letter-spacing: 0.08em; text-transform: uppercase; color: #7A5C38; padding-bottom: 0.4rem; }
+    .dow span { padding-left: 0.5rem; }
+    .grid {
+      display: grid; grid-template-columns: repeat(7, minmax(0, 1fr));
+      border-top: 0.5px solid #E0CCA4; border-left: 0.5px solid #E0CCA4;
+      border-radius: 10px; overflow: hidden; background: #fff;
+      box-shadow: 0 4px 18px rgba(44, 36, 22, 0.07);
+    }
+    .day {
+      min-height: clamp(5.5rem, 9vw, 8rem); padding: 0.4rem;
+      border-right: 0.5px solid #E0CCA4; border-bottom: 0.5px solid #E0CCA4;
+      display: flex; flex-direction: column; gap: 0.25rem; cursor: pointer; min-width: 0;
+    }
+    .day:hover { background: #FEF9F2; }
+    .day.out { background: #FBF7F0; }
+    .day.out .num { color: #C9B591; }
+    .day.sel { box-shadow: inset 0 0 0 2px #B07320; }
+    .num { font-size: 0.8rem; color: #6B5035; width: 1.6rem; height: 1.6rem; display: flex; align-items: center; justify-content: center; border-radius: 50%; }
+    .day.today .num { background: #B07320; color: #fff; font-weight: 700; }
+    .ev {
+      display: flex; align-items: center; gap: 0.35rem; width: 100%;
+      padding: 0.2rem 0.4rem; border-radius: 4px; text-align: left;
+      font-size: 0.75rem; line-height: 1.3;
+      background: color-mix(in srgb, var(--c) 14%, #fff);
+      border-left: 3px solid var(--c);
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    }
+    .ev:hover { background: color-mix(in srgb, var(--c) 24%, #fff); }
+    .ev .dot { flex: none; width: 0.5rem; height: 0.5rem; border-radius: 50%; }
+    .ev .lbl { overflow: hidden; text-overflow: ellipsis; }
+    .ev.active { outline: 1.5px solid var(--c); }
+    .st-interese, .st-rezervets { background: #E08A1E; }
+    .st-apstiprinats { background: #3E8E41; }
+
+    /* ---------- Labās puses forma ---------- */
+    .panel {
+      background: #fff; border: 0.5px solid #E0CCA4; border-radius: 12px;
+      box-shadow: 0 4px 18px rgba(44, 36, 22, 0.07);
+      padding: 1.4rem; position: sticky; top: 5rem;
+    }
+    .panel-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 1rem; margin-bottom: 1.1rem; }
+    .panel-head h2 { font-family: 'Libre Baskerville', Georgia, serif; font-size: 1.15rem; font-weight: 400; line-height: 1.35; }
+    .x { font-size: 1.4rem; line-height: 1; color: #7A5C38; padding: 0 0.2rem; }
+    .x:hover { color: #B07320; }
+    .flabel { display: block; font-size: 0.72rem; letter-spacing: 0.1em; text-transform: uppercase; color: #7A5C38; margin: 1rem 0 0.45rem; }
+    .flabel:first-of-type { margin-top: 0; }
+    .opts { display: flex; flex-wrap: wrap; gap: 0.4rem; }
+    .opt { display: inline-flex; align-items: center; gap: 0.45rem; padding: 0.4rem 0.75rem; border-radius: 999px; border: 0.5px solid #E0CCA4; font-size: 0.85rem; background: #fff; }
+    .opt .box { width: 0.9rem; height: 0.9rem; border-radius: 3px; border: 1.5px solid var(--c, #2C2416); display: inline-flex; align-items: center; justify-content: center; color: #fff; font-size: 0.6rem; }
+    .opt.on { border-color: var(--c, #2C2416); background: color-mix(in srgb, var(--c, #2C2416) 10%, #fff); }
+    .opt.on .box { background: var(--c, #2C2416); }
+    .opt.on .box::after { content: '✓'; }
+    .opt .dot { width: 0.6rem; height: 0.6rem; border-radius: 50%; }
+    .opt.st { --c: #E08A1E; }
+    .opt.st[data-st=apstiprinats] { --c: #3E8E41; }
+    .row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 0.6rem; }
+    .panel .field { padding: 0.6rem 0.75rem; font-size: 0.9rem; }
+    .panel textarea.field { min-height: 7rem; resize: vertical; line-height: 1.5; }
+    .ro { font-size: 0.95rem; line-height: 1.55; white-space: pre-wrap; color: #2C2416; }
+    .ro.muted { color: #9A8466; }
+    .panel-actions { display: flex; align-items: center; gap: 0.75rem; margin-top: 1.4rem; }
+    .del { margin-left: auto; font-size: 0.85rem; color: #A33A2A; }
+    .del:hover { text-decoration: underline; }
+    .meta { margin-top: 1rem; font-size: 0.75rem; color: #9A8466; line-height: 1.5; }
+    .notice { font-size: 0.95rem; line-height: 1.6; color: #6B5035; }
+
+    /* ---------- Admin ---------- */
+    .admin { padding: 2rem 3rem 4rem; display: flex; flex-direction: column; gap: 2.5rem; }
+    .admin h2 { font-family: 'Libre Baskerville', Georgia, serif; font-size: 1.3rem; font-weight: 400; margin-bottom: 1rem; }
+    .admin-tools { display: flex; flex-wrap: wrap; gap: 0.75rem; margin-bottom: 1rem; }
+    .admin-tools .field { max-width: 20rem; padding: 0.55rem 0.8rem; font-size: 0.9rem; }
+    .admin-tools .btn { padding: 0.55rem 1rem; }
+    .tbl-wrap { overflow-x: auto; background: #fff; border: 0.5px solid #E0CCA4; border-radius: 10px; box-shadow: 0 4px 18px rgba(44, 36, 22, 0.07); }
+    table { border-collapse: collapse; width: 100%; font-size: 0.88rem; }
+    th, td { padding: 0.55rem 0.7rem; border-bottom: 0.5px solid #EAD9B8; text-align: left; vertical-align: middle; white-space: nowrap; }
+    th { font-weight: 400; font-size: 0.72rem; letter-spacing: 0.08em; text-transform: uppercase; color: #7A5C38; background: #FEF9F2; }
+    th.calh { text-align: center; border-left: 0.5px solid #EAD9B8; }
+    th.calh .cn { display: block; color: #2C2416; text-transform: none; letter-spacing: 0; font-size: 0.82rem; margin-bottom: 0.2rem; }
+    th.calh .cn::before { content: ''; display: inline-block; width: 0.55rem; height: 0.55rem; border-radius: 50%; background: var(--c); margin-right: 0.35rem; }
+    td.acc { text-align: center; border-left: 0.5px solid #EAD9B8; }
+    td.acc label { display: inline-flex; flex-direction: column; align-items: center; gap: 0.1rem; font-size: 0.65rem; color: #9A8466; margin: 0 0.25rem; cursor: pointer; }
+    td.acc input { width: 1rem; height: 1rem; accent-color: #B07320; cursor: pointer; }
+    tr.pending td { background: #FFF6E6; }
+    .name-in { border: 0.5px solid transparent; border-radius: 6px; padding: 0.35rem 0.5rem; background: transparent; width: 12rem; }
+    .name-in:hover { border-color: #E0CCA4; }
+    .name-in:focus { outline: none; border-color: #B07320; background: #fff; }
+    .tag { display: inline-block; font-size: 0.68rem; letter-spacing: 0.06em; text-transform: uppercase; padding: 0.1rem 0.45rem; border-radius: 4px; background: #B07320; color: #fff; margin-left: 0.4rem; }
+    .small-btn { font-size: 0.8rem; color: #8A6840; text-decoration: underline; text-underline-offset: 3px; }
+    .small-btn.red { color: #A33A2A; }
+    .muted { color: #9A8466; }
+    .cal-list { display: flex; flex-direction: column; gap: 0.5rem; max-width: 34rem; }
+    .cal-row { display: flex; align-items: center; gap: 0.6rem; background: #fff; border: 0.5px solid #E0CCA4; border-radius: 8px; padding: 0.45rem 0.6rem; }
+    .cal-row input[type=color] { width: 2rem; height: 2rem; border: none; background: none; cursor: pointer; padding: 0; }
+    .cal-row .name-in { flex: 1; width: auto; }
+    .cal-row .mv { width: 1.9rem; height: 1.9rem; border-radius: 50%; color: #6B5035; }
+    .cal-row .mv:hover { background: #FDF5E6; }
+    .cal-row .mv:disabled { opacity: 0.25; cursor: default; background: none; }
+    .empty { padding: 1rem; color: #9A8466; font-size: 0.9rem; }
+
+    .toast { position: fixed; left: 50%; bottom: 1.5rem; transform: translateX(-50%); background: #2C2416; color: #F5ECD8; padding: 0.7rem 1.2rem; border-radius: 8px; font-size: 0.9rem; z-index: 200; box-shadow: 0 6px 20px rgba(0,0,0,0.2); }
+    .toast.err { background: #A33A2A; }
+
+    /* ---------- Mobilais ---------- */
+    @media (max-width: 768px) {
+      body { zoom: 1; }
+      .topnav { padding: 0.9rem 1rem; gap: 1rem; flex-wrap: wrap; }
+      .nav-user .who { display: none; }
+      .filters { padding: 0.75rem 1rem; flex-wrap: nowrap; overflow-x: auto; -webkit-overflow-scrolling: touch; }
+      .cal-wrap, .cal-wrap.with-panel { grid-template-columns: minmax(0, 1fr); padding: 1rem 0.5rem 2rem; }
+      .cal-head { padding: 0 0.5rem; }
+      .picker { left: 0.5rem; }
+      .day { min-height: 4.6rem; padding: 0.2rem; gap: 0.15rem; }
+      .num { font-size: 0.72rem; width: 1.35rem; height: 1.35rem; }
+      .ev { font-size: 0.6rem; padding: 0.1rem 0.2rem; border-left-width: 2px; gap: 0.2rem; }
+      .ev .dot { width: 0.35rem; height: 0.35rem; }
+      .dow span { padding-left: 0.25rem; font-size: 0.65rem; }
+      .panel {
+        position: fixed; left: 0; right: 0; bottom: 0; top: auto; z-index: 80;
+        max-height: 85vh; overflow-y: auto; border-radius: 16px 16px 0 0;
+        box-shadow: 0 -10px 30px rgba(44, 36, 22, 0.18);
+        padding: 1.25rem 1rem 2rem;
+      }
+      .scrim { position: fixed; inset: 0; background: rgba(44, 36, 22, 0.35); z-index: 70; }
+      .admin { padding: 1.5rem 1rem 3rem; }
+    }
+    @media (min-width: 769px) { .scrim { display: none !important; } }
+  </style>
+</head>
+<body>
+
+  <!-- Ielāde -->
+  <div id="scr-loading" class="center-screen"><p class="muted">…</p></div>
+
+  <!-- Pieteikšanās -->
+  <div id="scr-login" class="center-screen" hidden>
+    <div class="card">
+      <a class="card-logo" href="/">Roadchanger</a>
+      <h1>Kalendārs</h1>
+      <form id="email-form" class="login-form">
+        <input class="field" id="email-in" type="email" placeholder="E-pasts" autocomplete="email" required />
+        <button class="btn btn-dark btn-wide" type="submit">Sūtīt pieteikšanās saiti</button>
+      </form>
+      <div class="or">vai</div>
+      <button class="btn btn-line btn-wide" id="google-btn" type="button">
+        <svg width="18" height="18" viewBox="0 0 48 48" aria-hidden="true"><path fill="#FFC107" d="M43.6 20.5H42V20H24v8h11.3C33.7 32.7 29.2 36 24 36c-6.6 0-12-5.4-12-12s5.4-12 12-12c3.1 0 5.8 1.2 7.9 3.1l5.7-5.7C34 6.1 29.3 4 24 4 12.9 4 4 12.9 4 24s8.9 20 20 20 20-8.9 20-20c0-1.3-.1-2.4-.4-3.5z"/><path fill="#FF3D00" d="M6.3 14.7l6.6 4.8C14.7 15.1 19 12 24 12c3.1 0 5.8 1.2 7.9 3.1l5.7-5.7C34 6.1 29.3 4 24 4 16.3 4 9.7 8.3 6.3 14.7z"/><path fill="#4CAF50" d="M24 44c5.2 0 9.9-2 13.4-5.2l-6.2-5.2C29.2 35.1 26.7 36 24 36c-5.2 0-9.6-3.3-11.3-8l-6.5 5C9.5 39.6 16.2 44 24 44z"/><path fill="#1976D2" d="M43.6 20.5H42V20H24v8h11.3c-.8 2.2-2.2 4.2-4.1 5.6l6.2 5.2C37 39.2 44 34 44 24c0-1.3-.1-2.4-.4-3.5z"/></svg>
+        Turpināt ar Google
+      </button>
+      <p class="msg" id="login-msg"></p>
+    </div>
+  </div>
+
+  <!-- Gaida apstiprinājumu -->
+  <div id="scr-wait" class="center-screen" hidden>
+    <div class="card">
+      <a class="card-logo" href="/">Roadchanger</a>
+      <h1>Gaida apstiprinājumu</h1>
+      <p id="wait-email"></p>
+      <p class="msg"><button class="small-btn" data-signout type="button">Iziet</button></p>
+    </div>
+  </div>
+
+  <!-- Galvenā lapa -->
+  <div id="scr-main" hidden>
+    <nav class="topnav">
+      <a class="nav-logo" href="/">Roadchanger</a>
+      <div class="tabs">
+        <button class="tab active" data-tab="cal" type="button">Kalendārs</button>
+        <button class="tab" data-tab="admin" id="tab-admin" type="button" hidden>Admin<span class="badge" id="pending-badge" hidden></span></button>
+      </div>
+      <div class="nav-user"><span class="who" id="who"></span><button data-signout type="button">Iziet</button></div>
+    </nav>
+
+    <div id="view-cal">
+      <div class="filters" id="filters"></div>
+      <div class="cal-wrap" id="cal-wrap">
+        <div class="cal-main">
+          <div class="cal-head">
+            <button class="arrow" id="prev" type="button" aria-label="Iepriekšējais mēnesis">‹</button>
+            <button class="month-title" id="month-title" type="button"></button>
+            <button class="arrow" id="next" type="button" aria-label="Nākamais mēnesis">›</button>
+            <button class="btn btn-line today-btn" id="today" type="button">Šodien</button>
+            <div class="picker" id="picker" hidden></div>
+          </div>
+          <div class="dow"><span>P</span><span>O</span><span>T</span><span>C</span><span>Pk</span><span>S</span><span>Sv</span></div>
+          <div class="grid" id="grid"></div>
+        </div>
+        <div class="scrim" id="scrim" hidden></div>
+        <aside class="panel" id="panel" hidden></aside>
+      </div>
+    </div>
+
+    <div id="view-admin" class="admin" hidden>
+      <section>
+        <h2>E-pasti</h2>
+        <div class="admin-tools">
+          <input class="field" id="user-search" type="search" placeholder="Meklēt" />
+          <form id="add-user" style="display:flex; gap:0.5rem;">
+            <input class="field" id="add-user-in" type="email" placeholder="Pievienot e-pastu" required />
+            <button class="btn btn-dark" type="submit">Pievienot</button>
+          </form>
+        </div>
+        <div class="tbl-wrap" id="users-tbl"></div>
+      </section>
+
+      <section>
+        <h2>Kalendāri</h2>
+        <div class="cal-list" id="cal-list"></div>
+        <form id="add-cal" class="admin-tools" style="margin-top:0.75rem;">
+          <input class="field" id="add-cal-in" type="text" placeholder="Jauns kalendārs" required />
+          <button class="btn btn-dark" type="submit">Pievienot</button>
+        </form>
+      </section>
+
+      <section>
+        <h2>Dzēstie (30 dienas)</h2>
+        <div class="tbl-wrap" id="trash"></div>
+      </section>
+    </div>
+  </div>
+
+  <div class="toast" id="toast" hidden></div>
+
+  <script type="module">
+    import { initializeApp } from 'https://www.gstatic.com/firebasejs/12.19.0/firebase-app.js';
+    import {
+      getAuth, onAuthStateChanged, signOut, GoogleAuthProvider, signInWithPopup,
+      sendSignInLinkToEmail, isSignInWithEmailLink, signInWithEmailLink
+    } from 'https://www.gstatic.com/firebasejs/12.19.0/firebase-auth.js';
+    import {
+      getFirestore, doc, getDoc, setDoc, updateDoc, deleteDoc, collection, query, where, orderBy,
+      onSnapshot, getDocs, writeBatch, serverTimestamp, Timestamp
+    } from 'https://www.gstatic.com/firebasejs/12.19.0/firebase-firestore.js';
+
+    const app = initializeApp({
+      apiKey: 'AIzaSyD7NhjgDjoaaqFHoqdKzbp-k_PI_DYDG4A',
+      authDomain: 'roadchanger-kalendars.firebaseapp.com',
+      projectId: 'roadchanger-kalendars',
+      storageBucket: 'roadchanger-kalendars.firebasestorage.app',
+      messagingSenderId: '333346997656',
+      appId: '1:333346997656:web:c576e5b8bfdd8aa03497ed'
+    });
+    const auth = getAuth(app);
+    const db = getFirestore(app);
+
+    const ADMIN = 'e.asmanis@gmail.com';
+    const DEFAULT_CALS = [
+      ['uguns', 'Uguns šovs', '#C2462E'],
+      ['teli', 'Dzīvie tēli', '#8A4F9E'],
+      ['arfa', 'Arfa', '#2F7F8F'],
+      ['dj', 'DJ', '#2C2416'],
+      ['darbnica', 'Darbnīca', '#3B5BA5'],
+      ['skana', 'Skaņa/Gaisma', '#6A7B2E']
+    ];
+    const STATUSES = [
+      ['interese', 'Interesējas'],
+      ['rezervets', 'Rezervēts'],
+      ['apstiprinats', 'Apstiprināts']
+    ];
+    const MONTHS = ['Janvāris', 'Februāris', 'Marts', 'Aprīlis', 'Maijs', 'Jūnijs', 'Jūlijs', 'Augusts', 'Septembris', 'Oktobris', 'Novembris', 'Decembris'];
+    const MONTHS_GEN = ['janvāris', 'februāris', 'marts', 'aprīlis', 'maijs', 'jūnijs', 'jūlijs', 'augusts', 'septembris', 'oktobris', 'novembris', 'decembris'];
+    const WEEKDAYS = ['Svētdiena', 'Pirmdiena', 'Otrdiena', 'Trešdiena', 'Ceturtdiena', 'Piektdiena', 'Sestdiena'];
+    const PALETTE = ['#C2462E', '#8A4F9E', '#2F7F8F', '#2C2416', '#3B5BA5', '#6A7B2E', '#A0522D', '#5A6E8C', '#9C3D6B'];
+
+    const $ = (id) => document.getElementById(id);
+    const esc = (s) => String(s ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+    const pad = (n) => String(n).padStart(2, '0');
+    const ymd = (d) => `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
+    const parseYmd = (s) => { const [y, m, d] = s.split('-').map(Number); return new Date(y, m - 1, d); };
+    const fmtLong = (s) => { const d = parseYmd(s); return `${WEEKDAYS[d.getDay()]}, ${d.getDate()}. ${MONTHS_GEN[d.getMonth()]} ${d.getFullYear()}`; };
+    const fmtTs = (t) => { if (!t || !t.toDate) return ''; const d = t.toDate(); return `${d.getDate()}.${pad(d.getMonth() + 1)}.${d.getFullYear()} ${pad(d.getHours())}:${pad(d.getMinutes())}`; };
+
+    function toast(text, err = false) {
+      const t = $('toast'); t.textContent = text; t.className = 'toast' + (err ? ' err' : ''); t.hidden = false;
+      clearTimeout(toast.tm); toast.tm = setTimeout(() => { t.hidden = true; }, 3500);
+    }
+    function show(screen) {
+      for (const id of ['scr-loading', 'scr-login', 'scr-wait', 'scr-main']) $(id).hidden = id !== screen;
+    }
+
+    // ---------- Stāvoklis ----------
+    let me = null;            // e-pasts mazajiem burtiem
+    let isAdmin = false;
+    let profile = {};
+    let calendars = [];       // [{id, name, color, order}]
+    let selected = new Set(); // tukšs = "Visi"
+    const now = new Date();
+    let cursor = { y: now.getFullYear(), m: now.getMonth() };
+    let pickerYear = cursor.y;
+    let perCal = {};          // calId -> [{id, ...data}]
+    let events = new Map();   // id -> data (bez dzēstajiem)
+    let eventUnsubs = [];
+    let panel = null;         // {mode:'new', date} | {mode:'edit', id}
+    let selDate = null;
+    let otherUnsubs = [];
+    let users = [];
+    let tab = 'cal';
+
+    const viewIds = () => isAdmin ? calendars.map((c) => c.id) : calendars.map((c) => c.id).filter((id) => (profile.view || []).includes(id));
+    const editIds = () => isAdmin ? calendars.map((c) => c.id) : calendars.map((c) => c.id).filter((id) => (profile.edit || []).includes(id));
+    const calById = (id) => calendars.find((c) => c.id === id);
+
+    // ---------- Pieteikšanās ----------
+    const linkSettings = { url: location.origin + location.pathname, handleCodeInApp: true };
+
+    $('email-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const email = $('email-in').value.trim().toLowerCase();
+      const m = $('login-msg'); m.className = 'msg'; m.textContent = '…';
+      try {
+        await sendSignInLinkToEmail(auth, email, linkSettings);
+        try { localStorage.setItem('rcEmail', email); } catch (_) {}
+        m.textContent = `Saite nosūtīta uz ${email}.`;
+      } catch (err) {
+        console.error(err); m.className = 'msg err'; m.textContent = 'Neizdevās nosūtīt saiti.';
+      }
+    });
+    $('google-btn').addEventListener('click', async () => {
+      try { await signInWithPopup(auth, new GoogleAuthProvider()); }
+      catch (err) {
+        if (err.code !== 'auth/popup-closed-by-user') { console.error(err); const m = $('login-msg'); m.className = 'msg err'; m.textContent = 'Neizdevās pieteikties.'; }
+      }
+    });
+    document.querySelectorAll('[data-signout]').forEach((b) => b.addEventListener('click', () => signOut(auth)));
+
+    async function completeEmailLink() {
+      if (!isSignInWithEmailLink(auth, location.href)) return;
+      let email = null;
+      try { email = localStorage.getItem('rcEmail'); } catch (_) {}
+      if (!email) email = (prompt('E-pasts') || '').trim().toLowerCase();
+      if (!email) return;
+      try {
+        await signInWithEmailLink(auth, email, location.href);
+        try { localStorage.removeItem('rcEmail'); } catch (_) {}
+      } catch (err) {
+        console.error(err); toast('Saite nav derīga vai jau izmantota.', true);
+      }
+      history.replaceState(null, '', location.pathname);
+    }
+    completeEmailLink();
+
+    onAuthStateChanged(auth, async (u) => {
+      stopAll();
+      if (!u) { show('scr-login'); return; }
+      show('scr-loading');
+      me = (u.email || '').toLowerCase();
+      isAdmin = me === ADMIN;
+      $('who').textContent = me;
+      try {
+        await ensureProfile();
+        if (isAdmin) await seedCalendars();
+      } catch (err) { console.error(err); }
+      startListeners();
+    });
+
+    async function ensureProfile() {
+      const ref = doc(db, 'users', me);
+      const snap = await getDoc(ref);
+      if (!snap.exists()) {
+        if (!isAdmin) await setDoc(ref, { email: me, createdAt: serverTimestamp(), lastSeen: serverTimestamp() });
+      } else {
+        await updateDoc(ref, { lastSeen: serverTimestamp() });
+      }
+    }
+    async function seedCalendars() {
+      const snap = await getDocs(collection(db, 'calendars'));
+      if (!snap.empty) return;
+      const b = writeBatch(db);
+      DEFAULT_CALS.forEach(([id, name, color], i) => b.set(doc(db, 'calendars', id), { name, color, order: i }));
+      await b.commit();
+    }
+
+    function stopAll() {
+      eventUnsubs.forEach((u) => u()); eventUnsubs = [];
+      otherUnsubs.forEach((u) => u()); otherUnsubs = [];
+      perCal = {}; events = new Map(); calendars = []; profile = {}; users = [];
+      selected = new Set(); panel = null; selDate = null;
+    }
+
+    function startListeners() {
+      let gotCals = false, gotProfile = isAdmin;
+      const ready = () => {
+        if (!gotCals || !gotProfile) return;
+        if (!isAdmin && viewIds().length === 0) {
+          $('wait-email').textContent = me;
+          show('scr-wait');
+          eventUnsubs.forEach((u) => u()); eventUnsubs = [];
+          return;
+        }
+        show('scr-main');
+        $('tab-admin').hidden = !isAdmin;
+        for (const id of [...selected]) if (!viewIds().includes(id)) selected.delete(id);
+        renderFilters();
+        subscribeEvents();
+        if (tab === 'admin' && isAdmin) { renderCalList(); renderUsers(); }
+      };
+      otherUnsubs.push(onSnapshot(query(collection(db, 'calendars'), orderBy('order')), (snap) => {
+        calendars = snap.docs.map((d) => ({ id: d.id, ...d.data() }));
+        gotCals = true; ready();
+      }, (err) => console.error(err)));
+      if (!isAdmin) {
+        otherUnsubs.push(onSnapshot(doc(db, 'users', me), (snap) => {
+          profile = snap.exists() ? snap.data() : {};
+          gotProfile = true; ready();
+        }, (err) => console.error(err)));
+      } else {
+        otherUnsubs.push(onSnapshot(collection(db, 'users'), (snap) => {
+          users = snap.docs.map((d) => ({ id: d.id, ...d.data() })).filter((u) => u.id !== ADMIN);
+          const pending = users.filter((u) => !(u.view || []).length).length;
+          $('pending-badge').hidden = !pending;
+          $('pending-badge').textContent = pending;
+          if (tab === 'admin') renderUsers();
+        }, (err) => console.error(err)));
+      }
+    }
+
+    // ---------- Notikumu ielāde ----------
+    function gridRange() {
+      const first = new Date(cursor.y, cursor.m, 1);
+      const start = new Date(first); start.setDate(1 - ((first.getDay() + 6) % 7));
+      const end = new Date(start); end.setDate(start.getDate() + 41);
+      return { start, end };
+    }
+    function subscribeEvents() {
+      eventUnsubs.forEach((u) => u()); eventUnsubs = []; perCal = {};
+      const { start, end } = gridRange();
+      const a = ymd(start), b = ymd(end);
+      const ids = viewIds();
+      if (!ids.length) { rebuild(); return; }
+      for (const cal of ids) {
+        const q = query(collection(db, 'calendars', cal, 'events'), where('date', '>=', a), where('date', '<=', b));
+        eventUnsubs.push(onSnapshot(q, (snap) => {
+          perCal[cal] = snap.docs.map((d) => ({ id: d.id, ...d.data() }));
+          rebuild();
+        }, (err) => { console.error(err); toast('Neizdevās ielādēt kalendāru.', true); }));
+      }
+      rebuild();
+    }
+    function rebuild() {
+      events = new Map();
+      for (const list of Object.values(perCal)) for (const e of list) if (!e.deleted) events.set(e.id, e);
+      renderGrid();
+      if (panel && panel.mode === 'edit' && !events.has(panel.id)) closePanel();
+    }
+
+    // ---------- Kalendāru josla ----------
+    function renderFilters() {
+      const f = $('filters');
+      const ids = viewIds();
+      let html = `<button class="fchip ${selected.size === 0 ? 'on' : ''}" data-f="*" style="--c:#2C2416" type="button"><span class="box"></span>Visi</button>`;
+      for (const id of ids) {
+        const c = calById(id);
+        html += `<button class="fchip ${selected.has(id) ? 'on' : ''}" data-f="${esc(id)}" style="--c:${esc(c.color)}" type="button"><span class="box"></span>${esc(c.name)}</button>`;
+      }
+      f.innerHTML = html;
+    }
+    $('filters').addEventListener('click', (e) => {
+      const b = e.target.closest('[data-f]'); if (!b) return;
+      const id = b.dataset.f;
+      if (id === '*') selected = new Set();
+      else if (selected.has(id)) selected.delete(id);
+      else selected.add(id);
+      renderFilters(); renderGrid();
+    });
+
+    // ---------- Mēneša režģis ----------
+    function renderGrid() {
+      $('month-title').textContent = `${MONTHS[cursor.m]} ${cursor.y}`;
+      const { start } = gridRange();
+      const today = ymd(new Date());
+      const visible = new Set(selected.size ? [...selected] : viewIds());
+      const order = new Map(calendars.map((c, i) => [c.id, i]));
+      const byDate = {};
+      for (const e of events.values()) {
+        for (const c of e.cals || []) {
+          if (!visible.has(c) || !calById(c)) continue;
+          (byDate[e.date] ||= []).push({ e, c });
+        }
+      }
+      let html = '';
+      for (let i = 0; i < 42; i++) {
+        const d = new Date(start); d.setDate(start.getDate() + i);
+        const key = ymd(d);
+        const items = (byDate[key] || []).sort((x, y) => (order.get(x.c) - order.get(y.c)) || (x.e.from || '').localeCompare(y.e.from || ''));
+        const cls = ['day'];
+        if (d.getMonth() !== cursor.m) cls.push('out');
+        if (key === today) cls.push('today');
+        if (key === selDate) cls.push('sel');
+        html += `<div class="${cls.join(' ')}" data-date="${key}"><span class="num">${d.getDate()}</span>`;
+        for (const { e, c } of items) {
+          const cal = calById(c);
+          const act = panel && panel.mode === 'edit' && panel.id === e.id ? ' active' : '';
+          html += `<button class="ev${act}" data-ev="${esc(e.id)}" style="--c:${esc(cal.color)}" type="button" title="${esc(cal.name)}${e.from ? ' · ' + esc(e.from) : ''}${e.place ? ' · ' + esc(e.place) : ''}"><span class="dot st-${esc(e.status)}"></span><span class="lbl">${esc(cal.name)}</span></button>`;
+        }
+        html += `</div>`;
+      }
+      $('grid').innerHTML = html;
+    }
+    $('grid').addEventListener('click', (e) => {
+      const ev = e.target.closest('[data-ev]');
+      if (ev) { openEdit(ev.dataset.ev); return; }
+      const day = e.target.closest('[data-date]');
+      if (day) openNew(day.dataset.date);
+    });
+
+    function moveMonth(delta) {
+      let m = cursor.m + delta, y = cursor.y;
+      while (m < 0) { m += 12; y--; }
+      while (m > 11) { m -= 12; y++; }
+      cursor = { y, m };
+      $('picker').hidden = true;
+      subscribeEvents();
+    }
+    $('prev').addEventListener('click', () => moveMonth(-1));
+    $('next').addEventListener('click', () => moveMonth(1));
+    $('today').addEventListener('click', () => { const t = new Date(); cursor = { y: t.getFullYear(), m: t.getMonth() }; $('picker').hidden = true; subscribeEvents(); });
+
+    // Mēneša izvēle, uzklikšķinot uz nosaukuma
+    function renderPicker() {
+      let html = `<div class="picker-year"><button type="button" data-py="-1">‹</button><span>${pickerYear}</span><button type="button" data-py="1">›</button></div><div class="picker-months">`;
+      MONTHS.forEach((name, i) => {
+        const cur = pickerYear === cursor.y && i === cursor.m ? 'cur' : '';
+        html += `<button type="button" class="${cur}" data-pm="${i}">${name.slice(0, 3)}</button>`;
+      });
+      $('picker').innerHTML = html + '</div>';
+    }
+    $('month-title').addEventListener('click', () => {
+      const p = $('picker');
+      if (!p.hidden) { p.hidden = true; return; }
+      pickerYear = cursor.y; renderPicker(); p.hidden = false;
+    });
+    $('picker').addEventListener('click', (e) => {
+      const py = e.target.closest('[data-py]');
+      if (py) { pickerYear += Number(py.dataset.py); renderPicker(); return; }
+      const pm = e.target.closest('[data-pm]');
+      if (pm) { cursor = { y: pickerYear, m: Number(pm.dataset.pm) }; $('picker').hidden = true; subscribeEvents(); }
+    });
+    document.addEventListener('click', (e) => {
+      if (!$('picker').hidden && !e.target.closest('#picker') && !e.target.closest('#month-title')) $('picker').hidden = true;
+    });
+
+    // Pārvilkšana ar pirkstu telefonā
+    let touchX = null, touchY = null;
+    $('grid').addEventListener('touchstart', (e) => { touchX = e.touches[0].clientX; touchY = e.touches[0].clientY; }, { passive: true });
+    $('grid').addEventListener('touchend', (e) => {
+      if (touchX === null) return;
+      const dx = e.changedTouches[0].clientX - touchX, dy = e.changedTouches[0].clientY - touchY;
+      touchX = null;
+      if (Math.abs(dx) > 60 && Math.abs(dx) > Math.abs(dy) * 1.5) moveMonth(dx < 0 ? 1 : -1);
+    });
+
+    // ---------- Labās puses forma ----------
+    function openNew(date) {
+      panel = { mode: 'new', date }; selDate = date;
+      renderPanel(); renderGrid();
+    }
+    function openEdit(id) {
+      const e = events.get(id); if (!e) return;
+      panel = { mode: 'edit', id }; selDate = e.date;
+      renderPanel(); renderGrid();
+    }
+    function closePanel() {
+      panel = null; selDate = null;
+      $('panel').hidden = true; $('scrim').hidden = true;
+      $('cal-wrap').classList.remove('with-panel');
+      renderGrid();
+    }
+    $('scrim').addEventListener('click', closePanel);
+    document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && panel) closePanel(); });
+
+    function renderPanel() {
+      const p = $('panel');
+      p.hidden = false; $('scrim').hidden = false;
+      $('cal-wrap').classList.add('with-panel');
+      const edit = editIds();
+
+      if (panel.mode === 'new' && !edit.length) {
+        p.innerHTML = `<div class="panel-head"><h2>${esc(fmtLong(panel.date))}</h2><button class="x" data-close type="button" aria-label="Aizvērt">×</button></div>
+          <p class="notice">Lūdz atļauju pievienot pasākumu.</p>`;
+        return;
+      }
+
+      const e = panel.mode === 'edit' ? events.get(panel.id) : null;
+      const editable = !e || (e.cals || []).every((c) => edit.includes(c));
+      const date = e ? e.date : panel.date;
+      const head = `<div class="panel-head"><h2>${esc(fmtLong(date))}</h2><button class="x" data-close type="button" aria-label="Aizvērt">×</button></div>`;
+
+      if (!editable) {
+        const names = (e.cals || []).filter((c) => calById(c) && viewIds().includes(c)).map((c) => {
+          const cal = calById(c);
+          return `<span class="opt on" style="--c:${esc(cal.color)}"><span class="box"></span>${esc(cal.name)}</span>`;
+        }).join('');
+        const st = STATUSES.find(([k]) => k === e.status);
+        p.innerHTML = head + `
+          <span class="flabel">Kalendāri</span><div class="opts">${names}</div>
+          <span class="flabel">Statuss</span><div class="opts"><span class="opt"><span class="dot st-${esc(e.status)}"></span>${esc(st ? st[1] : '')}</span></div>
+          <span class="flabel">Laiks</span><p class="ro ${e.from || e.to ? '' : 'muted'}">${esc([e.from, e.to].filter(Boolean).join(' – ') || '—')}</p>
+          <span class="flabel">Vieta</span><p class="ro ${e.place ? '' : 'muted'}">${esc(e.place || '—')}</p>
+          <span class="flabel">Piezīmes</span><p class="ro ${e.notes ? '' : 'muted'}">${esc(e.notes || '—')}</p>
+          ${metaHtml(e)}`;
+        return;
+      }
+
+      // Jaunam pasākumam iepriekš atzīmē kalendāru, ja joslā izvēlēts tieši viens
+      let checked = e ? [...e.cals] : [];
+      if (!e && selected.size === 1) { const only = [...selected][0]; if (edit.includes(only)) checked = [only]; }
+      const calOpts = edit.map((id) => {
+        const c = calById(id);
+        return `<button type="button" class="opt ${checked.includes(id) ? 'on' : ''}" data-cal="${esc(id)}" style="--c:${esc(c.color)}"><span class="box"></span>${esc(c.name)}</button>`;
+      }).join('');
+      const status = e ? e.status : '';
+      const stOpts = STATUSES.map(([k, label]) =>
+        `<button type="button" class="opt st ${status === k ? 'on' : ''}" data-st="${k}"><span class="dot st-${k}"></span>${label}</button>`).join('');
+
+      p.innerHTML = head + `
+        <form id="ev-form">
+          <span class="flabel">Kalendāri</span><div class="opts" id="f-cals">${calOpts}</div>
+          <span class="flabel">Statuss</span><div class="opts" id="f-st">${stOpts}</div>
+          <span class="flabel">Datums</span><input class="field" type="date" id="f-date" value="${esc(date)}" required />
+          <span class="flabel">Laiks</span>
+          <div class="row2"><input class="field" type="time" id="f-from" value="${esc(e?.from || '')}" /><input class="field" type="time" id="f-to" value="${esc(e?.to || '')}" /></div>
+          <span class="flabel">Vieta</span><input class="field" type="text" id="f-place" maxlength="300" value="${esc(e?.place || '')}" />
+          <span class="flabel">Piezīmes</span><textarea class="field" id="f-notes" maxlength="5000">${esc(e?.notes || '')}</textarea>
+          <div class="panel-actions">
+            <button class="btn btn-brown" type="submit">Saglabāt</button>
+            ${e ? '<button class="del" type="button" id="f-del">Dzēst</button>' : ''}
+          </div>
+          <p class="msg err" id="f-msg"></p>
+        </form>
+        ${e ? metaHtml(e) : ''}`;
+    }
+    function metaHtml(e) {
+      const parts = [];
+      if (e.createdBy) parts.push(`Pievienoja ${esc(e.createdBy)}${e.createdAt ? ' · ' + fmtTs(e.createdAt) : ''}`);
+      if (e.updatedBy && e.updatedAt && (!e.createdAt || e.updatedAt.toMillis() - e.createdAt.toMillis() > 2000)) parts.push(`Labots ${esc(e.updatedBy)} · ${fmtTs(e.updatedAt)}`);
+      return parts.length ? `<p class="meta">${parts.join('<br>')}</p>` : '';
+    }
+
+    $('panel').addEventListener('click', async (ev) => {
+      if (ev.target.closest('[data-close]')) { closePanel(); return; }
+      const c = ev.target.closest('[data-cal]');
+      if (c) { c.classList.toggle('on'); return; }
+      const s = ev.target.closest('[data-st]');
+      if (s) { $('f-st').querySelectorAll('.opt').forEach((o) => o.classList.toggle('on', o === s)); return; }
+      const del = ev.target.closest('#f-del');
+      if (del) {
+        if (del.dataset.confirm) { await deleteEvent(); return; }
+        del.dataset.confirm = '1'; del.textContent = 'Tiešām dzēst?';
+        setTimeout(() => { if (del.isConnected) { delete del.dataset.confirm; del.textContent = 'Dzēst'; } }, 4000);
+      }
+    });
+    $('panel').addEventListener('submit', async (ev) => {
+      ev.preventDefault();
+      const msg = $('f-msg');
+      const cals = [...$('f-cals').querySelectorAll('.opt.on')].map((o) => o.dataset.cal);
+      const st = $('f-st').querySelector('.opt.on');
+      const date = $('f-date').value;
+      if (!cals.length) { msg.textContent = 'Izvēlies kalendāru.'; return; }
+      if (!st) { msg.textContent = 'Izvēlies statusu.'; return; }
+      if (!date) { msg.textContent = 'Izvēlies datumu.'; return; }
+      const old = panel.mode === 'edit' ? events.get(panel.id) : null;
+      const id = old ? old.id : doc(collection(db, 'calendars', cals[0], 'events')).id;
+      const data = {
+        date, cals, status: st.dataset.st,
+        from: $('f-from').value || '', to: $('f-to').value || '',
+        place: $('f-place').value.trim(), notes: $('f-notes').value.trim(),
+        createdBy: old ? old.createdBy : me,
+        createdAt: old ? (old.createdAt || serverTimestamp()) : serverTimestamp(),
+        updatedBy: me, updatedAt: serverTimestamp(),
+        deleted: false, deletedAt: null, deletedBy: null
+      };
+      const b = writeBatch(db);
+      for (const c of cals) b.set(doc(db, 'calendars', c, 'events', id), data);
+      if (old) for (const c of old.cals || []) if (!cals.includes(c)) b.delete(doc(db, 'calendars', c, 'events', id));
+      try {
+        await b.commit();
+        toast('Saglabāts.');
+        closePanel();
+        // Ja datums pārcelts uz citu mēnesi, pāriet uz to
+        const d = parseYmd(date);
+        if (d.getMonth() !== cursor.m || d.getFullYear() !== cursor.y) {
+          const { start, end } = gridRange();
+          if (d < start || d > end) { cursor = { y: d.getFullYear(), m: d.getMonth() }; subscribeEvents(); }
+        }
+      } catch (err) { console.error(err); msg.textContent = 'Neizdevās saglabāt.'; }
+    });
+
+    async function deleteEvent() {
+      const e = events.get(panel.id); if (!e) return;
+      const b = writeBatch(db);
+      for (const c of e.cals || []) b.update(doc(db, 'calendars', c, 'events', e.id), {
+        deleted: true, deletedAt: serverTimestamp(), deletedBy: me, updatedBy: me, updatedAt: serverTimestamp()
+      });
+      try { await b.commit(); toast('Izdzēsts.'); closePanel(); }
+      catch (err) { console.error(err); toast('Neizdevās izdzēst.', true); }
+    }
+
+    // ---------- Cilnes ----------
+    document.querySelectorAll('[data-tab]').forEach((t) => t.addEventListener('click', () => {
+      tab = t.dataset.tab;
+      document.querySelectorAll('[data-tab]').forEach((x) => x.classList.toggle('active', x === t));
+      $('view-cal').hidden = tab !== 'cal';
+      $('view-admin').hidden = tab !== 'admin';
+      if (tab === 'admin') renderAdmin();
+    }));
+
+    // ---------- Admin ----------
+    function renderAdmin() {
+      if (!isAdmin) return;
+      sortUsers(); renderUsers(); renderCalList(); loadTrash();
+    }
+
+    // Rindu secību nosaka, atverot Admin (gaidošie augšā), un tā nemainās, kamēr strādā —
+    // lai rinda nepārlēktu citur brīdī, kad tai ieliek ķeksi.
+    let userOrder = [];
+    function sortUsers() {
+      userOrder = [...users].sort((a, b) => {
+        const pa = (a.view || []).length ? 1 : 0, pb = (b.view || []).length ? 1 : 0;
+        if (pa !== pb) return pa - pb;
+        return (a.name || a.id).localeCompare(b.name || b.id, 'lv');
+      }).map((u) => u.id);
+    }
+    let usersDirty = false;
+    function renderUsers() {
+      // Nepārzīmē, kamēr raksta vārdu — citādi ievadītais pazustu
+      if ($('users-tbl').contains(document.activeElement) && document.activeElement.matches('[data-name]')) { usersDirty = true; return; }
+      usersDirty = false;
+      const q = $('user-search').value.trim().toLowerCase();
+      const fresh = users.filter((u) => !userOrder.includes(u.id)).map((u) => u.id);
+      userOrder = [...fresh, ...userOrder.filter((id) => users.some((u) => u.id === id))];
+      const list = userOrder.map((id) => users.find((u) => u.id === id))
+        .filter((u) => !q || u.id.includes(q) || (u.name || '').toLowerCase().includes(q));
+      if (!list.length) { $('users-tbl').innerHTML = `<p class="empty">${users.length ? 'Nekas netika atrasts.' : 'Vēl neviena e-pasta.'}</p>`; return; }
+      let html = `<table><thead><tr><th>Vārds Uzvārds</th><th>E-pasts</th>`;
+      for (const c of calendars) html += `<th class="calh"><span class="cn" style="--c:${esc(c.color)}">${esc(c.name)}</span></th>`;
+      html += `<th>Pēdējo reizi</th><th></th></tr></thead><tbody>`;
+      for (const u of list) {
+        const view = u.view || [], edit = u.edit || [];
+        const pending = !view.length;
+        html += `<tr class="${pending ? 'pending' : ''}" data-u="${esc(u.id)}">
+          <td><input class="name-in" data-name value="${esc(u.name || '')}" placeholder="—" /></td>
+          <td>${esc(u.id)}</td>`;
+        for (const c of calendars) {
+          html += `<td class="acc">
+            <label><input type="checkbox" data-acc="view" data-c="${esc(c.id)}" ${view.includes(c.id) ? 'checked' : ''} />skatīt</label>
+            <label><input type="checkbox" data-acc="edit" data-c="${esc(c.id)}" ${edit.includes(c.id) ? 'checked' : ''} />rakstīt</label>
+          </td>`;
+        }
+        html += `<td class="muted">${u.lastSeen ? fmtTs(u.lastSeen) : '—'}</td>
+          <td><button class="small-btn red" data-deluser type="button">Dzēst</button>${pending ? '<span class="tag">Gaida</span>' : ''}</td></tr>`;
+      }
+      $('users-tbl').innerHTML = html + '</tbody></table>';
+    }
+    $('user-search').addEventListener('input', renderUsers);
+
+    $('users-tbl').addEventListener('change', async (e) => {
+      const row = e.target.closest('[data-u]'); if (!row) return;
+      const id = row.dataset.u;
+      const ref = doc(db, 'users', id);
+      try {
+        if (e.target.matches('[data-name]')) {
+          await updateDoc(ref, { name: e.target.value.trim() });
+          if (usersDirty && !document.activeElement.matches('[data-name]')) renderUsers();
+          return;
+        }
+        if (e.target.matches('[data-acc]')) {
+          const u = users.find((x) => x.id === id) || {};
+          const view = new Set(u.view || []), edit = new Set(u.edit || []);
+          const c = e.target.dataset.c, on = e.target.checked;
+          if (e.target.dataset.acc === 'view') { if (on) view.add(c); else { view.delete(c); edit.delete(c); } }
+          else { if (on) { edit.add(c); view.add(c); } else edit.delete(c); }
+          await updateDoc(ref, { view: [...view], edit: [...edit] });
+        }
+      } catch (err) { console.error(err); toast('Neizdevās saglabāt.', true); }
+    });
+    $('users-tbl').addEventListener('click', async (e) => {
+      const b = e.target.closest('[data-deluser]'); if (!b) return;
+      const id = b.closest('[data-u]').dataset.u;
+      if (!b.dataset.confirm) {
+        b.dataset.confirm = '1'; b.textContent = 'Tiešām dzēst?';
+        setTimeout(() => { if (b.isConnected) { delete b.dataset.confirm; b.textContent = 'Dzēst'; } }, 4000);
+        return;
+      }
+      try { await deleteDoc(doc(db, 'users', id)); toast('Izdzēsts.'); }
+      catch (err) { console.error(err); toast('Neizdevās izdzēst.', true); }
+    });
+    $('add-user').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const email = $('add-user-in').value.trim().toLowerCase();
+      if (!email) return;
+      if (users.some((u) => u.id === email)) { toast('Šis e-pasts jau ir sarakstā.'); return; }
+      try {
+        await setDoc(doc(db, 'users', email), { email, createdAt: serverTimestamp(), lastSeen: null, view: [], edit: [] });
+        $('add-user-in').value = '';
+      } catch (err) { console.error(err); toast('Neizdevās pievienot.', true); }
+    });
+
+    function renderCalList() {
+      $('cal-list').innerHTML = calendars.map((c, i) => `
+        <div class="cal-row" data-cid="${esc(c.id)}">
+          <input type="color" data-color value="${esc(c.color)}" />
+          <input class="name-in" data-cname value="${esc(c.name)}" />
+          <button class="mv" type="button" data-mv="-1" ${i === 0 ? 'disabled' : ''} aria-label="Uz augšu">↑</button>
+          <button class="mv" type="button" data-mv="1" ${i === calendars.length - 1 ? 'disabled' : ''} aria-label="Uz leju">↓</button>
+        </div>`).join('');
+    }
+    $('cal-list').addEventListener('change', async (e) => {
+      const row = e.target.closest('[data-cid]'); if (!row) return;
+      const ref = doc(db, 'calendars', row.dataset.cid);
+      try {
+        if (e.target.matches('[data-color]')) await updateDoc(ref, { color: e.target.value });
+        if (e.target.matches('[data-cname]') && e.target.value.trim()) await updateDoc(ref, { name: e.target.value.trim() });
+        renderFilters(); renderGrid(); renderUsers();
+      } catch (err) { console.error(err); toast('Neizdevās saglabāt.', true); }
+    });
+    $('cal-list').addEventListener('click', async (e) => {
+      const b = e.target.closest('[data-mv]'); if (!b) return;
+      const i = calendars.findIndex((c) => c.id === b.closest('[data-cid]').dataset.cid);
+      const j = i + Number(b.dataset.mv);
+      if (j < 0 || j >= calendars.length) return;
+      const list = [...calendars]; [list[i], list[j]] = [list[j], list[i]];
+      const batch = writeBatch(db);
+      list.forEach((c, k) => batch.update(doc(db, 'calendars', c.id), { order: k }));
+      try { await batch.commit(); } catch (err) { console.error(err); toast('Neizdevās saglabāt.', true); }
+    });
+    $('add-cal').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const name = $('add-cal-in').value.trim(); if (!name) return;
+      const ref = doc(collection(db, 'calendars'));
+      const color = PALETTE[calendars.length % PALETTE.length];
+      const order = calendars.length ? Math.max(...calendars.map((c) => c.order || 0)) + 1 : 0;
+      try { await setDoc(ref, { name, color, order }); $('add-cal-in').value = ''; }
+      catch (err) { console.error(err); toast('Neizdevās pievienot.', true); }
+    });
+
+    // Dzēstie: rāda 30 dienas, vecākos izdzēš pavisam
+    let trash = [];
+    async function loadTrash() {
+      const cutoff = Date.now() - 30 * 24 * 3600 * 1000;
+      const byId = new Map();
+      const purge = writeBatch(db); let purgeCount = 0;
+      try {
+        for (const c of calendars) {
+          const snap = await getDocs(query(collection(db, 'calendars', c.id, 'events'), where('deleted', '==', true)));
+          for (const d of snap.docs) {
+            const data = { id: d.id, ...d.data() };
+            const t = data.deletedAt && data.deletedAt.toMillis ? data.deletedAt.toMillis() : Date.now();
+            if (t < cutoff) { purge.delete(d.ref); purgeCount++; continue; }
+            byId.set(d.id, data);
+          }
+        }
+        if (purgeCount) await purge.commit();
+      } catch (err) { console.error(err); }
+      trash = [...byId.values()].sort((a, b) => (b.deletedAt?.toMillis?.() || 0) - (a.deletedAt?.toMillis?.() || 0));
+      renderTrash();
+    }
+    function renderTrash() {
+      if (!trash.length) { $('trash').innerHTML = '<p class="empty">Nav dzēstu pasākumu.</p>'; return; }
+      let html = '<table><thead><tr><th>Datums</th><th>Kalendāri</th><th>Vieta</th><th>Dzēsa</th><th></th></tr></thead><tbody>';
+      for (const e of trash) {
+        const names = (e.cals || []).map((c) => calById(c)?.name || c).join(', ');
+        html += `<tr data-t="${esc(e.id)}"><td>${esc(e.date)}</td><td>${esc(names)}</td><td>${esc(e.place || '—')}</td>
+          <td class="muted">${esc(e.deletedBy || '')} · ${fmtTs(e.deletedAt)}</td>
+          <td><button class="small-btn" data-restore type="button">Atjaunot</button></td></tr>`;
+      }
+      $('trash').innerHTML = html + '</tbody></table>';
+    }
+    $('trash').addEventListener('click', async (e) => {
+      const b = e.target.closest('[data-restore]'); if (!b) return;
+      const t = trash.find((x) => x.id === b.closest('[data-t]').dataset.t); if (!t) return;
+      const batch = writeBatch(db);
+      for (const c of t.cals || []) batch.update(doc(db, 'calendars', c, 'events', t.id), {
+        deleted: false, deletedAt: null, deletedBy: null, updatedBy: me, updatedAt: serverTimestamp()
+      });
+      try { await batch.commit(); toast('Atjaunots.'); loadTrash(); }
+      catch (err) { console.error(err); toast('Neizdevās atjaunot.', true); }
+    });
+  </script>
+</body>
+</html>

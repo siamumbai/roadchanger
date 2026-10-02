@@ -51,6 +51,7 @@
 - `/review/` — **īsā saite atsauksmēm.** Pāradresē uz Google atsauksmes formu ar **HTTP 307** (`roadchanger/vercel.json`). `review/index.html` paliek kā rezerves slānis (meta refresh + poga + JS), ja konfigurācija kādreiz pazustu — Vercel redirects nostrādā pirms failiem, tāpēc parasti to nemaz nepasniedz. `noindex`, nav sitemap. Šo saiti lietotājs sūta klientiem pēc pasākuma.
 - `/reviews/` — atlasītas Google atsauksmes kā **statisks HTML** + poga uz pilno Google profilu + poga uz `/review/`.
 - `/projects/` — projektu saraksts; katrs projekts savā mapē `/projects/<slug>/index.html`.
+- `/kalendars/` — **privāts kalendārs sadarbības māksliniekiem** (uzlikts 2026-10-02). `noindex`, robots.txt aizliegts, nav sitemap, nav navigācijā. Sk. sadaļu "Kalendārs" zemāk.
 - `/thanks` — pateicības lapa pēc formas nosūtīšanas ("Thanks! The form was submitted successfully..." + Go back poga uz galveno lapu).
 
 ## Navigācija (galvenā lapa)
@@ -120,6 +121,22 @@ un pastāvīgs, īsinājums ir redirect. Abi noved uz to pašu profilu.
    (šablons ir **repo saknē**, netiek publicēts — pārbaudīts, Vercel publicē tikai `roadchanger/`).
 2. Aizvietot visas `<...>` vietas ar īsto saturu. Tekstus dod lietotājs — neizdomāt.
 3. Atjaunot 4 vietas: `projects/index.html` (kartiņa + ItemList JSON-LD), `sitemap.xml`, `llms.txt`.
+
+## Kalendārs `/kalendars/` (uzlikts 2026-10-02)
+
+- Viens fails `roadchanger/kalendars/index.html` (HTML + JS, Firebase JS SDK no gstatic CDN).
+- **Firebase projekts `roadchanger-kalendars`** (atsevišķs no skanudarbnica), Firestore `eur3`, bezmaksas Spark plāns.
+  Repo saknē (netiek publicēts): `firebase.json`, `.firebaserc`, `firestore.rules`, `firestore.indexes.json`.
+  Noteikumu publicēšana: `npx firebase-tools deploy --only firestore:rules` (no repo saknes).
+- Pieteikšanās: Google vai e-pasta saite (bez parolēm). Admin = tikai `e.asmanis@gmail.com` — pārbaude **Firestore noteikumos**, ne tikai UI.
+- Dati:
+  - `users/{e-pasts mazajiem burtiem}`: `name`, `view[]` (kalendāri, ko redz), `edit[]` (kuros raksta). Bez `view` = "Gaida".
+  - `calendars/{id}`: `name`, `color`, `order`. Sākuma 6: Uguns šovs, Dzīvie tēli, Arfa, DJ, Darbnīca, Skaņa/Gaisma. Jaunus pievieno Admin sadaļā.
+  - `calendars/{id}/events/{eventId}`: pasākums ar vairākiem kalendāriem = **kopija katra kalendāra mapē ar vienu ID** (`cals[]` lauks). Tā noteikumi piekļuvi pārbauda pēc mapes ceļa.
+  - Statusi: `interese`, `rezervets` (oranži), `apstiprinats` (zaļš).
+  - Dzēšana ir "mīkstā" (`deleted: true`); Admin sadaļā "Dzēstie" var atjaunot 30 dienas, vecākos Admin atverot izdzēš pavisam.
+- Labot pasākumu var tikai tas, kam ir "rakstīt" tiesības **visos** tā kalendāros; citiem forma ir tikai lasāma.
+- Lietotājam bez rakstīšanas tiesībām tukšas dienas klikšķis rāda "Lūdz atļauju pievienot pasākumu." (lietotāja teksts).
 
 ## Favikons (uzlikts 2026-08-28)
 
