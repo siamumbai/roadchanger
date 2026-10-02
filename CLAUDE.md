@@ -162,7 +162,8 @@ un pastāvīgs, īsinājums ir redirect. Abi noved uz to pašu profilu.
 - Scenārija skats: augšā Vieta + Adrese + karte (Leaflet + OpenStreetMap, adreses meklēšana caur Nominatim, vai klikšķis kartē),
   tabula Laiks | Notikums | Komentārs (rindas `order` secībā, labojas reālā laikā), labajā pusē kategorijas.
   Uzspiežot kategoriju: tās rindas oranžas, pārējās blāvas; rakstītāji ar apli rindas sākumā atzīmē/noņem.
-  "Labot" atklāj rindu un kategoriju dzēšanu.
+  "Labot" atklāj rindu un kategoriju dzēšanu (×, vienmēr ar "Izdzēst? Jā / Nē"). "+" rindas labajā pusē ieliek tukšu rindu zem tās.
+  Laika logā tukšai rindai iekrāsots (gaiši oranžs) iepriekšējās rindas laiks un tas ir noklusējums.
   Scenārija teksti (LV/EN) — `T` objekts failā; kategoriju sākuma nosaukumi pēc projekta valodas.
 - Mainot paroli, Admin izmet visus, kas ienāca ar veco. Valodu (`lang`) maina tikai admins.
 - Lietotāja lēmumi: iekrāsošana pagaidām oranža visiem; rindai var būt vairākas kategorijas; kategorijas var pievienot/dzēst (dzēst — paslēpts aiz "Labot");

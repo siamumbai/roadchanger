@@ -126,7 +126,7 @@
     .toolbar .spacer { flex: 1; }
 
     .sheet { background: #fff; border: 0.5px solid #E0CCA4; border-radius: 10px; box-shadow: 0 4px 18px rgba(44, 36, 22, 0.07); }
-    .srow { display: grid; grid-template-columns: 2.25rem 7.5rem minmax(0, 1.2fr) minmax(0, 1fr) 2.25rem; border-bottom: 0.5px solid #EAD9B8; transition: opacity 0.15s, background 0.15s; position: relative; }
+    .srow { display: grid; grid-template-columns: 2.25rem 7.5rem minmax(0, 1.2fr) minmax(0, 1fr) 4.5rem; border-bottom: 0.5px solid #EAD9B8; transition: opacity 0.15s, background 0.15s; position: relative; }
     .srow:last-child { border-bottom: none; }
     .srow > * { min-width: 0; }
     .shead { border-radius: 10px 10px 0 0; background: #FEF9F2; font-size: 0.75rem; letter-spacing: 0.08em; text-transform: uppercase; color: #7A5C38; }
@@ -150,17 +150,33 @@
     .tp-grid button { padding: 0.4rem 0; border-radius: 6px; font-size: 0.85rem; font-variant-numeric: tabular-nums; }
     .tp-grid button:hover { background: #FDF5E6; }
     .tp-grid button.on { background: #2C2416; color: #F5ECD8; }
+    .tp-grid button.hint { background: #FDEBD3; color: #8A5410; }
     .tp-clear { font-size: 0.8rem; color: #8A6840; text-decoration: underline; text-underline-offset: 3px; }
     .c-note { color: #6B5035; border-left: 0.5px solid #F2E6CF; }
     .tags { display: flex; flex-wrap: wrap; gap: 0.3rem; padding: 0 0.6rem 0.55rem; }
     .tags:empty { display: none; }
     .tag { font-size: 0.7rem; letter-spacing: 0.03em; padding: 0.1rem 0.45rem; border-radius: 999px; background: #FBE7CC; color: #8A5410; }
-    .mark, .del { display: flex; align-items: flex-start; justify-content: center; padding-top: 0.75rem; color: #C4A06A; }
+    .mark, .del, .ins { display: flex; align-items: flex-start; justify-content: center; padding-top: 0.75rem; color: #C4A06A; }
+    .r-act { display: flex; justify-content: flex-end; padding-right: 0.25rem; }
+    .r-act button { width: 2rem; }
     .mark span { width: 1.05rem; height: 1.05rem; border-radius: 50%; border: 1.5px solid #E08A1E; display: block; }
     .mark.on span { background: #E08A1E; }
-    .mark:disabled, .del:disabled { visibility: hidden; }
+    .mark:disabled, .del:disabled, .ins:disabled { visibility: hidden; }
     .del { font-size: 1.1rem; line-height: 1; }
     .del:hover { color: #A33A2A; }
+    .ins { font-size: 1.25rem; line-height: 0.85; }
+    .ins:hover { color: #B07320; }
+
+    /* Dzēšanas apstiprinājums */
+    .cfm {
+      position: absolute; right: 0.4rem; top: 2.4rem; z-index: 65; white-space: nowrap;
+      display: flex; align-items: center; gap: 0.5rem;
+      background: #fff; border: 0.5px solid #E0CCA4; border-radius: 8px;
+      box-shadow: 0 8px 24px rgba(44, 36, 22, 0.14); padding: 0.55rem 0.7rem; font-size: 0.85rem;
+    }
+    .cfm button { padding: 0.3rem 0.7rem; border-radius: 6px; font-size: 0.82rem; }
+    .cfm .yes { background: #A33A2A; color: #fff; }
+    .cfm .no { border: 0.5px solid #E0CCA4; }
     .srow.hl { background: #FDEBD3; box-shadow: inset 3px 0 0 #E08A1E; }
     .srow.dim { opacity: 0.4; }
     .sheet-empty { padding: 1.25rem; color: #7A5C38; font-size: 0.9rem; }
@@ -168,7 +184,7 @@
     .cats { background: #fff; border: 0.5px solid #E0CCA4; border-radius: 12px; box-shadow: 0 4px 18px rgba(44, 36, 22, 0.07); padding: 1.1rem; position: sticky; top: 5.5rem; }
     .cats h3 { font-family: 'Libre Baskerville', Georgia, serif; font-size: 1.05rem; font-weight: 400; margin-bottom: 0.8rem; }
     .cat-list { display: flex; flex-direction: column; gap: 0.4rem; }
-    .cat { display: flex; align-items: center; gap: 0.4rem; }
+    .cat { display: flex; align-items: center; gap: 0.4rem; position: relative; }
     .cat-btn { flex: 1; min-width: 0; display: flex; align-items: center; gap: 0.5rem; text-align: left; padding: 0.5rem 0.7rem; border-radius: 8px; border: 0.5px solid #E0CCA4; background: #FFFBF5; font-size: 0.9rem; }
     .cat-btn:hover { border-color: #E08A1E; }
     .cat-btn .n { margin-left: auto; font-size: 0.75rem; color: #7A5C38; }
@@ -197,10 +213,10 @@
       .cats { position: static; }
       .cat-list { flex-direction: row; flex-wrap: wrap; }
       .cat-btn { flex: none; }
-      .srow { grid-template-columns: 2.25rem 5.5rem minmax(0, 1fr) 2.25rem; }
+      .srow { grid-template-columns: 2.25rem 5.5rem minmax(0, 1fr) 4.5rem; }
       .srow .c-ev { grid-column: 3; }
       .srow .c-note { grid-column: 2 / 4; grid-row: 2; border-left: none; padding-top: 0; }
-      .srow .del { grid-column: 4; grid-row: 1; }
+      .srow .r-act { grid-column: 4; grid-row: 1; }
       .shead .h-note { display: none; }
     }
   </style>
@@ -374,10 +390,12 @@
     const T = {
       lv: { logout: 'Iziet', venue: 'Vieta', address: 'Adrese', find: 'Atrast kartē', time: 'Laiks', event: 'Notikums',
             note: 'Komentārs', addRow: '+ Rinda', cats: 'Kategorijas', edit: 'Labot', done: 'Gatavs', newCat: 'Jauna kategorija',
-            empty: 'Vēl nav nevienas rindas.', notFound: 'Adrese nav atrasta', hours: 'Stundas', minutes: 'Minūtes', clear: 'Notīrīt' },
+            empty: 'Vēl nav nevienas rindas.', notFound: 'Adrese nav atrasta', hours: 'Stundas', minutes: 'Minūtes', clear: 'Notīrīt',
+            delRow: 'Izdzēst rindu?', delCat: 'Izdzēst kategoriju?', yes: 'Jā', no: 'Nē' },
       en: { logout: 'Log out', venue: 'Venue', address: 'Address', find: 'Find on map', time: 'Time', event: 'Event',
             note: 'Comment', addRow: '+ Row', cats: 'Categories', edit: 'Edit', done: 'Done', newCat: 'New category',
-            empty: 'No rows yet.', notFound: 'Address not found', hours: 'Hours', minutes: 'Minutes', clear: 'Clear' }
+            empty: 'No rows yet.', notFound: 'Address not found', hours: 'Hours', minutes: 'Minutes', clear: 'Clear',
+            delRow: 'Delete row?', delCat: 'Delete category?', yes: 'Yes', no: 'No' }
     };
     const SID_KEY = 'rc-scenarijs-sid';
 
@@ -612,7 +630,7 @@
         // Dzēst var tikai "Labot" režīmā.
         if (S.edit && canWrite()) {
           const x = document.createElement('button'); x.className = 'cat-x'; x.type = 'button'; x.textContent = '×';
-          x.addEventListener('click', () => deleteCat(c.id));
+          x.addEventListener('click', e => { e.stopPropagation(); askConfirm(wrap, tr('delCat'), () => deleteCat(c.id)); });
           wrap.append(x);
         }
         box.append(wrap);
@@ -654,7 +672,7 @@
         + '<button class="cell c-time" type="button"></button>'
         + '<div class="c-ev"><textarea class="cell" rows="1" maxlength="2000"></textarea><div class="tags"></div></div>'
         + '<textarea class="cell c-note" rows="1" maxlength="2000"></textarea>'
-        + '<button class="del" type="button">×</button>';
+        + '<div class="r-act"><button class="ins" type="button">+</button><button class="del" type="button">×</button></div>';
       const [time, ev, note] = [el.querySelector('.c-time'), el.querySelector('.c-ev textarea'), el.querySelector('.c-note')];
       const bind = (input, field) => input.addEventListener('input', () => {
         if (input.tagName === 'TEXTAREA') autosize(input);
@@ -668,17 +686,57 @@
         const on = (r.cats || []).includes(S.sel);
         updateDoc(rref(id), { cats: on ? arrayRemove(S.sel) : arrayUnion(S.sel) }).catch(fail);
       });
-      el.querySelector('.del').addEventListener('click', () => deleteDoc(rref(id)).catch(fail));
-      el._f = { time, ev, note, tags: el.querySelector('.tags'), mark: el.querySelector('.mark'), del: el.querySelector('.del') };
+      el.querySelector('.del').addEventListener('click', e => {
+        e.stopPropagation();
+        askConfirm(el, tr('delRow'), () => deleteDoc(rref(id)).catch(fail));
+      });
+      el.querySelector('.ins').addEventListener('click', () => insertAfter(id));
+      el._f = { time, ev, note, tags: el.querySelector('.tags'), mark: el.querySelector('.mark'),
+                del: el.querySelector('.del'), ins: el.querySelector('.ins') };
       return el;
     }
+
+    const sortedRows = () => [...S.rows.entries()].sort((a, b) => (a[1].order || 0) - (b[1].order || 0));
+
+    // Jauna tukša rinda tieši zem norādītās.
+    async function insertAfter(id) {
+      const list = sortedRows();
+      const i = list.findIndex(([rid]) => rid === id);
+      const cur = list[i][1].order || 0;
+      const next = list[i + 1] ? (list[i + 1][1].order || 0) : cur + 2000;
+      try {
+        const ref = await addDoc(collection(db, 'scenarios', S.sid, 'rows'), {
+          t: '', ev: '', note: '', cats: S.sel ? [S.sel] : [], order: (cur + next) / 2
+        });
+        pendingFocus = ref.id;
+        renderRows();
+      } catch (e) { fail(e); }
+    }
+
+    // Mazs "Izdzēst? Jā / Nē" logs pie elementa.
+    let cfmEl = null;
+    function closeConfirm() { cfmEl?.remove(); cfmEl = null; }
+    function askConfirm(anchor, text, onYes) {
+      closeConfirm();
+      const box = document.createElement('div'); box.className = 'cfm';
+      const t = document.createElement('span'); t.textContent = text;
+      const yes = document.createElement('button'); yes.type = 'button'; yes.className = 'yes'; yes.textContent = tr('yes');
+      const no = document.createElement('button'); no.type = 'button'; no.className = 'no'; no.textContent = tr('no');
+      yes.addEventListener('click', () => { closeConfirm(); onYes(); });
+      no.addEventListener('click', closeConfirm);
+      box.addEventListener('click', e => e.stopPropagation());
+      box.append(t, yes, no);
+      anchor.append(box);
+      cfmEl = box;
+    }
+    document.addEventListener('click', closeConfirm);
 
     let pendingFocus = null;
     function renderRows() {
       if (!S || !S.data) return;
       const box = $('rows');
       const names = Object.fromEntries((S.data.cats || []).map(c => [c.id, c.name]));
-      const list = [...S.rows.entries()].sort((a, b) => (a[1].order || 0) - (b[1].order || 0));
+      const list = sortedRows();
 
       for (const [id, el] of S.els) if (!S.rows.has(id)) { el.remove(); S.els.delete(id); }
       box.querySelector('.sheet-empty')?.remove();
@@ -706,6 +764,7 @@
         f.mark.disabled = !(S.sel && canWrite());
         f.mark.classList.toggle('on', !!S.sel && cats.includes(S.sel));
         f.del.disabled = !(S.edit && canWrite());
+        f.ins.disabled = !canWrite();
         el.classList.toggle('hl', !!S.sel && cats.includes(S.sel));
         el.classList.toggle('dim', !!S.sel && !cats.includes(S.sel));
         // Kārtība: pārvieto tikai, ja rinda nav savā vietā (lai nepazūd fokuss).
@@ -737,14 +796,26 @@
       const b = document.createElement('button'); b.type = 'button'; b.textContent = pad(m); b.dataset.m = pad(m);
       $('tp-m').append(b);
     }
-    function tpValue() {
-      const [h, m] = (S?.rows.get(tpRow)?.t || '').split(':');
-      return { h: h || '', m: m || '' };
+    const split = t => { const [h, m] = (t || '').split(':'); return { h: h || '', m: m || '' }; };
+    function tpValue() { return split(S?.rows.get(tpRow)?.t); }
+    // Tukšai rindai iekrāso iepriekšējās rindas laiku (tuvākā augstāk ar laiku).
+    function tpHint() {
+      if (S?.rows.get(tpRow)?.t) return { h: '', m: '' };
+      const list = sortedRows();
+      for (let i = list.findIndex(([id]) => id === tpRow) - 1; i >= 0; i--) if (list[i][1].t) return split(list[i][1].t);
+      return { h: '', m: '' };
     }
     function tpMark() {
       const { h, m } = tpValue();
-      tp.querySelectorAll('[data-h]').forEach(b => b.classList.toggle('on', b.dataset.h === h));
-      tp.querySelectorAll('[data-m]').forEach(b => b.classList.toggle('on', b.dataset.m === m));
+      const hint = tpHint();
+      tp.querySelectorAll('[data-h]').forEach(b => {
+        b.classList.toggle('on', b.dataset.h === h);
+        b.classList.toggle('hint', b.dataset.h === hint.h);
+      });
+      tp.querySelectorAll('[data-m]').forEach(b => {
+        b.classList.toggle('on', b.dataset.m === m);
+        b.classList.toggle('hint', b.dataset.m === hint.m);
+      });
     }
     function openTp(id, rowEl) {
       if (tpRow === id) { closeTp(); return; }
@@ -768,7 +839,8 @@
       e.stopPropagation();
       const b = e.target.closest('button');
       if (!b) return;
-      const { h, m } = tpValue();
+      const cur = tpValue(), hint = tpHint();
+      const h = cur.h || hint.h, m = cur.m || hint.m;
       if (b.dataset.h) setTime(b.dataset.h + ':' + (m || '00'), false);
       else if (b.dataset.m) setTime((h || '00') + ':' + b.dataset.m, true);
       else if (b.id === 'tp-clear') setTime('', true);
