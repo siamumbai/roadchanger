@@ -152,13 +152,17 @@ un pastāvīgs, īsinājums ir redirect. Abi noved uz to pašu profilu.
 - Viens fails `roadchanger/scenarijs/index.html`, tas pats Firebase projekts `roadchanger-kalendars`.
 - Ieeja tikai ar paroli (Firebase **anonīmā** pieteikšanās + Firestore noteikumi). Paroles nav reģistrjutīgas.
 - **Admin parole: `pasmaidi`.** Noteikumos glabājas tikai tās SHA-256 (repo ir publisks). Mainot: jauns hash `firestore.rules` → `scnAdmins` + deploy.
-- Katram projektam 3 paroles: `rw` lasīt/rakstīt, `ro` tikai lasīt, `dj` lasīt + rakstīt tikai rindas ar DJ kategoriju. Parolēm jābūt unikālām visos projektos.
-- Dati: `scenarios/{sid}` (name, lang, place, address, lat, lng, cats[]), `scenarios/{sid}/keys/main` (paroles, lasa tikai admins),
-  `scenarios/{sid}/members/{uid}` (kas ar kuru paroli ienācis), `scenarios/{sid}/rows/{rid}`, `scnIndex/{sha256('scn:'+parole)}` → {sid, role}, `scnAdmins/{uid}`.
+- Katram projektam 2 pamata paroles: `rw` lasīt/rakstīt, `ro` tikai lasīt (redzamas kartiņā) + pēc izvēles **parole katrai kategorijai**
+  (zem "Labot"): lasīt visu + rakstīt tikai rindas ar šo kategoriju. Parolēm jābūt unikālām visos projektos.
+- **Vēsture:** projektus nedzēš — "Labot" → "Pārnest uz vēsturi" (paroļu rādītāji izdzēsti, klienti izmesti, redz tikai admins);
+  no vēstures "Pārnest uz aktuālajiem" paroles atjauno. Dzēšanas pogas projektiem nav.
+- Jaunam scenārijam uzreiz 4 tukšas rindas. Laiku izvēlas ar klikšķiem (stundas 00–23, minūtes ik pa 5), bez rakstīšanas.
+- Dati: `scenarios/{sid}` (name, lang, place, address, lat, lng, cats[]), `scenarios/{sid}/keys/main` ({rw, ro, cats:{catId: parole}}, lasa tikai admins),
+  `scenarios/{sid}/members/{uid}` (kas ar kuru paroli ienācis), `scenarios/{sid}/rows/{rid}`, `scnIndex/{sha256('scn:'+parole)}` → {sid, role: rw|ro|cat, cat?}, `scnAdmins/{uid}`.
 - Scenārija skats: augšā Vieta + Adrese + karte (Leaflet + OpenStreetMap, adreses meklēšana caur Nominatim, vai klikšķis kartē),
   tabula Laiks | Notikums | Komentārs (rindas `order` secībā, labojas reālā laikā), labajā pusē kategorijas.
   Uzspiežot kategoriju: tās rindas oranžas, pārējās blāvas; rakstītāji ar apli rindas sākumā atzīmē/noņem.
-  "Labot" atklāj rindu un kategoriju dzēšanu. DJ kategoriju (`id: 'dj'`) dzēst nevar — uz to balstās "lasīt + DJ" parole.
+  "Labot" atklāj rindu un kategoriju dzēšanu.
   Scenārija teksti (LV/EN) — `T` objekts failā; kategoriju sākuma nosaukumi pēc projekta valodas.
 - Mainot paroli, Admin izmet visus, kas ienāca ar veco. Valodu (`lang`) maina tikai admins.
 - Lietotāja lēmumi: iekrāsošana pagaidām oranža visiem; rindai var būt vairākas kategorijas; kategorijas var pievienot/dzēst (dzēst — paslēpts aiz "Labot");

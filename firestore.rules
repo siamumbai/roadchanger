@@ -84,15 +84,15 @@ service cloud.firestore {
       return isAdmin() || (anyUser()
         && exists(/databases/$(database)/documents/scnAdmins/$(request.auth.uid)));
     }
-    function scnRole(sid) {
-      return get(/databases/$(database)/documents/scenarios/$(sid)/members/$(request.auth.uid)).data.role;
+    function scnMe(sid) {
+      return get(/databases/$(database)/documents/scenarios/$(sid)/members/$(request.auth.uid)).data;
     }
     function scnMember(sid) {
       return anyUser()
         && exists(/databases/$(database)/documents/scenarios/$(sid)/members/$(request.auth.uid));
     }
     function scnWriter(sid) {
-      return scnAdmin() || (scnMember(sid) && scnRole(sid) == 'rw');
+      return scnAdmin() || (scnMember(sid) && scnMe(sid).role == 'rw');
     }
 
     match /scnAdmins/{uid} {
@@ -107,23 +107,26 @@ service cloud.firestore {
 
     // Paroles rādītājs: dokumenta ID = sha256('scn:' + parole). Tikai get, ne list —
     // bez paroles nevar uzzināt, kādi projekti eksistē. Update nav: parole ir unikāla.
+    // Projektam vēsturē rādītāji ir izdzēsti — paroles nestrādā.
+    // Lomas: rw = lasīt/rakstīt, ro = tikai lasīt, cat = lasīt + rakstīt tikai savas kategorijas rindas.
     match /scnIndex/{h} {
       allow get: if anyUser();
       allow list: if scnAdmin();
       allow create: if scnAdmin()
-        && request.resource.data.keys().hasOnly(['sid', 'role'])
-        && request.resource.data.role in ['rw', 'ro', 'dj'];
+        && request.resource.data.keys().hasOnly(['sid', 'role', 'cat'])
+        && request.resource.data.role in ['rw', 'ro', 'cat'];
       allow delete: if scnAdmin();
     }
 
     match /scenarios/{sid} {
       allow read: if scnAdmin() || scnMember(sid);
       allow create, delete: if scnAdmin();
-      // Valodu maina tikai admins.
+      // Valodu un vēsturi maina tikai admins.
       allow update: if scnAdmin()
         || (scnWriter(sid)
-            && !request.resource.data.diff(resource.data).affectedKeys().hasAny(['lang', 'createdAt']));
+            && !request.resource.data.diff(resource.data).affectedKeys().hasAny(['lang', 'createdAt', 'archived', 'archivedAt']));
 
+      // keys/main: { rw, ro, cats: { <kategorijas id>: parole } }
       match /keys/{k} {
         allow read, write: if scnAdmin();
       }
@@ -131,21 +134,27 @@ service cloud.firestore {
       match /members/{uid} {
         allow read: if scnAdmin() || (anyUser() && request.auth.uid == uid);
         allow create: if anyUser() && request.auth.uid == uid
-          && request.resource.data.keys().hasOnly(['pw', 'role', 'at'])
-          && request.resource.data.role in ['rw', 'ro', 'dj']
-          && request.resource.data.pw
-             == get(/databases/$(database)/documents/scenarios/$(sid)/keys/main).data[request.resource.data.role];
+          && get(/databases/$(database)/documents/scenarios/$(sid)).data.get('archived', false) == false
+          && request.resource.data.keys().hasOnly(['pw', 'role', 'cat', 'at'])
+          && (
+            (request.resource.data.role in ['rw', 'ro']
+              && request.resource.data.pw
+                 == get(/databases/$(database)/documents/scenarios/$(sid)/keys/main).data[request.resource.data.role])
+            || (request.resource.data.role == 'cat' && request.resource.data.cat is string
+              && request.resource.data.pw
+                 == get(/databases/$(database)/documents/scenarios/$(sid)/keys/main).data.cats[request.resource.data.cat])
+          );
         allow delete: if scnAdmin() || (anyUser() && request.auth.uid == uid);
       }
 
       match /rows/{rid} {
         allow read: if scnAdmin() || scnMember(sid);
         allow create, delete: if scnWriter(sid);
-        // "Lasīt+DJ": drīkst labot tikai rindas, kas ir (un paliek) atzīmētas ar DJ.
+        // Kategorijas parole: drīkst labot tikai rindas, kas ir (un paliek) atzīmētas ar savu kategoriju.
         allow update: if scnWriter(sid)
-          || (scnMember(sid) && scnRole(sid) == 'dj'
-              && 'dj' in resource.data.get('cats', [])
-              && 'dj' in request.resource.data.get('cats', []));
+          || (scnMember(sid) && scnMe(sid).role == 'cat'
+              && scnMe(sid).cat in resource.data.get('cats', [])
+              && scnMe(sid).cat in request.resource.data.get('cats', []));
       }
     }
   }
