@@ -152,11 +152,23 @@ service cloud.firestore {
       match /rows/{rid} {
         allow read: if scnAdmin() || scnMember(sid);
         allow create, delete: if scnWriter(sid);
-        // Kategorijas parole: drīkst labot tikai rindas, kas ir (un paliek) atzīmētas ar savu kategoriju.
+        // Kategorijas parole: drīkst labot rindas, kas ir (un paliek) atzīmētas ar savu kategoriju,
+        // un jebkurā rindā — tikai savas kategorijas komentāru (catNotes.<kategorija>).
         allow update: if scnWriter(sid)
           || (scnMember(sid) && scnMe(sid).role == 'cat'
-              && scnMe(sid).cat in resource.data.get('cats', [])
-              && scnMe(sid).cat in request.resource.data.get('cats', []));
+              && ((scnMe(sid).cat in resource.data.get('cats', [])
+                   && scnMe(sid).cat in request.resource.data.get('cats', []))
+                  || (request.resource.data.diff(resource.data).affectedKeys().hasOnly(['catNotes'])
+                      && request.resource.data.catNotes.diff(resource.data.get('catNotes', {}))
+                           .affectedKeys().hasOnly([scnMe(sid).cat]))));
+      }
+
+      // Kategorijas ierašanās laiks + komentārs: catinfo/{kategorija} = { arrive, note }.
+      match /catinfo/{cat} {
+        allow read: if scnAdmin() || scnMember(sid);
+        allow write: if scnWriter(sid)
+          || (scnMember(sid) && scnMe(sid).role == 'cat' && scnMe(sid).cat == cat
+              && request.resource.data.keys().hasOnly(['arrive', 'note']));
       }
     }
   }

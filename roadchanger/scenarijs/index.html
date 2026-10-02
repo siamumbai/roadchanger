@@ -152,7 +152,32 @@
     .tp-grid button.on { background: #2C2416; color: #F5ECD8; }
     .tp-grid button.hint { background: #FDEBD3; color: #8A5410; }
     .tp-clear { font-size: 0.8rem; color: #8A6840; text-decoration: underline; text-underline-offset: 3px; }
-    .c-note { color: #6B5035; border-left: 0.5px solid #F2E6CF; }
+    .c-note { color: #6B5035; }
+    .cw { position: relative; min-width: 0; transition: background 0.15s; }
+    .w-note, .w-cn { border-left: 0.5px solid #F2E6CF; }
+    .w-cn, .h-cn { display: none; }
+    .sheet.withcat .srow { grid-template-columns: 2.25rem 7.5rem minmax(0, 1.2fr) minmax(0, 1fr) minmax(0, 1fr) 4.5rem; }
+    .sheet.withcat .w-cn, .sheet.withcat .h-cn { display: block; }
+    .w-cn { background: #FFFBF5; }
+    .h-cn { color: #B07320; }
+    .cw.painted { background: #FAD7A8; }
+    .cw .cell:focus { background: rgba(255, 251, 245, 0.6); }
+    .paint {
+      display: none; position: absolute; top: 0.45rem; right: 0.35rem; width: 0.95rem; height: 0.95rem;
+      border-radius: 3px; border: 1.5px solid #E08A1E; background: #fff; opacity: 0; transition: opacity 0.12s;
+    }
+    .sheet.paintable .paint { display: block; }
+    .sheet.paintable .cw:hover .paint, .sheet.paintable .cw:focus-within .paint { opacity: 1; }
+    .cw.painted .paint { background: #E08A1E; opacity: 1; }
+    @media (hover: none) { .sheet.paintable .paint { opacity: 0.6; } }
+
+    .arrive { background: #fff; border: 0.5px solid #E0CCA4; border-left: 3px solid #E08A1E; border-radius: 10px; box-shadow: 0 4px 18px rgba(44, 36, 22, 0.07); padding: 1rem 1.2rem; margin-bottom: 1.25rem; }
+    .arrive-title { font-family: 'Libre Baskerville', Georgia, serif; font-size: 1.1rem; margin-bottom: 0.6rem; }
+    .arrive-row { display: grid; grid-template-columns: 9rem minmax(0, 1fr); gap: 1rem; align-items: start; }
+    .arrive-time { position: relative; }
+    .arrive-time .tp { left: 0; top: 100%; }
+    .arrive .cell { border: 0.5px solid #EAD9B8; border-radius: 6px; margin-top: 0.3rem; }
+    .arrive .c-time { width: 100%; }
     .tags { display: flex; flex-wrap: wrap; gap: 0.3rem; padding: 0 0.6rem 0.55rem; }
     .tags:empty { display: none; }
     .tag { font-size: 0.7rem; letter-spacing: 0.03em; padding: 0.1rem 0.45rem; border-radius: 999px; background: #FBE7CC; color: #8A5410; }
@@ -177,7 +202,7 @@
     .cfm button { padding: 0.3rem 0.7rem; border-radius: 6px; font-size: 0.82rem; }
     .cfm .yes { background: #A33A2A; color: #fff; }
     .cfm .no { border: 0.5px solid #E0CCA4; }
-    .srow.hl { background: #FDEBD3; box-shadow: inset 3px 0 0 #E08A1E; }
+    .srow.hl { box-shadow: inset 3px 0 0 #E08A1E; }
     .srow.dim { opacity: 0.4; }
     .sheet-empty { padding: 1.25rem; color: #7A5C38; font-size: 0.9rem; }
 
@@ -214,8 +239,13 @@
       .cat-list { flex-direction: row; flex-wrap: wrap; }
       .cat-btn { flex: none; }
       .srow { grid-template-columns: 2.25rem 5.5rem minmax(0, 1fr) 4.5rem; }
-      .srow .c-ev { grid-column: 3; }
-      .srow .c-note { grid-column: 2 / 4; grid-row: 2; border-left: none; padding-top: 0; }
+      .srow .w-ev { grid-column: 3; }
+      .srow .w-note { grid-column: 2 / 4; grid-row: 2; border-left: none; }
+      .srow .w-note .cell { padding-top: 0; }
+      .srow .w-cn { grid-column: 2 / 4; grid-row: 3; border-left: none; }
+      .sheet.withcat .srow { grid-template-columns: 2.25rem 5.5rem minmax(0, 1fr) 4.5rem; }
+      .sheet.withcat .h-cn { display: none; }
+      .arrive-row { grid-template-columns: minmax(0, 1fr); }
       .srow .r-act { grid-column: 4; grid-row: 1; }
       .shead .h-note { display: none; }
     }
@@ -278,13 +308,27 @@
           <div id="map"></div>
         </section>
 
+        <section class="arrive" id="arrive" hidden>
+          <div class="arrive-title" id="arrive-title"></div>
+          <div class="arrive-row">
+            <div class="arrive-time">
+              <span class="venue-label" data-t="arrive"></span>
+              <button class="cell c-time" type="button" id="arr-t"></button>
+            </div>
+            <div class="arrive-note">
+              <span class="venue-label" data-t="note"></span>
+              <textarea class="cell" id="arr-note" rows="1" maxlength="2000"></textarea>
+            </div>
+          </div>
+        </section>
+
         <div class="toolbar">
           <span class="spacer"></span>
           <button class="btn btn-line btn-sm" id="edit-btn"></button>
         </div>
         <div class="sheet" id="rows">
           <div class="srow shead">
-            <div></div><div data-t="time"></div><div data-t="event"></div><div class="h-note" data-t="note"></div><div></div>
+            <div></div><div data-t="time"></div><div data-t="event"></div><div class="h-note" data-t="note"></div><div class="h-cn" id="h-cn"></div><div></div>
           </div>
         </div>
         <div class="toolbar" style="margin-top:0.75rem">
@@ -391,11 +435,11 @@
       lv: { logout: 'Iziet', venue: 'Vieta', address: 'Adrese', find: 'Atrast kartē', time: 'Laiks', event: 'Notikums',
             note: 'Komentārs', addRow: '+ Rinda', cats: 'Kategorijas', edit: 'Labot', done: 'Gatavs', newCat: 'Jauna kategorija',
             empty: 'Vēl nav nevienas rindas.', notFound: 'Adrese nav atrasta', hours: 'Stundas', minutes: 'Minūtes', clear: 'Notīrīt',
-            delRow: 'Izdzēst rindu?', delCat: 'Izdzēst kategoriju?', yes: 'Jā', no: 'Nē' },
+            arrive: 'Ierašanās laiks', delRow: 'Izdzēst rindu?', delCat: 'Izdzēst kategoriju?', yes: 'Jā', no: 'Nē' },
       en: { logout: 'Log out', venue: 'Venue', address: 'Address', find: 'Find on map', time: 'Time', event: 'Event',
             note: 'Comment', addRow: '+ Row', cats: 'Categories', edit: 'Edit', done: 'Done', newCat: 'New category',
             empty: 'No rows yet.', notFound: 'Address not found', hours: 'Hours', minutes: 'Minutes', clear: 'Clear',
-            delRow: 'Delete row?', delCat: 'Delete category?', yes: 'Yes', no: 'No' }
+            arrive: 'Arrival time', delRow: 'Delete row?', delCat: 'Delete category?', yes: 'Yes', no: 'No' }
     };
     const SID_KEY = 'rc-scenarijs-sid';
 
@@ -511,7 +555,8 @@
 
     function openScenario(sid, role, cat) {
       closeScenario();
-      S = { sid, role, cat, filled: false, data: null, rows: new Map(), els: new Map(), sel: null, edit: false, centered: false, unsubs: [] };
+      S = { sid, role, cat, filled: false, data: null, rows: new Map(), els: new Map(), catinfo: new Map(),
+            sel: role === 'cat' ? cat : null, edit: false, centered: false, unsubs: [] };
       $('back-btn').hidden = role !== 'admin';
       $('rows').querySelectorAll('.srow:not(.shead), .sheet-empty').forEach(el => el.remove());
       show('sheet');
@@ -542,6 +587,14 @@
           }
         }
         renderRows();
+      }, err => console.error(err)));
+
+      S.unsubs.push(onSnapshot(collection(db, 'scenarios', sid, 'catinfo'), snap => {
+        snap.docChanges().forEach(ch => {
+          if (ch.type === 'removed') S.catinfo.delete(ch.doc.id);
+          else S.catinfo.set(ch.doc.id, ch.doc.data());
+        });
+        if (S.data) renderArrive();
       }, err => console.error(err)));
     }
 
@@ -662,41 +715,77 @@
     $('edit-btn').addEventListener('click', () => { S.edit = !S.edit; renderCats(); renderRows(); });
 
     // ----- Rindas -----
+    // Rindas lauki: t, ev, note, cats[], order, catNotes { catId: teksts }, marks { catId: ['t','ev','note','cn'] }.
     function autosize(t) { t.style.height = 'auto'; t.style.height = t.scrollHeight + 'px'; }
-    window.addEventListener('resize', () => document.querySelectorAll('#rows textarea').forEach(autosize));
+    window.addEventListener('resize', () => document.querySelectorAll('#rows textarea, #arr-note').forEach(autosize));
+    const empty = { h: '', m: '' };
 
     function makeRow(id) {
       const el = document.createElement('div');
       el.className = 'srow';
+      const paint = f => `<button class="paint" type="button" data-f="${f}"></button>`;
       el.innerHTML = '<button class="mark" type="button"><span></span></button>'
-        + '<button class="cell c-time" type="button"></button>'
-        + '<div class="c-ev"><textarea class="cell" rows="1" maxlength="2000"></textarea><div class="tags"></div></div>'
-        + '<textarea class="cell c-note" rows="1" maxlength="2000"></textarea>'
+        + '<div class="cw w-t"><button class="cell c-time" type="button"></button>' + paint('t') + '</div>'
+        + '<div class="cw w-ev"><textarea class="cell" rows="1" maxlength="2000"></textarea><div class="tags"></div>' + paint('ev') + '</div>'
+        + '<div class="cw w-note"><textarea class="cell c-note" rows="1" maxlength="2000"></textarea>' + paint('note') + '</div>'
+        + '<div class="cw w-cn"><textarea class="cell c-cn" rows="1" maxlength="2000"></textarea>' + paint('cn') + '</div>'
         + '<div class="r-act"><button class="ins" type="button">+</button><button class="del" type="button">×</button></div>';
-      const [time, ev, note] = [el.querySelector('.c-time'), el.querySelector('.c-ev textarea'), el.querySelector('.c-note')];
+      const q = sel => el.querySelector(sel);
+      const [time, ev, note, cn] = [q('.c-time'), q('.w-ev textarea'), q('.c-note'), q('.c-cn')];
       const bind = (input, field) => input.addEventListener('input', () => {
-        if (input.tagName === 'TEXTAREA') autosize(input);
+        autosize(input);
         later(id + field, () => updateDoc(rref(id), { [field]: input.value }).catch(fail));
       });
       bind(ev, 'ev'); bind(note, 'note');
-      time.addEventListener('click', e => { e.stopPropagation(); openTp(id, el); });
-      el.querySelector('.mark').addEventListener('click', () => {
+      // Kategorijas komentārs: saglabā tai kategorijai, kas bija izvēlēta rakstīšanas brīdī.
+      cn.addEventListener('input', () => {
+        autosize(cn);
+        const cat = S.sel;
+        if (!cat) return;
+        later(id + 'cn' + cat, () => updateDoc(rref(id), { ['catNotes.' + cat]: cn.value }).catch(fail));
+      });
+      time.addEventListener('click', e => {
+        e.stopPropagation();
+        openTp({
+          key: 'r:' + id,
+          get: () => S.rows.get(id)?.t,
+          set: v => { const r = S.rows.get(id); if (!r) return; r.t = v; renderRows(); updateDoc(rref(id), { t: v }).catch(fail); },
+          hint: () => {
+            const list = sortedRows();
+            for (let i = list.findIndex(([rid]) => rid === id) - 1; i >= 0; i--) if (list[i][1].t) return split(list[i][1].t);
+            return empty;
+          }
+        }, q('.w-t'));
+      });
+      q('.mark').addEventListener('click', () => {
         const r = S.rows.get(id);
         if (!r || !S.sel) return;
         const on = (r.cats || []).includes(S.sel);
         updateDoc(rref(id), { cats: on ? arrayRemove(S.sel) : arrayUnion(S.sel) }).catch(fail);
       });
-      el.querySelector('.del').addEventListener('click', e => {
+      // Iekrāso vienu šūnu izvēlētajai kategorijai (rinda pati tiek pievienota kategorijai).
+      el.querySelectorAll('.paint').forEach(b => b.addEventListener('click', e => {
+        e.stopPropagation();
+        const r = S.rows.get(id), cat = S.sel, f = b.dataset.f;
+        if (!r || !cat) return;
+        const on = (r.marks?.[cat] || []).includes(f);
+        const upd = { ['marks.' + cat]: on ? arrayRemove(f) : arrayUnion(f) };
+        if (!on && !(r.cats || []).includes(cat)) upd.cats = arrayUnion(cat);
+        updateDoc(rref(id), upd).catch(fail);
+      }));
+      q('.del').addEventListener('click', e => {
         e.stopPropagation();
         askConfirm(el, tr('delRow'), () => deleteDoc(rref(id)).catch(fail));
       });
-      el.querySelector('.ins').addEventListener('click', () => insertAfter(id));
-      el._f = { time, ev, note, tags: el.querySelector('.tags'), mark: el.querySelector('.mark'),
-                del: el.querySelector('.del'), ins: el.querySelector('.ins') };
+      q('.ins').addEventListener('click', () => insertAfter(id));
+      el._f = { time, ev, note, cn, tags: q('.tags'), mark: q('.mark'), del: q('.del'), ins: q('.ins'),
+                cells: { t: q('.w-t'), ev: q('.w-ev'), note: q('.w-note'), cn: q('.w-cn') } };
       return el;
     }
 
     const sortedRows = () => [...S.rows.entries()].sort((a, b) => (a[1].order || 0) - (b[1].order || 0));
+    const canCat = cat => canWrite() || (S.role === 'cat' && S.cat === cat);
+    const catName = id => (S.data.cats || []).find(c => c.id === id)?.name || '';
 
     // Jauna tukša rinda tieši zem norādītās.
     async function insertAfter(id) {
@@ -737,6 +826,10 @@
       const box = $('rows');
       const names = Object.fromEntries((S.data.cats || []).map(c => [c.id, c.name]));
       const list = sortedRows();
+      const sel = S.sel;
+      box.classList.toggle('withcat', !!sel);
+      box.classList.toggle('paintable', !!sel && canWrite());
+      $('h-cn').textContent = sel ? tr('note') + ' · ' + catName(sel) : '';
 
       for (const [id, el] of S.els) if (!S.rows.has(id)) { el.remove(); S.els.delete(id); }
       box.querySelector('.sheet-empty')?.remove();
@@ -754,6 +847,8 @@
           input.readOnly = !editable;
           setVal(input, v);
         }
+        f.cn.readOnly = !(sel && canCat(sel));
+        setVal(f.cn, sel ? r.catNotes?.[sel] : '');
         f.time.disabled = !editable;
         f.time.textContent = r.t || (editable ? '--:--' : '');
         f.time.classList.toggle('ph', !r.t);
@@ -761,12 +856,14 @@
         f.tags.replaceChildren(...cats.filter(c => names[c]).map(c => {
           const s = document.createElement('span'); s.className = 'tag'; s.textContent = names[c]; return s;
         }));
-        f.mark.disabled = !(S.sel && canWrite());
-        f.mark.classList.toggle('on', !!S.sel && cats.includes(S.sel));
+        const painted = sel ? (r.marks?.[sel] || []) : [];
+        for (const [k, cell] of Object.entries(f.cells)) cell.classList.toggle('painted', painted.includes(k));
+        f.mark.disabled = !(sel && canWrite());
+        f.mark.classList.toggle('on', !!sel && cats.includes(sel));
         f.del.disabled = !(S.edit && canWrite());
         f.ins.disabled = !canWrite();
-        el.classList.toggle('hl', !!S.sel && cats.includes(S.sel));
-        el.classList.toggle('dim', !!S.sel && !cats.includes(S.sel));
+        el.classList.toggle('hl', !!sel && cats.includes(sel));
+        el.classList.toggle('dim', !!sel && !cats.includes(sel));
         // Kārtība: pārvieto tikai, ja rinda nav savā vietā (lai nepazūd fokuss).
         const at = box.children[i + 1];
         if (at !== el) box.insertBefore(el, at || null);
@@ -774,6 +871,7 @@
       requestAnimationFrame(() => box.querySelectorAll('textarea').forEach(autosize));
       if (pendingFocus && S.els.has(pendingFocus)) { S.els.get(pendingFocus)._f.ev.focus(); pendingFocus = null; }
       renderCatCounts();
+      renderArrive();
     }
     function renderCatCounts() {
       const cats = S.data.cats || [];
@@ -784,9 +882,50 @@
       });
     }
 
+    // ----- Kategorijas ierašanās laiks + komentārs (virs tabulas) -----
+    // catinfo/{catId}: { arrive, note }
+    const ciref = cat => doc(db, 'scenarios', S.sid, 'catinfo', cat);
+    function renderArrive() {
+      const sel = S.sel;
+      $('arrive').hidden = !sel;
+      if (!sel) return;
+      const info = S.catinfo.get(sel) || {};
+      const w = canCat(sel);
+      $('arrive-title').textContent = catName(sel);
+      $('arr-t').disabled = !w;
+      $('arr-t').textContent = info.arrive || (w ? '--:--' : '—');
+      $('arr-t').classList.toggle('ph', !info.arrive);
+      $('arr-note').readOnly = !w;
+      if ($('arr-note').dataset.cat !== sel) { $('arr-note').dataset.cat = sel; $('arr-note').value = ''; }
+      setVal($('arr-note'), info.note);
+      autosize($('arr-note'));
+    }
+    $('arr-note').addEventListener('input', e => {
+      autosize(e.target);
+      const cat = S.sel;
+      if (!cat) return;
+      later('arr' + cat, () => setDoc(ciref(cat), { note: e.target.value }, { merge: true }).catch(fail));
+    });
+    $('arr-t').addEventListener('click', e => {
+      e.stopPropagation();
+      const cat = S.sel;
+      if (!cat) return;
+      openTp({
+        key: 'a:' + cat,
+        get: () => S.catinfo.get(cat)?.arrive,
+        set: v => {
+          S.catinfo.set(cat, { ...(S.catinfo.get(cat) || {}), arrive: v });
+          renderArrive();
+          setDoc(ciref(cat), { arrive: v }, { merge: true }).catch(fail);
+        },
+        hint: () => empty
+      }, $('arr-t').parentElement);
+    });
+
     // ----- Laika izvēle: stundas un minūtes ar klikšķi, bez rakstīšanas -----
+    // Mērķis: { key, get(), set(v), hint() } — rindas laiks vai kategorijas ierašanās laiks.
     const tp = $('tp');
-    let tpRow = null;
+    let tpT = null;
     const pad = n => String(n).padStart(2, '0');
     for (let h = 0; h < 24; h++) {
       const b = document.createElement('button'); b.type = 'button'; b.textContent = pad(h); b.dataset.h = pad(h);
@@ -797,14 +936,9 @@
       $('tp-m').append(b);
     }
     const split = t => { const [h, m] = (t || '').split(':'); return { h: h || '', m: m || '' }; };
-    function tpValue() { return split(S?.rows.get(tpRow)?.t); }
-    // Tukšai rindai iekrāso iepriekšējās rindas laiku (tuvākā augstāk ar laiku).
-    function tpHint() {
-      if (S?.rows.get(tpRow)?.t) return { h: '', m: '' };
-      const list = sortedRows();
-      for (let i = list.findIndex(([id]) => id === tpRow) - 1; i >= 0; i--) if (list[i][1].t) return split(list[i][1].t);
-      return { h: '', m: '' };
-    }
+    const tpValue = () => split(tpT?.get());
+    // Tukšam laikam iekrāso ieteikumu (rindām — iepriekšējās rindas laiku).
+    const tpHint = () => (!tpT || tpT.get()) ? empty : tpT.hint();
     function tpMark() {
       const { h, m } = tpValue();
       const hint = tpHint();
@@ -817,23 +951,19 @@
         b.classList.toggle('hint', b.dataset.m === hint.m);
       });
     }
-    function openTp(id, rowEl) {
-      if (tpRow === id) { closeTp(); return; }
-      tpRow = id;
-      rowEl.append(tp);
+    function openTp(target, anchor) {
+      if (tpT?.key === target.key) { closeTp(); return; }
+      tpT = target;
+      anchor.append(tp);
       tp.hidden = false;
       tpMark();
     }
-    function closeTp() { tp.hidden = true; tpRow = null; }
+    function closeTp() { tp.hidden = true; tpT = null; }
     function setTime(v, close) {
-      const id = tpRow;
-      const r = S.rows.get(id);
-      if (!r) return;
-      r.t = v;
-      renderRows();
+      if (!tpT) return;
+      tpT.set(v);
       tpMark();
       if (close) closeTp();
-      updateDoc(rref(id), { t: v }).catch(fail);
     }
     tp.addEventListener('click', e => {
       e.stopPropagation();

@@ -165,6 +165,10 @@ un pastāvīgs, īsinājums ir redirect. Abi noved uz to pašu profilu.
   tabula Laiks | Notikums | Komentārs (rindas `order` secībā, labojas reālā laikā), labajā pusē kategorijas.
   Uzspiežot kategoriju: tās rindas oranžas, pārējās blāvas; rakstītāji ar apli rindas sākumā atzīmē/noņem.
   "Labot" atklāj rindu un kategoriju dzēšanu (×, vienmēr ar "Izdzēst? Jā / Nē"). "+" rindas labajā pusē ieliek tukšu rindu zem tās.
+  **Izvēloties kategoriju:** virs tabulas tās "Ierašanās laiks" + komentārs (`catinfo/{catId}`), tabulā papildu kolonna
+  "Komentārs · <kategorija>" (`rows.catNotes.<catId>`), un jebkuru šūnu var iekrāsot ar kvadrātiņu tās stūrī (`rows.marks.<catId>`,
+  rinda pati tiek pievienota kategorijai). Rinda kategorijā = oranža svītra kreisajā malā (nevis pilns fons).
+  Kategorijas parole: ienākot sava kategorija jau izvēlēta; drīkst rakstīt savu ierašanās laiku un savu komentāru kolonnu jebkurā rindā.
   Laika logā tukšai rindai iekrāsots (gaiši oranžs) iepriekšējās rindas laiks un tas ir noklusējums.
   Scenārija teksti (LV/EN) — `T` objekts failā; kategoriju sākuma nosaukumi pēc projekta valodas.
 - Mainot paroli, Admin izmet visus, kas ienāca ar veco. Valodu (`lang`) maina tikai admins.
