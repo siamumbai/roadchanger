@@ -71,5 +71,81 @@ service cloud.firestore {
         allow delete: if canEdit(cal);
       }
     }
+
+    // ================= roadchanger.com/scenarijs/ =================
+    // Pieteikšanās ar paroli (anonīms Firebase lietotājs). Admin parole šeit ir tikai kā
+    // SHA-256 (repo ir publisks). Projekta paroles glabājas scenarios/{sid}/keys/main —
+    // to lasa tikai admins; noteikumu get() to redz arī bez lasīšanas tiesībām.
+    function anyUser() {
+      return request.auth != null;
+    }
+    function scnAdmin() {
+      return isAdmin() || (anyUser()
+        && exists(/databases/$(database)/documents/scnAdmins/$(request.auth.uid)));
+    }
+    function scnRole(sid) {
+      return get(/databases/$(database)/documents/scenarios/$(sid)/members/$(request.auth.uid)).data.role;
+    }
+    function scnMember(sid) {
+      return anyUser()
+        && exists(/databases/$(database)/documents/scenarios/$(sid)/members/$(request.auth.uid));
+    }
+    function scnWriter(sid) {
+      return scnAdmin() || (scnMember(sid) && scnRole(sid) == 'rw');
+    }
+
+    match /scnAdmins/{uid} {
+      allow read: if anyUser() && request.auth.uid == uid;
+      allow create: if anyUser() && request.auth.uid == uid
+        && request.resource.data.keys().hasOnly(['pw', 'at'])
+        && request.resource.data.pw is string
+        && hashing.sha256(request.resource.data.pw).toHexString().lower()
+           == '2cceff1b340a228b9ab9d09a3eda94cea5e4810336158636e7dd0768cba302ea';
+      allow delete: if anyUser() && request.auth.uid == uid;
+    }
+
+    // Paroles rādītājs: dokumenta ID = sha256('scn:' + parole). Tikai get, ne list —
+    // bez paroles nevar uzzināt, kādi projekti eksistē. Update nav: parole ir unikāla.
+    match /scnIndex/{h} {
+      allow get: if anyUser();
+      allow list: if scnAdmin();
+      allow create: if scnAdmin()
+        && request.resource.data.keys().hasOnly(['sid', 'role'])
+        && request.resource.data.role in ['rw', 'ro', 'dj'];
+      allow delete: if scnAdmin();
+    }
+
+    match /scenarios/{sid} {
+      allow read: if scnAdmin() || scnMember(sid);
+      allow create, delete: if scnAdmin();
+      // Valodu maina tikai admins.
+      allow update: if scnAdmin()
+        || (scnWriter(sid)
+            && !request.resource.data.diff(resource.data).affectedKeys().hasAny(['lang', 'createdAt']));
+
+      match /keys/{k} {
+        allow read, write: if scnAdmin();
+      }
+
+      match /members/{uid} {
+        allow read: if scnAdmin() || (anyUser() && request.auth.uid == uid);
+        allow create: if anyUser() && request.auth.uid == uid
+          && request.resource.data.keys().hasOnly(['pw', 'role', 'at'])
+          && request.resource.data.role in ['rw', 'ro', 'dj']
+          && request.resource.data.pw
+             == get(/databases/$(database)/documents/scenarios/$(sid)/keys/main).data[request.resource.data.role];
+        allow delete: if scnAdmin() || (anyUser() && request.auth.uid == uid);
+      }
+
+      match /rows/{rid} {
+        allow read: if scnAdmin() || scnMember(sid);
+        allow create, delete: if scnWriter(sid);
+        // "Lasīt+DJ": drīkst labot tikai rindas, kas ir (un paliek) atzīmētas ar DJ.
+        allow update: if scnWriter(sid)
+          || (scnMember(sid) && scnRole(sid) == 'dj'
+              && 'dj' in resource.data.get('cats', [])
+              && 'dj' in request.resource.data.get('cats', []));
+      }
+    }
   }
 }

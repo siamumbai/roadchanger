@@ -1,0 +1,493 @@
+<!DOCTYPE html>
+<html lang="lv">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="icon" href="/favicon.ico" sizes="32x32" />
+  <link rel="icon" type="image/png" href="/icon-192.png" sizes="192x192" />
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+  <title>Roadchanger scenārijs</title>
+  <meta name="robots" content="noindex, nofollow" />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:wght@400;700&family=Lato:wght@300;400;700&display=swap" rel="stylesheet" />
+
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    [hidden] { display: none !important; }
+    body { background: #FFFBF5; color: #2C2416; font-family: 'Lato', Arial, sans-serif; zoom: 0.9; min-height: 100vh; }
+    button, input, textarea, select { font: inherit; color: inherit; }
+    button { cursor: pointer; background: none; border: none; }
+    button:disabled { opacity: 0.55; cursor: default; }
+
+    /* ---------- Paroles logs ---------- */
+    .center-screen { min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 2rem 1rem; }
+    .card {
+      width: 100%; max-width: 26rem; background: #FFFBF5;
+      border: 0.5px solid #E0CCA4; border-radius: 12px;
+      box-shadow: 0 4px 18px rgba(44, 36, 22, 0.07);
+      padding: clamp(1.75rem, 4vw, 2.5rem); text-align: center;
+    }
+    .card-logo { font-family: 'Libre Baskerville', Georgia, serif; font-size: 14px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: #2C2416; text-decoration: none; }
+    .card h1 { font-family: 'Libre Baskerville', Georgia, serif; font-size: 1.6rem; font-weight: 400; margin: 1.25rem 0 1.5rem; }
+    .login-form { display: flex; flex-direction: column; gap: 0.75rem; }
+    .field { width: 100%; padding: 0.75rem 0.9rem; border: 0.5px solid #E0CCA4; border-radius: 8px; background: #fff; font-size: 0.95rem; }
+    .field:focus { outline: none; border-color: #B07320; }
+    .btn { display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem; padding: 0.75rem 1.25rem; border-radius: 8px; font-size: 0.9rem; letter-spacing: 0.04em; }
+    .btn-dark { background: #2C2416; color: #F5ECD8; }
+    .btn-dark:hover { background: #3D3020; }
+    .btn-brown { background: #B07320; color: #fff; }
+    .btn-brown:hover { background: #9A6418; }
+    .btn-line { border: 0.5px solid #E0CCA4; background: #fff; }
+    .btn-line:hover { border-color: #B07320; }
+    .btn-sm { padding: 0.45rem 0.85rem; font-size: 0.82rem; }
+    .msg { margin-top: 1rem; font-size: 0.9rem; color: #6B5035; min-height: 1.2em; }
+    .msg.err { color: #A33A2A; }
+
+    /* ---------- Navigācija ---------- */
+    .topnav {
+      display: flex; align-items: center; gap: clamp(1rem, 3vw, 2.5rem);
+      padding: 1.1rem 3rem; background: #FFFBF5;
+      border-bottom: 0.5px solid #EAD9B8; position: sticky; top: 0; z-index: 50;
+    }
+    .nav-logo { font-family: 'Libre Baskerville', Georgia, serif; font-size: 16px; font-weight: 700; letter-spacing: 0.08em; color: #2C2416; text-transform: uppercase; text-decoration: none; }
+    .nav-title { font-size: 14px; letter-spacing: 0.05em; color: #8A6840; }
+    .nav-user { margin-left: auto; font-size: 13px; color: #8A6840; text-decoration: underline; text-underline-offset: 3px; }
+
+    /* ---------- Admin: projektu saraksts ---------- */
+    .wrap { padding: 2.5rem 3rem 4rem; max-width: 72rem; margin: 0 auto; }
+    .wrap-head { display: flex; align-items: center; gap: 1rem; margin-bottom: 1.75rem; }
+    .wrap-head h1 { font-family: 'Libre Baskerville', Georgia, serif; font-size: clamp(1.4rem, 2.2vw, 1.8rem); font-weight: 400; }
+    .wrap-head .btn { margin-left: auto; }
+    .projects { display: grid; grid-template-columns: repeat(auto-fill, minmax(20rem, 1fr)); gap: 1.25rem; }
+    .empty { color: #7A5C38; font-size: 0.95rem; }
+    .proj {
+      background: #fff; border: 0.5px solid #E0CCA4; border-radius: 12px;
+      box-shadow: 0 4px 18px rgba(44, 36, 22, 0.07); padding: 1.3rem 1.4rem;
+      display: flex; flex-direction: column; gap: 0.9rem;
+    }
+    .proj-top { display: flex; align-items: baseline; gap: 0.75rem; }
+    .proj h2 { font-family: 'Libre Baskerville', Georgia, serif; font-size: 1.15rem; font-weight: 400; overflow-wrap: anywhere; }
+    .lang { margin-left: auto; flex: none; font-size: 0.72rem; letter-spacing: 0.08em; text-transform: uppercase; color: #B07320; border: 0.5px solid #E0CCA4; border-radius: 4px; padding: 0.1rem 0.4rem; }
+    .pw-list { display: flex; flex-direction: column; gap: 0.4rem; }
+    .pw { display: flex; align-items: center; gap: 0.6rem; font-size: 0.85rem; }
+    .pw-label { flex: none; width: 8.5rem; color: #7A5C38; }
+    .pw-val {
+      flex: 1; min-width: 0; text-align: left; font-family: ui-monospace, Menlo, monospace; font-size: 0.85rem;
+      background: #FEF9F2; border: 0.5px solid #EAD9B8; border-radius: 6px; padding: 0.3rem 0.55rem;
+      overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+    }
+    .pw-val:hover { border-color: #B07320; }
+    .proj-actions { display: flex; gap: 0.5rem; justify-content: flex-end; }
+
+    /* ---------- Modālais logs ---------- */
+    .scrim { position: fixed; inset: 0; background: rgba(44, 36, 22, 0.35); z-index: 90; display: flex; align-items: flex-start; justify-content: center; padding: 6vh 1rem; overflow-y: auto; }
+    .modal {
+      width: 100%; max-width: 30rem; background: #fff; border: 0.5px solid #E0CCA4; border-radius: 12px;
+      box-shadow: 0 12px 36px rgba(44, 36, 22, 0.18); padding: 1.6rem;
+    }
+    .modal h2 { font-family: 'Libre Baskerville', Georgia, serif; font-size: 1.3rem; font-weight: 400; margin-bottom: 1.25rem; }
+    .modal label { display: block; font-size: 0.8rem; letter-spacing: 0.04em; color: #7A5C38; margin: 0.9rem 0 0.35rem; }
+    .modal .row { display: flex; gap: 0.5rem; }
+    .modal .row .field { flex: 1; min-width: 0; }
+    .modal-actions { display: flex; gap: 0.5rem; justify-content: flex-end; margin-top: 1.5rem; }
+    .danger-zone { margin-top: 1.5rem; padding-top: 1rem; border-top: 0.5px solid #EAD9B8; }
+    .danger-link { font-size: 0.82rem; color: #A33A2A; text-decoration: underline; text-underline-offset: 3px; }
+    .btn-danger { background: #A33A2A; color: #fff; }
+
+    /* ---------- Klienta skats (nākamais solis) ---------- */
+    .client-title { font-family: 'Libre Baskerville', Georgia, serif; font-size: clamp(1.4rem, 2.2vw, 1.8rem); font-weight: 400; }
+
+    .toast {
+      position: fixed; left: 50%; bottom: 2rem; transform: translateX(-50%); z-index: 100;
+      background: #2C2416; color: #F5ECD8; padding: 0.7rem 1.2rem; border-radius: 8px; font-size: 0.9rem;
+      box-shadow: 0 6px 20px rgba(44, 36, 22, 0.25);
+    }
+
+    @media (max-width: 768px) {
+      .topnav { padding: 1rem 1.25rem; }
+      .wrap { padding: 1.75rem 1.25rem 3rem; }
+      .projects { grid-template-columns: minmax(0, 1fr); }
+      .pw-label { width: 7rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Paroles logs -->
+  <div class="center-screen" id="gate" hidden>
+    <div class="card">
+      <a class="card-logo" href="/">Roadchanger</a>
+      <h1>Scenārijs</h1>
+      <form class="login-form" id="gate-form">
+        <input class="field" id="gate-pw" type="password" placeholder="Parole / Password" autocomplete="current-password" required />
+        <button class="btn btn-dark" type="submit" id="gate-btn">Ieiet / Enter</button>
+      </form>
+      <div class="msg" id="gate-msg"></div>
+    </div>
+  </div>
+
+  <!-- Admin -->
+  <div id="admin" hidden>
+    <nav class="topnav">
+      <a class="nav-logo" href="/">Roadchanger</a>
+      <span class="nav-title">Scenāriji · Admin</span>
+      <button class="nav-user" data-logout>Iziet</button>
+    </nav>
+    <main class="wrap">
+      <div class="wrap-head">
+        <h1>Projekti</h1>
+        <button class="btn btn-brown" id="new-btn">+ Jauns projekts</button>
+      </div>
+      <div class="projects" id="projects"></div>
+      <p class="empty" id="projects-empty" hidden>Vēl nav neviena projekta.</p>
+    </main>
+  </div>
+
+  <!-- Klients (tabula būs nākamajā solī) -->
+  <div id="client" hidden>
+    <nav class="topnav">
+      <a class="nav-logo" href="/">Roadchanger</a>
+      <button class="nav-user" data-logout>Iziet / Log out</button>
+    </nav>
+    <main class="wrap">
+      <h1 class="client-title" id="client-title"></h1>
+    </main>
+  </div>
+
+  <!-- Projekta forma -->
+  <div class="scrim" id="modal" hidden>
+    <form class="modal" id="proj-form">
+      <h2 id="modal-title">Jauns projekts</h2>
+
+      <label for="f-name">Nosaukums</label>
+      <input class="field" id="f-name" maxlength="120" required />
+
+      <label for="f-lang">Valoda</label>
+      <select class="field" id="f-lang">
+        <option value="lv">Latviešu</option>
+        <option value="en">English</option>
+      </select>
+
+      <label for="f-rw">Parole: lasīt / rakstīt</label>
+      <div class="row"><input class="field" id="f-rw" maxlength="60" required /><button type="button" class="btn btn-line btn-sm" data-gen="f-rw">Ģenerēt</button></div>
+
+      <label for="f-ro">Parole: tikai lasīt</label>
+      <div class="row"><input class="field" id="f-ro" maxlength="60" required /><button type="button" class="btn btn-line btn-sm" data-gen="f-ro">Ģenerēt</button></div>
+
+      <label for="f-dj">Parole: lasīt + DJ</label>
+      <div class="row"><input class="field" id="f-dj" maxlength="60" required /><button type="button" class="btn btn-line btn-sm" data-gen="f-dj">Ģenerēt</button></div>
+
+      <div class="msg err" id="modal-msg"></div>
+
+      <div class="modal-actions">
+        <button type="button" class="btn btn-line" id="modal-cancel">Atcelt</button>
+        <button type="submit" class="btn btn-dark" id="modal-save">Saglabāt</button>
+      </div>
+
+      <div class="danger-zone" id="danger" hidden>
+        <button type="button" class="danger-link" id="del-show">Dzēst projektu</button>
+        <div id="del-confirm" hidden style="margin-top:0.75rem">
+          <p style="font-size:0.88rem;color:#6B5035;margin-bottom:0.6rem">Projekts un viss tā saturs tiks izdzēsts neatgriezeniski.</p>
+          <button type="button" class="btn btn-danger btn-sm" id="del-yes">Jā, dzēst</button>
+        </div>
+      </div>
+    </form>
+  </div>
+
+  <div class="toast" id="toast" hidden></div>
+
+  <script type="module">
+    import { initializeApp } from 'https://www.gstatic.com/firebasejs/12.19.0/firebase-app.js';
+    import { getAuth, onAuthStateChanged, signInAnonymously, signOut } from 'https://www.gstatic.com/firebasejs/12.19.0/firebase-auth.js';
+    import {
+      getFirestore, doc, getDoc, setDoc, deleteDoc, collection, query, where, orderBy,
+      onSnapshot, getDocs, writeBatch, serverTimestamp
+    } from 'https://www.gstatic.com/firebasejs/12.19.0/firebase-firestore.js';
+
+    const app = initializeApp({
+      apiKey: 'AIzaSyD7NhjgDjoaaqFHoqdKzbp-k_PI_DYDG4A',
+      authDomain: 'roadchanger-kalendars.firebaseapp.com',
+      projectId: 'roadchanger-kalendars',
+      storageBucket: 'roadchanger-kalendars.firebasestorage.app',
+      messagingSenderId: '333346997656',
+      appId: '1:333346997656:web:c576e5b8bfdd8aa03497ed'
+    });
+    const auth = getAuth(app);
+    const db = getFirestore(app);
+
+    const ROLES = ['rw', 'ro', 'dj'];
+    const ROLE_LABEL = { rw: 'Lasīt / rakstīt', ro: 'Tikai lasīt', dj: 'Lasīt + DJ' };
+    const DEFAULT_CATS = [
+      { id: 'dj', name: 'DJ' },
+      { id: 'vaditajs', name: 'Vadītājs' },
+      { id: 'skana', name: 'Skaņa/Gaisma' },
+      { id: 'keiterings', name: 'Keiterings' },
+      { id: 'dekoracijas', name: 'Dekorācijas' }
+    ];
+    const SID_KEY = 'rc-scenarijs-sid';
+
+    const $ = id => document.getElementById(id);
+    const screens = ['gate', 'admin', 'client'];
+    function show(name) { screens.forEach(s => { $(s).hidden = s !== name; }); }
+
+    let toastTimer;
+    function toast(text) {
+      const t = $('toast'); t.textContent = text; t.hidden = false;
+      clearTimeout(toastTimer); toastTimer = setTimeout(() => { t.hidden = true; }, 2600);
+    }
+
+    // Paroles nav reģistrjutīgas: "LONAS-7k3" = "lonas-7k3".
+    const norm = s => s.trim().toLowerCase();
+    async function sha256(text) {
+      const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(text));
+      return [...new Uint8Array(buf)].map(b => b.toString(16).padStart(2, '0')).join('');
+    }
+    const indexId = pw => sha256('scn:' + pw);
+
+    function lsGet(k) { try { return localStorage.getItem(k); } catch { return null; } }
+    function lsSet(k, v) { try { v == null ? localStorage.removeItem(k) : localStorage.setItem(k, v); } catch {} }
+
+    // ---------- Sesijas atjaunošana ----------
+    let unsubProjects = null;
+    let started = false;
+    onAuthStateChanged(auth, async user => {
+      if (started) return;
+      started = true;
+      if (!user) { show('gate'); return; }
+      try {
+        if ((await getDoc(doc(db, 'scnAdmins', user.uid))).exists()) { openAdmin(); return; }
+      } catch {}
+      const sid = lsGet(SID_KEY);
+      if (sid) {
+        try {
+          const m = await getDoc(doc(db, 'scenarios', sid, 'members', user.uid));
+          if (m.exists()) { await openClient(sid, m.data().role); return; }
+        } catch {}
+      }
+      show('gate');
+    });
+
+    // ---------- Ieeja ar paroli ----------
+    $('gate-form').addEventListener('submit', async e => {
+      e.preventDefault();
+      const pw = norm($('gate-pw').value);
+      if (!pw) return;
+      const msg = $('gate-msg');
+      msg.textContent = ''; msg.classList.remove('err');
+      $('gate-btn').disabled = true;
+      try {
+        const user = auth.currentUser || (await signInAnonymously(auth)).user;
+        const idx = await getDoc(doc(db, 'scnIndex', await indexId(pw)));
+        if (idx.exists()) {
+          const { sid, role } = idx.data();
+          const mref = doc(db, 'scenarios', sid, 'members', user.uid);
+          try { await deleteDoc(mref); } catch {}
+          await setDoc(mref, { pw, role, at: serverTimestamp() });
+          lsSet(SID_KEY, sid);
+          await openClient(sid, role);
+        } else {
+          await setDoc(doc(db, 'scnAdmins', user.uid), { pw, at: serverTimestamp() });
+          openAdmin();
+        }
+        $('gate-pw').value = '';
+      } catch (err) {
+        console.error(err);
+        msg.textContent = err.code === 'auth/admin-restricted-operation' || err.code === 'auth/operation-not-allowed'
+          ? 'Pieteikšanās šobrīd nav pieejama.'
+          : 'Nepareiza parole / Wrong password';
+        msg.classList.add('err');
+      } finally {
+        $('gate-btn').disabled = false;
+      }
+    });
+
+    document.querySelectorAll('[data-logout]').forEach(b => b.addEventListener('click', async () => {
+      if (unsubProjects) { unsubProjects(); unsubProjects = null; }
+      const uid = auth.currentUser?.uid;
+      if (uid) { try { await deleteDoc(doc(db, 'scnAdmins', uid)); } catch {} }
+      lsSet(SID_KEY, null);
+      await signOut(auth);
+      show('gate');
+    }));
+
+    // ---------- Klients ----------
+    async function openClient(sid, role) {
+      const s = await getDoc(doc(db, 'scenarios', sid));
+      if (!s.exists()) { lsSet(SID_KEY, null); show('gate'); return; }
+      $('client-title').textContent = s.data().name;
+      document.documentElement.lang = s.data().lang || 'lv';
+      show('client');
+    }
+
+    // ---------- Admin: saraksts ----------
+    const keysCache = new Map();
+    function openAdmin() {
+      show('admin');
+      if (unsubProjects) return;
+      unsubProjects = onSnapshot(query(collection(db, 'scenarios'), orderBy('createdAt', 'desc')), async snap => {
+        const projects = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+        await Promise.all(projects.filter(p => !keysCache.has(p.id)).map(async p => {
+          try { keysCache.set(p.id, (await getDoc(doc(db, 'scenarios', p.id, 'keys', 'main'))).data() || {}); }
+          catch { keysCache.set(p.id, {}); }
+        }));
+        renderProjects(projects);
+      }, err => { console.error(err); toast('Neizdevās ielādēt projektus'); });
+    }
+
+    function renderProjects(projects) {
+      const box = $('projects');
+      box.replaceChildren();
+      $('projects-empty').hidden = projects.length > 0;
+      for (const p of projects) {
+        const keys = keysCache.get(p.id) || {};
+        const card = document.createElement('article');
+        card.className = 'proj';
+
+        const top = document.createElement('div'); top.className = 'proj-top';
+        const h = document.createElement('h2'); h.textContent = p.name;
+        const lang = document.createElement('span'); lang.className = 'lang'; lang.textContent = p.lang || 'lv';
+        top.append(h, lang);
+
+        const list = document.createElement('div'); list.className = 'pw-list';
+        for (const r of ROLES) {
+          const row = document.createElement('div'); row.className = 'pw';
+          const l = document.createElement('span'); l.className = 'pw-label'; l.textContent = ROLE_LABEL[r];
+          const v = document.createElement('button'); v.className = 'pw-val'; v.type = 'button';
+          v.textContent = keys[r] || '—'; v.title = 'Kopēt';
+          v.addEventListener('click', async () => {
+            try { await navigator.clipboard.writeText(keys[r] || ''); toast('Parole nokopēta'); } catch {}
+          });
+          row.append(l, v);
+          list.append(row);
+        }
+
+        const actions = document.createElement('div'); actions.className = 'proj-actions';
+        const edit = document.createElement('button'); edit.className = 'btn btn-line btn-sm'; edit.textContent = 'Labot';
+        edit.addEventListener('click', () => openModal(p));
+        actions.append(edit);
+
+        card.append(top, list, actions);
+        box.append(card);
+      }
+    }
+
+    // ---------- Admin: projekta forma ----------
+    let editing = null; // null = jauns projekts
+    const slug = s => s.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '')
+      .replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '').slice(0, 20) || 'projekts';
+    function genPw() {
+      const abc = 'abcdefghjkmnpqrstuvwxyz23456789';
+      const rnd = crypto.getRandomValues(new Uint8Array(4));
+      return slug($('f-name').value) + '-' + [...rnd].map(n => abc[n % abc.length]).join('');
+    }
+    document.querySelectorAll('[data-gen]').forEach(b =>
+      b.addEventListener('click', () => { $(b.dataset.gen).value = genPw(); }));
+
+    function openModal(p) {
+      editing = p;
+      $('modal-title').textContent = p ? 'Labot projektu' : 'Jauns projekts';
+      $('f-name').value = p ? p.name : '';
+      $('f-lang').value = p ? (p.lang || 'lv') : 'lv';
+      const keys = p ? (keysCache.get(p.id) || {}) : {};
+      for (const r of ROLES) $('f-' + r).value = keys[r] || '';
+      $('modal-msg').textContent = '';
+      $('danger').hidden = !p;
+      $('del-confirm').hidden = true;
+      $('modal').hidden = false;
+      $('f-name').focus();
+    }
+    function closeModal() { $('modal').hidden = true; editing = null; }
+    $('new-btn').addEventListener('click', () => openModal(null));
+    $('modal-cancel').addEventListener('click', closeModal);
+    $('modal').addEventListener('click', e => { if (e.target === $('modal')) closeModal(); });
+    document.addEventListener('keydown', e => { if (e.key === 'Escape' && !$('modal').hidden) closeModal(); });
+
+    $('proj-form').addEventListener('submit', async e => {
+      e.preventDefault();
+      const name = $('f-name').value.trim();
+      const lang = $('f-lang').value;
+      const pws = Object.fromEntries(ROLES.map(r => [r, norm($('f-' + r).value)]));
+      const err = t => { $('modal-msg').textContent = t; };
+
+      if (!name) return err('Ieraksti nosaukumu.');
+      if (ROLES.some(r => !pws[r])) return err('Aizpildi visas trīs paroles.');
+      if (new Set(ROLES.map(r => pws[r])).size < 3) return err('Visām trim parolēm jābūt atšķirīgām.');
+      if (ROLES.some(r => pws[r] === 'pasmaidi')) return err('Šī parole ir rezervēta.');
+
+      const old = editing ? (keysCache.get(editing.id) || {}) : {};
+      const changed = ROLES.filter(r => pws[r] !== old[r]);
+
+      $('modal-save').disabled = true;
+      try {
+        // Parolei jābūt unikālai visos projektos.
+        for (const r of changed) {
+          if ((await getDoc(doc(db, 'scnIndex', await indexId(pws[r])))).exists())
+            return err(`Parole "${pws[r]}" jau ir aizņemta citā projektā.`);
+        }
+
+        const sid = editing ? editing.id : doc(collection(db, 'scenarios')).id;
+        const b = writeBatch(db);
+        if (editing) {
+          b.update(doc(db, 'scenarios', sid), { name, lang, updatedAt: serverTimestamp() });
+        } else {
+          b.set(doc(db, 'scenarios', sid), {
+            name, lang, place: '', address: '', lat: null, lng: null, cats: DEFAULT_CATS,
+            createdAt: serverTimestamp(), updatedAt: serverTimestamp()
+          });
+        }
+        b.set(doc(db, 'scenarios', sid, 'keys', 'main'), pws);
+        for (const r of changed) {
+          if (old[r]) b.delete(doc(db, 'scnIndex', await indexId(old[r])));
+          b.set(doc(db, 'scnIndex', await indexId(pws[r])), { sid, role: r });
+        }
+        await b.commit();
+
+        // Mainīta parole = vecā vairs neder arī tiem, kas jau ir iekšā.
+        if (editing) {
+          for (const r of changed) {
+            const ms = await getDocs(query(collection(db, 'scenarios', sid, 'members'), where('role', '==', r)));
+            await Promise.all(ms.docs.map(m => deleteDoc(m.ref)));
+          }
+        }
+        keysCache.set(sid, pws);
+        closeModal();
+        toast(editing ? 'Saglabāts' : 'Projekts izveidots');
+      } catch (ex) {
+        console.error(ex);
+        err('Neizdevās saglabāt.');
+      } finally {
+        $('modal-save').disabled = false;
+      }
+    });
+
+    // ---------- Admin: dzēšana (paslēpta aiz "Labot") ----------
+    $('del-show').addEventListener('click', () => { $('del-confirm').hidden = false; });
+    $('del-yes').addEventListener('click', async () => {
+      if (!editing) return;
+      const sid = editing.id;
+      const keys = keysCache.get(sid) || {};
+      $('del-yes').disabled = true;
+      try {
+        const b = writeBatch(db);
+        for (const sub of ['rows', 'members']) {
+          (await getDocs(collection(db, 'scenarios', sid, sub))).forEach(d => b.delete(d.ref));
+        }
+        for (const r of ROLES) if (keys[r]) b.delete(doc(db, 'scnIndex', await indexId(keys[r])));
+        b.delete(doc(db, 'scenarios', sid, 'keys', 'main'));
+        b.delete(doc(db, 'scenarios', sid));
+        await b.commit();
+        keysCache.delete(sid);
+        closeModal();
+        toast('Projekts izdzēsts');
+      } catch (ex) {
+        console.error(ex);
+        $('modal-msg').textContent = 'Neizdevās izdzēst.';
+      } finally {
+        $('del-yes').disabled = false;
+      }
+    });
+  </script>
+</body>
+</html>

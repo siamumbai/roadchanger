@@ -52,6 +52,7 @@
 - `/reviews/` — atlasītas Google atsauksmes kā **statisks HTML** + poga uz pilno Google profilu + poga uz `/review/`.
 - `/projects/` — projektu saraksts; katrs projekts savā mapē `/projects/<slug>/index.html`.
 - `/kalendars/` — **privāts kalendārs sadarbības māksliniekiem** (uzlikts 2026-10-02). `noindex`, robots.txt aizliegts, nav sitemap, nav navigācijā. Sk. sadaļu "Kalendārs" zemāk.
+- `/scenarijs/` — **privāti pasākumu scenāriji klientiem** (uzlikts 2026-10-02, 1. solis: paroles logs + Admin). `noindex`, robots.txt aizliegts, nav sitemap, nav navigācijā. Sk. sadaļu "Scenārijs" zemāk.
 - `/thanks` — pateicības lapa pēc formas nosūtīšanas ("Thanks! The form was submitted successfully..." + Go back poga uz galveno lapu).
 
 ## Navigācija (galvenā lapa)
@@ -140,6 +141,18 @@ un pastāvīgs, īsinājums ir redirect. Abi noved uz to pašu profilu.
 - Kalendāra skats: **mēneši viens zem otra, ritināmi** (ritinot pievienojas vēl). Katrs mēnesis ar savu virsrakstu un TIKAI savām dienām — tukšās vietas pirms 1. datuma bez līnijām, nākamā mēneša dienas nerāda. Augšā sticky josla ar ‹ mēnesis › un "Šodien".
 - Admin: ķekši bloķēti, kamēr rindā nav nospiests **"Labot"** (tad poga = "Gatavs"). Dzēst e-pastu: klikšķis uz e-pasta → parādās **"Izdzēst"**. "Dzēstie (30 dienas)" salocīti ar ķeksi.
 - Piekļuves noņemšana neko neizdzēš — ieraksti glabājas kalendārā, ne pie cilvēka; atdodot piekļuvi, viss atkal redzams.
+
+## Scenārijs `/scenarijs/` (uzlikts 2026-10-02)
+
+- Viens fails `roadchanger/scenarijs/index.html`, tas pats Firebase projekts `roadchanger-kalendars`.
+- Ieeja tikai ar paroli (Firebase **anonīmā** pieteikšanās + Firestore noteikumi). Paroles nav reģistrjutīgas.
+- **Admin parole: `pasmaidi`.** Noteikumos glabājas tikai tās SHA-256 (repo ir publisks). Mainot: jauns hash `firestore.rules` → `scnAdmins` + deploy.
+- Katram projektam 3 paroles: `rw` lasīt/rakstīt, `ro` tikai lasīt, `dj` lasīt + rakstīt tikai rindas ar DJ kategoriju. Parolēm jābūt unikālām visos projektos.
+- Dati: `scenarios/{sid}` (name, lang, place, address, lat, lng, cats[]), `scenarios/{sid}/keys/main` (paroles, lasa tikai admins),
+  `scenarios/{sid}/members/{uid}` (kas ar kuru paroli ienācis), `scenarios/{sid}/rows/{rid}`, `scnIndex/{sha256('scn:'+parole)}` → {sid, role}, `scnAdmins/{uid}`.
+- Mainot paroli, Admin izmet visus, kas ienāca ar veco. Valodu (`lang`) maina tikai admins.
+- Lietotāja lēmumi: iekrāsošana pagaidām oranža visiem; rindai var būt vairākas kategorijas; kategorijas var pievienot/dzēst (dzēst — paslēpts aiz "Labot");
+  PDF: galvenais + 1 kategorija; valoda katram projektam, maina tikai admins.
 
 ## Favikons (uzlikts 2026-08-28)
 
