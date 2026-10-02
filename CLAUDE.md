@@ -137,6 +137,9 @@ un pastāvīgs, īsinājums ir redirect. Abi noved uz to pašu profilu.
   - Dzēšana ir "mīkstā" (`deleted: true`); Admin sadaļā "Dzēstie" var atjaunot 30 dienas, vecākos Admin atverot izdzēš pavisam.
 - Labot pasākumu var tikai tas, kam ir "rakstīt" tiesības **visos** tā kalendāros; citiem forma ir tikai lasāma.
 - Lietotājam bez rakstīšanas tiesībām tukšas dienas klikšķis rāda "Lūdz atļauju pievienot pasākumu." (lietotāja teksts).
+- Kalendāra skats: **mēneši viens zem otra, ritināmi** (ritinot pievienojas vēl). Katrs mēnesis ar savu virsrakstu un TIKAI savām dienām — tukšās vietas pirms 1. datuma bez līnijām, nākamā mēneša dienas nerāda. Augšā sticky josla ar ‹ mēnesis › un "Šodien".
+- Admin: ķekši bloķēti, kamēr rindā nav nospiests **"Labot"** (tad poga = "Gatavs"). Dzēst e-pastu: klikšķis uz e-pasta → parādās **"Izdzēst"**. "Dzēstie (30 dienas)" salocīti ar ķeksi.
+- Piekļuves noņemšana neko neizdzēš — ieraksti glabājas kalendārā, ne pie cilvēka; atdodot piekļuvi, viss atkal redzams.
 
 ## Favikons (uzlikts 2026-08-28)
 
