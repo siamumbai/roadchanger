@@ -882,11 +882,12 @@
       if (map || !window.L) { map && setTimeout(() => map.invalidateSize(), 50); return; }
       map = L.map('map', { scrollWheelZoom: false });
       showLatvia();
-      // CARTO Positron — gaiša, tīra karte.
-      L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
-        maxZoom: 20, subdomains: 'abcd',
-        attribution: '© OpenStreetMap © CARTO'
+      // Esri Light Gray — gaiša, tīra karte (kā CARTO Positron, bet bez API atslēgas). Virsū nosaukumu slānis.
+      const esri = 'https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/';
+      L.tileLayer(esri + 'World_Light_Gray_Base/MapServer/tile/{z}/{y}/{x}', {
+        maxZoom: 16, attribution: '© Esri, HERE, Garmin, © OpenStreetMap'
       }).addTo(map);
+      L.tileLayer(esri + 'World_Light_Gray_Reference/MapServer/tile/{z}/{y}/{x}', { maxZoom: 16 }).addTo(map);
       map.on('click', e => {
         if (!canWrite()) return;
         updateDoc(sref(), { lat: e.latlng.lat, lng: e.latlng.lng, updatedAt: serverTimestamp() }).catch(fail);
