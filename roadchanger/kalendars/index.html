@@ -301,15 +301,20 @@
       .cal-wrap { grid-template-columns: minmax(0, 1fr); padding: 0 0.5rem 2rem; }
       .cal-main, .panel, .side { grid-column: auto; grid-row: auto; }
       .people { display: none !important; }
-      .side { position: static; margin: 0 -0.5rem; max-height: none; overflow: visible; background: #FEF9F2; border-bottom: 0.5px solid #EAD9B8; }
-      .side h4 { margin: 0.25rem 1rem 0.5rem; }
-      .upc { padding: 0 1rem 1rem; }
       /* Telefonā kalendārs ritinās savā rāmī, nevis visa lapa */
       .cal-sticky { position: static; }
-      #months { overflow-anchor: none; position: relative; height: calc(100svh - var(--navh, 0px) - var(--calh, 0px) - 0.5rem); overflow-y: auto; overscroll-behavior: contain; -webkit-overflow-scrolling: touch; }
-      .month { scroll-margin-top: 0; }
-      .side .filters { position: static; flex-direction: row; overflow-x: auto; padding: 0.75rem 1rem; }
-      .side .fdiv { border-top: none; border-left: 0.5px solid #E0CCA4; margin: 0 0.25rem; align-self: stretch; }
+      .month h3 { display: none; }
+      .month { padding-top: 0.5rem; }
+      .mchips { justify-content: space-between; align-items: center; }
+      .mtitle { font-family: 'Libre Baskerville', Georgia, serif; font-size: 1.2rem; }
+      /* Secība telefonā: Nākošie pasākumi → kalendārs → Aizņemts un kalendāri */
+      .side { display: contents; }
+      #upc-title, #upcoming { order: 1; }
+      .cal-main { order: 2; }
+      .side .filters { order: 3; flex-direction: column; flex-wrap: nowrap; overflow: visible; padding: 1.25rem 0.5rem 0; background: none; }
+      .side .fdiv { border-left: none; border-top: 0.5px solid #E0CCA4; margin: 0.35rem 0; align-self: auto; }
+      #upc-title { margin: 1rem 0.5rem 0.5rem; }
+      #upcoming { padding: 0 0.5rem 0.5rem; }
       /* Telefonā mēneši neritinās: izvēlētais vidū, blakus 2 iepriekšējie un 2 nākamie */
       .mchips { overflow: hidden; }
       .mchip { flex: 1 1 0; min-width: 0; padding: 0.4rem 0.2rem; font-size: 0.8rem; }
@@ -375,7 +380,7 @@
   <!-- Galvenā lapa -->
   <div id="scr-main" hidden>
     <nav class="topnav">
-      <a class="nav-logo" href="/">Roadchanger</a>
+      <a class="nav-logo" href="/kalendars/" id="nav-logo">Roadchanger</a>
       <div class="tabs">
         <button class="tab active" data-tab="cal" type="button">Kalendārs</button>
         <button class="tab" data-tab="admin" id="tab-admin" type="button" hidden>Admin<span class="badge" id="pending-badge" hidden></span></button>
@@ -387,7 +392,7 @@
       <div class="cal-wrap" id="cal-wrap">
         <aside class="side" id="side">
           <div class="filters" id="filters"></div>
-          <h4>Nākošie pasākumi</h4>
+          <h4 id="upc-title">Nākošie pasākumi</h4>
           <div class="upc" id="upcoming"></div>
         </aside>
         <div class="cal-main">
@@ -826,7 +831,9 @@
         }
       }
       let html = '';
-      for (let mi = rangeFrom; mi <= rangeTo; mi++) {
+      // Telefonā rāda tikai vienu mēnesi (pārslēdz ar bultām), datorā — ritināmu sarakstu
+      const mFrom = isMobile() ? visibleMi : rangeFrom, mTo = isMobile() ? visibleMi : rangeTo;
+      for (let mi = mFrom; mi <= mTo; mi++) {
         const y = Math.floor(mi / 12), m = mi % 12;
         const lead = (miDate(mi, 1).getDay() + 6) % 7;
         const days = miDate(mi + 1, 0).getDate();
@@ -873,6 +880,7 @@
 
     // Augšā rāda mēnesi, kas šobrīd ir redzams kalendāra augšā
     function updateTitle() {
+      if (isMobile()) { if (!$('mchips').children.length) renderMonthChips(); return; }
       const limit = (isMobile() ? $('months').getBoundingClientRect().top : $('cal-sticky').getBoundingClientRect().bottom) + 60;
       let mi = rangeFrom;
       for (const sec of $('months').children) {
@@ -885,6 +893,13 @@
     // Telefonā: izvēlētais mēnesis vidū, 2 iepriekšējie un 2 nākamie — var iet uz priekšu un atpakaļ.
     function renderMonthChips() {
       const mob = isMobile();
+      if (mob) {
+        // Telefonā: ‹ Mēnesis Gads ›
+        $('mchips').innerHTML = `<button class="arrow" data-step="-1" type="button" aria-label="Iepriekšējais mēnesis">‹</button>
+          <span class="mtitle">${MONTHS[visibleMi % 12]} ${Math.floor(visibleMi / 12)}</span>
+          <button class="arrow" data-step="1" type="button" aria-label="Nākamais mēnesis">›</button>`;
+        return;
+      }
       const from = mob ? visibleMi - 2 : curMi, to = mob ? visibleMi + 2 : curMi + 23;
       let html = '';
       for (let mi = from; mi <= to; mi++) {
@@ -913,6 +928,7 @@
     });
     document.fonts && document.fonts.ready.then(fitMonthChips);
     $('mchips').addEventListener('click', (e) => {
+      const st = e.target.closest('[data-step]'); if (st) { scrollToMonth(visibleMi + Number(st.dataset.step)); return; }
       const b = e.target.closest('[data-mi]'); if (b) scrollToMonth(Number(b.dataset.mi));
     });
 
@@ -927,7 +943,7 @@
       requestAnimationFrame(() => { extending = false; });
     }
     function onCalScroll(fromBox) {
-      if ($('scr-main').hidden || $('view-cal').hidden) return;
+      if ($('scr-main').hidden || $('view-cal').hidden || isMobile()) return;
       requestAnimationFrame(() => {
         updateTitle();
         if (!didInitialScroll || extending || fromBox !== isMobile()) return;
@@ -939,6 +955,14 @@
     $('months').addEventListener('scroll', () => onCalScroll(true), { passive: true });
 
     function scrollToMonth(mi, smooth = true) {
+      if (isMobile()) {
+        // Telefonā vienkārši pārslēdz rādīto mēnesi
+        visibleMi = mi;
+        if (mi < rangeFrom - 12 || mi > rangeTo + 12) { rangeFrom = mi - 3; rangeTo = mi + 6; subscribeEvents(); }
+        else if (mi - 1 < rangeFrom || mi + 1 > rangeTo) { rangeFrom = Math.min(rangeFrom, mi - 3); rangeTo = Math.max(rangeTo, mi + 6); subscribeEvents(); }
+        renderGrid(); renderMonthChips();
+        return;
+      }
       if (Math.abs(mi - visibleMi) > 3) smooth = false;
       const r0 = rangeFrom, r1 = rangeTo;
       if (mi < rangeFrom - 12 || mi > rangeTo + 12) { rangeFrom = mi - 3; rangeTo = mi + 6; renderGrid(); subscribeEvents(); }
@@ -1166,6 +1190,13 @@
     }
 
     // ---------- Cilnes ----------
+    // Logo atgriež kalendāra sadaļā (šis mēnesis), nevis uz galveno lapu
+    $('nav-logo').addEventListener('click', (e) => {
+      e.preventDefault();
+      document.querySelector('[data-tab="cal"]').click();
+      if (panel) closePanel();
+      requestAnimationFrame(() => scrollToMonth(curMi, false));
+    });
     document.querySelectorAll('[data-tab]').forEach((t) => t.addEventListener('click', () => {
       tab = t.dataset.tab;
       document.querySelectorAll('[data-tab]').forEach((x) => x.classList.toggle('active', x === t));
