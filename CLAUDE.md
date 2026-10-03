@@ -146,6 +146,7 @@ un pastāvīgs, īsinājums ir redirect. Abi noved uz to pašu profilu.
 - Pasākumam var būt vairākas dienas: lauks `dateEnd` (tukšs = viena diena). Formā "Datums no – līdz"; kalendāri un statuss divās kolonnās.
 - Pasākumu krāsas kalendārā (bez punktiņiem): **oranžs** = Interesējas/Rezervēts, **zaļš** = Apstiprināts, **sarkans** = Aizņemts. Ja atzīmēts tikai "Aizņemts", statusa kolonna paslēpta (saglabā kā `apstiprinats`).
 - Formas secība: Kalendāri | Statuss → **Nosaukums** (`title`, piem. uzņēmums) → Datums no – līdz → Laiks → Vieta (`place`) → **Adrese** (`address`) → Piezīmes. Lauki tukši, bez parauga teksta.
+- Labās puses forma (datorā) sniedzas līdz ekrāna apakšai bez iekšējās ritināšanas: augstums `--panelh` aprēķināts JS (`measureSticky`, ņem vērā `zoom`), "Piezīmes" aizpilda atlikušo vietu; "Pievienoja/Labots" rindiņa zem virsraksta.
 - Telefonā: filtri + mēnešu pogas lipīgi augšā, "Nākošie pasākumi" paslēpti.
 - Filtrs (2026-10-03): var izvēlēties **tikai vienu** kalendāru; atkārtots klikšķis vai "Visi" → redzami visi.
 - **"Aizņemts" ir personīgs katram e-pastam** (2026-10-04): `busy/{e-pasts}/days/{YYYY-MM-DD}` (`{date, at}`). Redz un maina tikai pats; admins var lasīt. Filtros virs svītras, ieslēgts pēc noklusējuma, rādās kopā ar jebkuru kalendāru — **tikai sarkans dienas fons**, bez joslas; "Nākošajos pasākumos" nav. Pogu **"Labot"** (tad "Gatavs") — klikšķis uz dienas atzīmē/atbrīvo; šajā režīmā citus pasākumus pievienot nevar. Vecais kopīgais "Aizņemts" kalendārs (`c3ctw0kt2yPFC9hqyzMC`) pārnests uz personīgajiem un izdzēsts.
