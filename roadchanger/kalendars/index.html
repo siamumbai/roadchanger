@@ -158,6 +158,7 @@
     .day.bl { border-left: 0.5px solid #E0CCA4; }
     .day:hover { background: #FEF9F2; }
     .day.sel { box-shadow: inset 0 0 0 2px #B07320; }
+    .day.hl { box-shadow: inset 0 0 0 2px #B07320; background: color-mix(in srgb, #B07320 20%, #fff); }
     .num { font-size: 0.8rem; color: #6B5035; width: 1.6rem; height: 1.6rem; display: flex; align-items: center; justify-content: center; border-radius: 50%; }
     .day.today { background: color-mix(in srgb, #B07320 12%, #fff); }
     /* Pagājušās dienas viegli pārsvītrotas */
@@ -304,6 +305,9 @@
       /* Telefonā kalendārs ritinās savā rāmī, nevis visa lapa */
       .cal-sticky { position: static; }
       .month h3 { display: none; }
+      .cal-sticky { scroll-margin-top: var(--navh, 0px); }
+      .cal-wrap { row-gap: 0; }
+      .cal-main { margin-top: 0.5rem; }
       .month { padding-top: 0.5rem; }
       .mchips { justify-content: space-between; align-items: center; }
       .mtitle { font-family: 'Libre Baskerville', Georgia, serif; font-size: 1.2rem; }
@@ -326,7 +330,8 @@
       .month { padding-top: 1.25rem; }
       .month h3 { padding-left: 0.5rem; }
       .picker { left: 0.5rem; }
-      .day { min-height: 4.6rem; padding: 0.2rem; gap: 0.15rem; }
+      .day { min-height: 0; height: 4.6rem; overflow: hidden; padding: 0.2rem; gap: 0.15rem; }
+      .grid > .pad { height: 4.6rem; }
       .num { font-size: 0.72rem; width: 1.35rem; height: 1.35rem; }
       .day.today .num { font-size: 0.75rem; width: 1.5rem; height: 1.5rem; }
       .ev { font-size: 0.6rem; padding: 0.1rem 0.2rem; border-left-width: 2px; gap: 0.2rem; }
@@ -735,6 +740,13 @@
       const b = ev.target.closest('[data-upc]'); if (!b) return;
       const e = getEv(b.dataset.upc); if (!e) return;
       const d = parseYmd(e.date);
+      if (isMobile()) {
+        // Telefonā: neatver formu, bet aizved uz kalendāru un iekrāso šo datumu
+        hlDate = e.date;
+        scrollToMonth(d.getFullYear() * 12 + d.getMonth());
+        $('cal-sticky').scrollIntoView({ block: 'start' });
+        return;
+      }
       openEdit(e.id);
       scrollToMonth(d.getFullYear() * 12 + d.getMonth());
     });
@@ -849,6 +861,7 @@
           if (key < today) cls.push('past');
           if (showBusy && busySet.has(key)) cls.push('busy');
           if (key === selDate) cls.push('sel');
+          if (key === hlDate) cls.push('hl');
           html += `<div class="${cls.join(' ')}" data-date="${key}"><span class="num">${d}</span>`;
           for (const { e, c } of items) {
             const cal = calById(c);
@@ -857,6 +870,8 @@
           }
           html += `</div>`;
         }
+        // Telefonā vienmēr 6 rindas, lai kalendāra augstums nemainās, pārslēdzot mēnešus
+        if (isMobile()) for (let i = lead + days; i < 42; i++) html += '<div class="pad"></div>';
         html += `</div></section>`;
       }
       $('months').innerHTML = html;
@@ -1022,11 +1037,14 @@
     });
 
     // ---------- Labās puses forma ----------
+    let hlDate = null;   // telefonā: datums, uz kuru aizveda "Nākošie pasākumi"
     function openNew(date) {
+      hlDate = null;
       panel = { mode: 'new', date }; selDate = date;
       renderPanel(); renderGrid();
     }
     function openEdit(id) {
+      hlDate = null;
       const e = getEv(id); if (!e) return;
       panel = { mode: 'edit', id }; selDate = e.date;
       renderPanel(); renderGrid();
