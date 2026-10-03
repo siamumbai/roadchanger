@@ -148,7 +148,7 @@ un pastāvīgs, īsinājums ir redirect. Abi noved uz to pašu profilu.
 - Formas secība: Kalendāri | Statuss → **Nosaukums** (`title`, piem. uzņēmums) → Datums no – līdz → Laiks → Vieta (`place`) → **Adrese** (`address`) → Piezīmes. Lauki tukši, bez parauga teksta.
 - Telefonā: filtri + mēnešu pogas lipīgi augšā, "Nākošie pasākumi" paslēpti.
 - Filtrs (2026-10-03): var izvēlēties **tikai vienu** kalendāru; atkārtots klikšķis vai "Visi" → redzami visi.
-- **"Aizņemts"** kalendārs (`calendars/c3ctw0kt2yPFC9hqyzMC`, lauks `busy: true`, sarkans `#D32F2F`; agrāk "Personīgais"): filtros atsevišķi virs svītras, ieslēgts pēc noklusējuma, rādās kopā ar jebkuru izvēlēto kalendāru; tā dienas iekrāsotas sarkanas. Piekļuvi dod Admin tāpat kā citiem.
+- **"Aizņemts"** kalendārs (`calendars/c3ctw0kt2yPFC9hqyzMC`, lauks `busy: true`, sarkans `#D32F2F`; agrāk "Personīgais"): filtros atsevišķi virs svītras, ieslēgts pēc noklusējuma, rādās kopā ar jebkuru izvēlēto kalendāru; tā dienas iekrāsotas sarkanas. Piekļuvi dod Admin tāpat kā citiem. Kalendārā "Aizņemts" rāda **tikai sarkanu dienas fonu** (bez joslas); citu kalendāru pasākumi redzami virs tā. "Nākošajos pasākumos" aizņemtie netiek rādīti. Aizņemtos datumus ieliek/noņem ar pogu **"Labot"** "Aizņemts" rindā (tad "Gatavs"): klikšķis uz dienas to atzīmē vai atbrīvo (periodu sadala); šajā režīmā citus pasākumus pievienot nevar. Pasākuma formā "Aizņemts" vairs netiek piedāvāts.
 
 ## Scenārijs `/scenarijs/` (uzlikts 2026-10-02)
 
