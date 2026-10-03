@@ -141,7 +141,7 @@ un pastāvīgs, īsinājums ir redirect. Abi noved uz to pašu profilu.
 - Kalendāra skats: **mēneši viens zem otra, ritināmi** (ritinot pievienojas vēl). Katrs mēnesis ar savu virsrakstu un TIKAI savām dienām — tukšās vietas pirms 1. datuma bez līnijām, nākamā mēneša dienas nerāda. Augšā sticky josla ar ‹ mēnesis › un "Šodien".
 - Admin: ķekši bloķēti, kamēr rindā nav nospiests **"Labot"** (tad poga = "Gatavs"). Dzēst e-pastu: klikšķis uz e-pasta → parādās **"Izdzēst"**. "Dzēstie (30 dienas)" salocīti ar ķeksi.
 - Piekļuves noņemšana neko neizdzēš — ieraksti glabājas kalendārā, ne pie cilvēka; atdodot piekļuvi, viss atkal redzams.
-- (2026-10-03) Izkārtojums 3 kolonnās: **kreisajā** kalendāru filtri vertikāli + "Nākošie pasākumi" (līdz 15, no šodienas); **vidū** mēneši; **labajā** vienmēr rezervēta vieta formai. Augšā mēnešu pogas (šis + 5 nākamie) un "Šodien" — bultas ‹ › un mēneša nosaukums noņemti.
+- (2026-10-03) Izkārtojums 3 kolonnās: **kreisajā** kalendāru filtri vertikāli + "Nākošie pasākumi" (līdz 15, no šodienas); **vidū** mēneši; **labajā** vienmēr rezervēta vieta formai. Augšā mēnešu pogas no šī mēneša uz priekšu — tik, cik ietilpst rindā līdz malai (telefonā ritina uz sāniem). Bultas, mēneša nosaukums un "Šodien" noņemti. Kalendāru ķekši filtros visi melni kā "Visi" ("Aizņemts" sarkans).
 - Šodiena tikai iekrāsota (bez kvadrāta); pagājušās dienas viegli pārsvītrotas pa diagonāli.
 - Pasākumam var būt vairākas dienas: lauks `dateEnd` (tukšs = viena diena). Formā "Datums no – līdz"; kalendāri un statuss divās kolonnās.
 - Pasākumu krāsas kalendārā (bez punktiņiem): **oranžs** = Interesējas/Rezervēts, **zaļš** = Apstiprināts, **sarkans** = Aizņemts. Ja atzīmēts tikai "Aizņemts", statusa kolonna paslēpta (saglabā kā `apstiprinats`).
