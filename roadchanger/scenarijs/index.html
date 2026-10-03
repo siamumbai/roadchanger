@@ -109,7 +109,13 @@
 
     /* ---------- Scenārijs ---------- */
     .sheet-wrap { display: grid; grid-template-columns: minmax(0, 1fr) clamp(14rem, 19vw, 17rem); gap: 1.75rem; padding: 2rem 3rem 4rem; align-items: start; }
-    .ev-title { font-family: 'Libre Baskerville', Georgia, serif; font-size: clamp(1.9rem, 3vw, 2.6rem); margin-bottom: 1.25rem; }
+    .ev-title { font-family: 'Libre Baskerville', Georgia, serif; font-size: clamp(1.9rem, 3vw, 2.6rem); margin-bottom: 1rem; }
+    .venue-map { display: flex; flex-direction: column; gap: 0.5rem; min-width: 0; }
+    .desc { resize: none; overflow: hidden; line-height: 1.5; min-height: 5.5rem; }
+    .desc[readonly] { border-color: transparent; background: transparent; padding-left: 0; min-height: 0; }
+    .venue-time { position: relative; margin-top: 0.6rem; display: flex; flex-direction: column; gap: 0.35rem; align-items: flex-start; }
+    .venue-time .c-time { width: 9rem; border: 0.5px solid #EAD9B8; border-radius: 6px; }
+    .venue-time .tp { left: 0; top: 100%; }
     .venue { display: grid; grid-template-columns: minmax(0, 1fr) clamp(16rem, 30vw, 24rem); gap: 1.5rem; margin-bottom: 2rem; align-items: start; }
     .venue-text { display: flex; flex-direction: column; gap: 0.5rem; min-width: 0; }
     .venue-label { font-size: 0.75rem; letter-spacing: 0.08em; text-transform: uppercase; color: #7A5C38; }
@@ -293,18 +299,26 @@
     </nav>
     <div class="sheet-wrap">
       <main>
-        <input class="plain ev-title" id="v-title" maxlength="200" />
         <section class="venue">
           <div class="venue-text">
+            <input class="plain ev-title" id="v-title" maxlength="200" />
             <span class="venue-label" data-t="venue"></span>
             <input class="plain venue-name" id="v-name" maxlength="200" />
-            <span class="venue-label" style="margin-top:0.6rem" data-t="address"></span>
+            <span class="venue-label" style="margin-top:0.6rem" data-t="desc"></span>
+            <textarea class="field desc" id="v-desc" rows="3" maxlength="5000"></textarea>
+            <div class="venue-time">
+              <span class="venue-label" data-t="guests"></span>
+              <button class="cell c-time" type="button" id="v-guests"></button>
+            </div>
+          </div>
+          <div class="venue-map">
+            <span class="venue-label" data-t="address"></span>
             <div class="addr-row">
               <input class="plain venue-addr" id="v-addr" maxlength="300" />
               <button class="btn btn-line btn-sm" id="v-find" data-t="find"></button>
             </div>
+            <div id="map"></div>
           </div>
-          <div id="map"></div>
         </section>
 
         <section class="arrive" id="arrive" hidden>
@@ -431,11 +445,11 @@
     };
     // Scenārija teksti projekta valodā (valodu izvēlas admins).
     const T = {
-      lv: { logout: 'Iziet', title: 'Pasākuma nosaukums', venue: 'Vieta', address: 'Adrese', find: 'Atrast kartē', time: 'Laiks', event: 'Notikums',
+      lv: { logout: 'Iziet', title: 'Pasākuma nosaukums', desc: 'Apraksts', guests: 'Viesi ierodas', venue: 'Vieta', address: 'Adrese', find: 'Atrast kartē', time: 'Laiks', event: 'Notikums',
             note: 'Komentārs', addRow: '+ Rinda', cats: 'Kategorijas', edit: 'Labot', done: 'Gatavs', newCat: 'Jauna kategorija',
             empty: 'Vēl nav nevienas rindas.', notFound: 'Adrese nav atrasta', hours: 'Stundas', minutes: 'Minūtes', clear: 'Notīrīt',
             arrive: 'Ierašanās laiks', delRow: 'Izdzēst rindu?', delCat: 'Izdzēst kategoriju?', yes: 'Jā', no: 'Nē' },
-      en: { logout: 'Log out', title: 'Event title', venue: 'Venue', address: 'Address', find: 'Find on map', time: 'Time', event: 'Event',
+      en: { logout: 'Log out', title: 'Event title', desc: 'Description', guests: 'Guests arrive', venue: 'Venue', address: 'Address', find: 'Find on map', time: 'Time', event: 'Event',
             note: 'Comment', addRow: '+ Row', cats: 'Categories', edit: 'Edit', done: 'Done', newCat: 'New category',
             empty: 'No rows yet.', notFound: 'Address not found', hours: 'Hours', minutes: 'Minutes', clear: 'Clear',
             arrive: 'Arrival time', delRow: 'Delete row?', delCat: 'Delete category?', yes: 'Yes', no: 'No' }
@@ -614,7 +628,12 @@
     function setVal(el, v) { if (document.activeElement !== el && el.value !== (v || '')) el.value = v || ''; }
     function renderVenue() {
       const w = canWrite();
-      for (const id of ['v-title', 'v-name', 'v-addr']) $(id).readOnly = !w;
+      for (const id of ['v-title', 'v-name', 'v-addr', 'v-desc']) $(id).readOnly = !w;
+      setVal($('v-desc'), S.data.desc);
+      autosize($('v-desc'));
+      $('v-guests').disabled = !w;
+      $('v-guests').textContent = S.data.guests || (w ? '--:--' : '—');
+      $('v-guests').classList.toggle('ph', !S.data.guests);
       setVal($('v-title'), S.data.title);
       $('v-title').placeholder = w ? tr('title') : '';
       setVal($('v-name'), S.data.place);
@@ -624,6 +643,19 @@
       $('v-addr').placeholder = w ? tr('address') : '';
       renderMarker();
     }
+    $('v-desc').addEventListener('input', e => {
+      autosize(e.target);
+      later('desc', () => updateDoc(sref(), { desc: e.target.value, updatedAt: serverTimestamp() }).catch(fail));
+    });
+    $('v-guests').addEventListener('click', e => {
+      e.stopPropagation();
+      openTp({
+        key: 'guests',
+        get: () => S.data.guests,
+        set: v => { S.data.guests = v; renderVenue(); updateDoc(sref(), { guests: v, updatedAt: serverTimestamp() }).catch(fail); },
+        hint: () => empty
+      }, $('v-guests').parentElement);
+    });
     $('v-title').addEventListener('input', e => later('title', () =>
       updateDoc(sref(), { title: e.target.value, updatedAt: serverTimestamp() }).catch(fail)));
     $('v-name').addEventListener('input', e => later('place', () =>
@@ -633,7 +665,8 @@
 
     function ensureMap() {
       if (map || !window.L) { map && setTimeout(() => map.invalidateSize(), 50); return; }
-      map = L.map('map', { scrollWheelZoom: false }).setView([56.88, 24.6], 6);
+      map = L.map('map', { scrollWheelZoom: false });
+      showLatvia();
       L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         maxZoom: 19, attribution: '© OpenStreetMap'
       }).addTo(map);
@@ -642,17 +675,19 @@
         updateDoc(sref(), { lat: e.latlng.lat, lng: e.latlng.lng, updatedAt: serverTimestamp() }).catch(fail);
       });
     }
+    // Karte vienmēr rāda visu Latviju; pietuvināt katrs var pats.
+    function showLatvia() { map.fitBounds([[55.67, 20.97], [58.08, 28.24]]); }
     function renderMarker() {
       if (!map) return;
       const { lat, lng } = S.data;
       if (lat == null || lng == null) {
         if (marker) { marker.remove(); marker = null; }
-        if (!S.centered) { map.setView([56.88, 24.6], 6); S.centered = true; }
+        if (!S.centered) { showLatvia(); S.centered = true; }
         return;
       }
       if (!marker) marker = L.circleMarker([lat, lng], { radius: 9, color: '#fff', weight: 2.5, fillColor: '#B07320', fillOpacity: 1 }).addTo(map);
       else marker.setLatLng([lat, lng]);
-      if (!S.centered) { map.setView([lat, lng], 13); S.centered = true; }
+      if (!S.centered) { showLatvia(); S.centered = true; }
     }
     $('v-find').addEventListener('click', async () => {
       const q = $('v-addr').value.trim();
@@ -662,7 +697,6 @@
         const [hit] = await res.json();
         if (!hit) { toast(tr('notFound')); return; }
         const lat = +hit.lat, lng = +hit.lon;
-        map.setView([lat, lng], 14);
         await updateDoc(sref(), { address: q, lat, lng, updatedAt: serverTimestamp() });
       } catch (e) { fail(e); }
     });
@@ -720,7 +754,7 @@
     // ----- Rindas -----
     // Rindas lauki: t, ev, note, cats[], order, catNotes { catId: teksts }, marks { catId: ['t','ev','note','cn'] }.
     function autosize(t) { t.style.height = 'auto'; t.style.height = t.scrollHeight + 'px'; }
-    window.addEventListener('resize', () => document.querySelectorAll('#rows textarea, #arr-note').forEach(autosize));
+    window.addEventListener('resize', () => document.querySelectorAll('#rows textarea, #arr-note, #v-desc').forEach(autosize));
     const empty = { h: '', m: '' };
 
     function makeRow(id) {
