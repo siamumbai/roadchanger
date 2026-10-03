@@ -169,7 +169,9 @@
     /* "Aizņemts" rinda ar pogu "Labot" iekšā */
     .busy-row { justify-content: space-between; padding: 0.3rem 0.35rem 0.3rem 0.85rem; }
     .busy-tg { display: inline-flex; align-items: center; gap: 0.5rem; }
-    .busy-edit { font-size: 0.75rem; padding: 0.2rem 0.65rem; border-radius: 999px; border: 0.5px solid #E0CCA4; background: #fff; color: #6B5035; }
+    .side .busy-row, .busy-row { justify-content: space-between; }
+    .busy-row.editing { background: color-mix(in srgb, #D32F2F 12%, #fff); }
+    .busy-edit { font-weight: 700; font-size: 0.75rem; padding: 0.2rem 0.65rem; border-radius: 999px; border: 0.5px solid #E0CCA4; background: #fff; color: #6B5035; }
     .busy-edit:hover { border-color: #D32F2F; color: #D32F2F; }
     .busy-edit.on { background: #D32F2F; border-color: #D32F2F; color: #fff; }
     .busy-mode .day { cursor: cell; }
@@ -299,13 +301,19 @@
       .cal-wrap { grid-template-columns: minmax(0, 1fr); padding: 0 0.5rem 2rem; }
       .cal-main, .panel, .side { grid-column: auto; grid-row: auto; }
       .people { display: none !important; }
-      .side { position: sticky; top: var(--navh, 0px); z-index: 45; margin: 0 -0.5rem; max-height: none; overflow: visible; background: #FEF9F2; border-bottom: 0.5px solid #EAD9B8; }
-      .side h4, .upc { display: none; }
+      .side { position: static; margin: 0 -0.5rem; max-height: none; overflow: visible; background: #FEF9F2; border-bottom: 0.5px solid #EAD9B8; }
+      .side h4 { margin: 0.25rem 1rem 0.5rem; }
+      .upc { padding: 0 1rem 1rem; }
+      /* Telefonā kalendārs ritinās savā rāmī, nevis visa lapa */
+      .cal-sticky { position: static; }
+      #months { overflow-anchor: none; position: relative; height: calc(100svh - var(--navh, 0px) - var(--calh, 0px) - 0.5rem); overflow-y: auto; overscroll-behavior: contain; -webkit-overflow-scrolling: touch; }
+      .month { scroll-margin-top: 0; }
       .side .filters { position: static; flex-direction: row; overflow-x: auto; padding: 0.75rem 1rem; }
       .side .fdiv { border-top: none; border-left: 0.5px solid #E0CCA4; margin: 0 0.25rem; align-self: stretch; }
-      .mchips { overflow-x: auto; }
-      .mchip { flex-grow: 0; }
-      .mchip { padding: 0.4rem 0.7rem; font-size: 0.8rem; }
+      /* Telefonā mēneši neritinās: izvēlētais vidū, blakus 2 iepriekšējie un 2 nākamie */
+      .mchips { overflow: hidden; }
+      .mchip { flex: 1 1 0; min-width: 0; padding: 0.4rem 0.2rem; font-size: 0.8rem; }
+      .mchip small { display: block; margin: 0; font-size: 0.6rem; }
       .cal-head { padding: 0 0.5rem; gap: 0.4rem; }
       .month-title { min-width: 0; font-size: 1.15rem; padding: 0.2rem 0.3rem; }
       .today-btn { padding: 0.5rem 0.8rem; font-size: 0.8rem; }
@@ -730,7 +738,7 @@
     function measureSticky() {
       const r = document.documentElement.style;
       r.setProperty('--navh', document.querySelector('.topnav').offsetHeight + 'px');
-      r.setProperty('--filh', (matchMedia('(max-width: 768px)').matches ? $('side').offsetHeight : 0) + 'px');
+      r.setProperty('--filh', '0px');
       r.setProperty('--calh', $('cal-sticky').offsetHeight + 'px');
       // Labās puses formas augstums: no tās augšas līdz ekrāna apakšai (ņem vērā lapas zoom)
       const z = parseFloat(getComputedStyle(document.body).zoom) || 1;
@@ -769,7 +777,7 @@
     function renderFilters() {
       const f = $('filters');
       const ids = viewIds();
-      let html = `<div class="fchip busy-row ${showBusy ? 'on' : ''}" style="--c:#D32F2F">
+      let html = `<div class="fchip busy-row ${showBusy ? 'on' : ''} ${busyEdit ? 'editing' : ''}" style="--c:#D32F2F">
           <button class="busy-tg" data-busy type="button"><span class="box"></span>Aizņemts</button>
           ${viewAs ? '' : `<button class="busy-edit ${busyEdit ? 'on' : ''}" data-busyedit type="button">${busyEdit ? 'Gatavs' : 'Labot'}</button>`}
         </div><hr class="fdiv">`;
@@ -855,9 +863,17 @@
       if (day) openNew(day.dataset.date);
     });
 
-    // Augšā rāda mēnesi, kas šobrīd ir redzams zem galvenes
+    // Datorā ritina visa lapa; telefonā — kalendāra rāmis #months
+    const isMobile = () => matchMedia('(max-width: 768px)').matches;
+    const box = () => isMobile() ? $('months') : null;
+    const scrollTopNow = () => box() ? box().scrollTop : window.scrollY;
+    const scrollHeightNow = () => box() ? box().scrollHeight : document.documentElement.scrollHeight;
+    const viewHeightNow = () => box() ? box().clientHeight : window.innerHeight;
+    const scrollByNow = (dy) => { if (box()) box().scrollTop += dy; else window.scrollBy(0, dy); };
+
+    // Augšā rāda mēnesi, kas šobrīd ir redzams kalendāra augšā
     function updateTitle() {
-      const limit = $('cal-sticky').getBoundingClientRect().bottom + 60;
+      const limit = (isMobile() ? $('months').getBoundingClientRect().top : $('cal-sticky').getBoundingClientRect().bottom) + 60;
       let mi = rangeFrom;
       for (const sec of $('months').children) {
         if (sec.getBoundingClientRect().top <= limit) mi = Number(sec.dataset.mi); else break;
@@ -865,28 +881,36 @@
       if (mi !== visibleMi || !$('mchips').children.length) { visibleMi = mi; renderMonthChips(); }
     }
 
-    // Mēnešu pogas: šis mēnesis + 5 nākamie
+    // Mēnešu pogas. Datorā: no šī mēneša uz priekšu, cik ietilpst rindā.
+    // Telefonā: izvēlētais mēnesis vidū, 2 iepriekšējie un 2 nākamie — var iet uz priekšu un atpakaļ.
     function renderMonthChips() {
+      const mob = isMobile();
+      const from = mob ? visibleMi - 2 : curMi, to = mob ? visibleMi + 2 : curMi + 23;
       let html = '';
-      for (let mi = curMi; mi <= curMi + 23; mi++) {
+      for (let mi = from; mi <= to; mi++) {
         const y = Math.floor(mi / 12);
-        html += `<button class="mchip ${mi === visibleMi ? 'on' : ''}" data-mi="${mi}" type="button">${MONTHS[mi % 12]}${y !== now.getFullYear() ? `<small>${y}</small>` : ''}</button>`;
+        const name = mob ? MONTHS[mi % 12].slice(0, 3) : MONTHS[mi % 12];
+        html += `<button class="mchip ${mi === visibleMi ? 'on' : ''}" data-mi="${mi}" type="button">${name}${y !== now.getFullYear() ? `<small>${y}</small>` : ''}</button>`;
       }
       $('mchips').innerHTML = html;
       fitMonthChips();
     }
-    // Datorā paslēpj mēnešus, kas neietilpst rindā; telefonā rinda ritinās uz sāniem
+    // Datorā paslēpj mēnešus, kas neietilpst rindā
     function fitMonthChips() {
-      const box = $('mchips');
-      const chips = [...box.children];
+      const el = $('mchips');
+      const chips = [...el.children];
       chips.forEach((c) => { c.hidden = false; });
-      if (matchMedia('(max-width: 768px)').matches) return;
-      box.classList.add('measuring');
-      const w = box.clientWidth;
-      for (const c of chips) if (c.offsetLeft - box.offsetLeft + c.offsetWidth > w) c.hidden = true;
-      box.classList.remove('measuring');
+      if (isMobile()) return;
+      el.classList.add('measuring');
+      const w = el.clientWidth;
+      for (const c of chips) if (c.offsetLeft - el.offsetLeft + c.offsetWidth > w) c.hidden = true;
+      el.classList.remove('measuring');
     }
-    window.addEventListener('resize', fitMonthChips);
+    let wasMobile = isMobile();
+    window.addEventListener('resize', () => {
+      if (isMobile() !== wasMobile) { wasMobile = isMobile(); measureSticky(); renderMonthChips(); scrollToMonth(visibleMi, false); }
+      else fitMonthChips();
+    });
     document.fonts && document.fonts.ready.then(fitMonthChips);
     $('mchips').addEventListener('click', (e) => {
       const b = e.target.closest('[data-mi]'); if (b) scrollToMonth(Number(b.dataset.mi));
@@ -895,33 +919,47 @@
     // Pievieno mēnešus augšā vai apakšā; pievienojot augšā, saglabā skatu tajā pašā vietā
     function extendRange(before, after) {
       extending = true;
-      const h0 = document.documentElement.scrollHeight;
+      const h0 = scrollHeightNow();
       rangeFrom -= before; rangeTo += after;
       renderGrid();
-      if (before) window.scrollBy(0, document.documentElement.scrollHeight - h0);
+      if (before) scrollByNow(scrollHeightNow() - h0);
       subscribeEvents();
       requestAnimationFrame(() => { extending = false; });
     }
-    window.addEventListener('scroll', () => {
+    function onCalScroll(fromBox) {
       if ($('scr-main').hidden || $('view-cal').hidden) return;
       requestAnimationFrame(() => {
         updateTitle();
-        if (!didInitialScroll || extending) return;
-        const h = document.documentElement.scrollHeight;
-        if (window.scrollY + window.innerHeight > h - 900) extendRange(0, 6);
-        else if (window.scrollY < 300) extendRange(6, 0);
+        if (!didInitialScroll || extending || fromBox !== isMobile()) return;
+        if (scrollTopNow() + viewHeightNow() > scrollHeightNow() - 900) extendRange(0, 6);
+        else if (scrollTopNow() < 300) extendRange(6, 0);
       });
-    }, { passive: true });
+    }
+    window.addEventListener('scroll', () => onCalScroll(false), { passive: true });
+    $('months').addEventListener('scroll', () => onCalScroll(true), { passive: true });
 
     function scrollToMonth(mi, smooth = true) {
       if (Math.abs(mi - visibleMi) > 3) smooth = false;
-      if (mi < rangeFrom - 12 || mi > rangeTo + 12) { rangeFrom = mi - 2; rangeTo = mi + 6; renderGrid(); subscribeEvents(); }
-      else if (mi < rangeFrom || mi > rangeTo) { rangeFrom = Math.min(rangeFrom, mi - 2); rangeTo = Math.max(rangeTo, mi + 6); renderGrid(); subscribeEvents(); }
+      const r0 = rangeFrom, r1 = rangeTo;
+      if (mi < rangeFrom - 12 || mi > rangeTo + 12) { rangeFrom = mi - 3; rangeTo = mi + 6; renderGrid(); subscribeEvents(); }
+      // Pirms un pēc mērķa mēneša vienmēr ir vēl mēneši — citādi ritināšana līdz malai uzreiz pievieno jaunus un traucē
+      else if (mi - 2 < rangeFrom || mi + 3 > rangeTo) { rangeFrom = Math.min(rangeFrom, mi - 3); rangeTo = Math.max(rangeTo, mi + 6); renderGrid(); subscribeEvents(); }
+      // Ja ielādēti jauni mēneši, kalendārs tūlīt tiks pārzīmēts — gluda ritināšana pārtrūktu, tāpēc lec uzreiz
+      if (rangeFrom !== r0 || rangeTo !== r1) smooth = false;
       const el = $('months').querySelector(`[data-mi="${mi}"]`);
       if (!el) return;
       extending = true;
-      el.scrollIntoView({ behavior: smooth ? 'smooth' : 'auto', block: 'start' });
-      setTimeout(() => { extending = false; updateTitle(); }, smooth ? 800 : 50);
+      if (isMobile()) $('months').scrollTo({ top: el.offsetTop, behavior: smooth ? 'smooth' : 'auto' });
+      else el.scrollIntoView({ behavior: smooth ? 'smooth' : 'auto', block: 'start' });
+      setTimeout(() => {
+        // Ja gludā ritināšana pārtrūka (vai pārlūks to neizpildīja), aiziet uz mērķi uzreiz
+        const t = $('months').querySelector(`[data-mi="${mi}"]`);
+        if (t && smooth) {
+          if (isMobile()) { if (Math.abs($('months').scrollTop - t.offsetTop) > 4) $('months').scrollTop = t.offsetTop; }
+          else if (Math.abs(t.getBoundingClientRect().top - $('cal-sticky').getBoundingClientRect().bottom) > 40) t.scrollIntoView({ block: 'start' });
+        }
+        extending = false; updateTitle();
+      }, smooth ? 1000 : 50);
     }
 
     // ---------- "Aizņemts" Labot režīms ----------
