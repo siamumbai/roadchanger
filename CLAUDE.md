@@ -144,8 +144,8 @@ un pastāvīgs, īsinājums ir redirect. Abi noved uz to pašu profilu.
 - (2026-10-03) Izkārtojums 3 kolonnās: **kreisajā** kalendāru filtri vertikāli + "Nākošie pasākumi" (līdz 15, no šodienas); **vidū** mēneši; **labajā** vienmēr rezervēta vieta formai. Augšā mēnešu pogas no šī mēneša uz priekšu — tik, cik ietilpst rindā līdz malai (telefonā ritina uz sāniem). Bultas, mēneša nosaukums un "Šodien" noņemti. Kalendāru ķekši filtros visi melni kā "Visi" ("Aizņemts" sarkans).
 - Šodiena tikai iekrāsota (bez kvadrāta); pagājušās dienas viegli pārsvītrotas pa diagonāli.
 - Pasākumam var būt vairākas dienas: lauks `dateEnd` (tukšs = viena diena). Formā "Datums no – līdz"; kalendāri un statuss divās kolonnās.
-- Pasākumu krāsas kalendārā (bez punktiņiem): **oranžs** = Interesējas/Rezervēts, **zaļš** = Apstiprināts, **sarkans** = Aizņemts. Ja atzīmēts tikai "Aizņemts", statusa kolonna paslēpta (saglabā kā `apstiprinats`).
-- Formas secība: Kalendāri | Statuss → **Nosaukums** (`title`, piem. uzņēmums) → Datums no – līdz → Laiks → Vieta (`place`) → **Adrese** (`address`) → Piezīmes. Lauki tukši, bez parauga teksta.
+- Pasākumu krāsas kalendārā (bez punktiņiem): **dzeltens** = Interesējas, **oranžs** = Rezervēts, **zaļš** = Apstiprināts, **sarkans** = Aizņemts. Ja atzīmēts tikai "Aizņemts", statusa kolonna paslēpta (saglabā kā `apstiprinats`).
+- Formas secība: Kalendāri | Statuss → Datums no – līdz → Laiks → Vieta (`place`) → **Adrese** (`address`) → **Apraksts** (`notes`). Lauki tukši, bez parauga teksta. "Nosaukums" (`title`) noņemts 2026-10-04 (vecās vērtības saglabājas datos).
 - Labās puses forma (datorā) sniedzas līdz ekrāna apakšai bez iekšējās ritināšanas: augstums `--panelh` aprēķināts JS (`measureSticky`, ņem vērā `zoom`), "Piezīmes" aizpilda atlikušo vietu; "Pievienoja/Labots" rindiņa zem virsraksta.
 - Telefonā: filtri + mēnešu pogas lipīgi augšā, "Nākošie pasākumi" paslēpti.
 - Filtrs (2026-10-03): var izvēlēties **tikai vienu** kalendāru; atkārtots klikšķis vai "Visi" → redzami visi.
