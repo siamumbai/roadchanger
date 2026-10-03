@@ -110,7 +110,8 @@
     /* ---------- Scenārijs ---------- */
     .sheet-wrap { display: grid; grid-template-columns: minmax(0, 1fr) clamp(14rem, 19vw, 17rem); gap: 1.75rem; padding: 2rem 3rem 4rem; align-items: start; }
     .ev-title { font-family: 'Libre Baskerville', Georgia, serif; font-size: clamp(1.9rem, 3vw, 2.6rem); margin-bottom: 1rem; }
-    .venue-map { display: flex; flex-direction: column; gap: 0.5rem; min-width: 0; }
+    .venue-map { display: flex; flex-direction: column; gap: 0.2rem; min-width: 0; }
+    .venue-map #map { margin-top: 0.4rem; }
     .desc { resize: none; overflow: hidden; line-height: 1.5; min-height: 5.5rem; }
     .desc[readonly] { border-color: transparent; background: transparent; padding-left: 0; min-height: 0; }
     .venue-time { position: relative; margin-top: 0.6rem; display: flex; flex-direction: column; gap: 0.35rem; align-items: flex-start; }
@@ -320,7 +321,7 @@
           <div class="venue-map">
             <span class="venue-label" data-t="city"></span>
             <input class="plain venue-addr" id="v-city" maxlength="100" />
-            <span class="venue-label" style="margin-top:0.4rem" data-t="address"></span>
+            <span class="venue-label" style="margin-top:0.25rem" data-t="address"></span>
             <div class="addr-row">
               <input class="plain venue-addr" id="v-addr" maxlength="300" />
               <button class="btn btn-line btn-sm" id="v-find" data-t="find"></button>
