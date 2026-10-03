@@ -83,7 +83,17 @@
     .side { grid-column: 1; position: sticky; top: calc(var(--navh, 0px) + 1.25rem); margin-top: 1.25rem;
       max-height: calc(100vh - var(--navh, 0px) - 2.5rem); overflow-y: auto; }
     .cal-main { grid-column: 2; }
-    .panel { grid-column: 3; }
+    .panel, .people { grid-column: 3; grid-row: 1; }
+    .people { position: sticky; top: calc(var(--navh, 0px) + 1.25rem); margin-top: 1.25rem;
+      max-height: calc(100vh - var(--navh, 0px) - 2.5rem); overflow-y: auto; }
+    .people h4 { font-size: 0.72rem; letter-spacing: 0.1em; text-transform: uppercase; color: #7A5C38; font-weight: 400; margin-bottom: 0.6rem; }
+    .people-list { display: flex; flex-direction: column; gap: 0.4rem; }
+    .person { display: flex; flex-direction: column; align-items: flex-start; text-align: left; width: 100%;
+      padding: 0.5rem 0.8rem; border-radius: 8px; border: 0.5px solid #E0CCA4; background: #fff; }
+    .person:hover { border-color: #B07320; }
+    .person.on { background: #2C2416; border-color: #2C2416; color: #F5ECD8; }
+    .person .pn { font-size: 0.88rem; overflow: hidden; text-overflow: ellipsis; max-width: 100%; white-space: nowrap; }
+    .person .pe { font-size: 0.72rem; opacity: 0.65; overflow: hidden; text-overflow: ellipsis; max-width: 100%; white-space: nowrap; }
     .side .filters { position: static; flex-direction: column; flex-wrap: nowrap; align-items: stretch; padding: 0; border: none; background: none; gap: 0.4rem; }
     .side .fchip { justify-content: flex-start; }
     .side h4 { font-size: 0.72rem; letter-spacing: 0.1em; text-transform: uppercase; color: #7A5C38; font-weight: 400; margin: 1.75rem 0 0.6rem; }
@@ -269,7 +279,8 @@
       .nav-user .who { display: none; }
       .filters { padding: 0.75rem 1rem; flex-wrap: nowrap; overflow-x: auto; -webkit-overflow-scrolling: touch; }
       .cal-wrap { grid-template-columns: minmax(0, 1fr); padding: 0 0.5rem 2rem; }
-      .cal-main, .panel, .side { grid-column: auto; }
+      .cal-main, .panel, .side { grid-column: auto; grid-row: auto; }
+      .people { display: none !important; }
       .side { position: sticky; top: var(--navh, 0px); z-index: 45; margin: 0 -0.5rem; max-height: none; overflow: visible; background: #FEF9F2; border-bottom: 0.5px solid #EAD9B8; }
       .side h4, .upc { display: none; }
       .side .filters { position: static; flex-direction: row; overflow-x: auto; padding: 0.75rem 1rem; }
@@ -364,6 +375,7 @@
         </div>
         <div class="scrim" id="scrim" hidden></div>
         <aside class="panel" id="panel" hidden></aside>
+        <aside class="people" id="people" hidden></aside>
       </div>
     </div>
 
@@ -474,8 +486,15 @@
     let users = [];
     let tab = 'cal';
 
-    const viewIds = () => isAdmin ? calendars.map((c) => c.id) : calendars.map((c) => c.id).filter((id) => (profile.view || []).includes(id));
-    const editIds = () => isAdmin ? calendars.map((c) => c.id) : calendars.map((c) => c.id).filter((id) => (profile.edit || []).includes(id));
+    // Admins var skatīties "kā konkrētais e-pasts redz" (viewAs); tad piekļuve ir šī e-pasta
+    let viewAs = null;
+    const accessOf = (key) => {
+      const ids = calendars.filter((c) => !c.busy).map((c) => c.id);
+      if (viewAs) return ids.filter((id) => (viewAs[key] || []).includes(id));
+      return isAdmin ? ids : ids.filter((id) => (profile[key] || []).includes(id));
+    };
+    const viewIds = () => accessOf('view');
+    const editIds = () => accessOf('edit');
     const calById = (id) => calendars.find((c) => c.id === id);
 
     // ---------- Pieteikšanās ----------
@@ -555,6 +574,8 @@
       perCal = {}; events = new Map(); calendars = []; profile = {}; users = [];
       selected = new Set(); panel = null; selDate = null;
       didInitialScroll = false; rangeFrom = curMi - 2; rangeTo = curMi + 6;
+      viewAs = null; busyEdit = false; busySet = new Set();
+      if (busyUnsub) { busyUnsub(); busyUnsub = null; }
     }
 
     function startListeners() {
@@ -593,6 +614,12 @@
           $('pending-badge').hidden = !pending;
           $('pending-badge').textContent = pending;
           if (tab === 'admin') renderUsers();
+          // Ja skatos kā kāds e-pasts — paņem viņa jaunākās piekļuves
+          if (viewAs) {
+            viewAs = users.find((u) => u.id === viewAs.id) || null;
+            renderFilters(); subscribeEvents(); subscribeUpcoming();
+          }
+          renderPeople();
         }, (err) => console.error(err)));
       }
     }
@@ -612,6 +639,7 @@
       for (const k of Object.keys(perCal)) if (!ids.includes(k)) delete perCal[k];
       // Sāk 2 mēnešus agrāk, lai redzētu arī vairāku dienu pasākumus, kas sākušies pirms pirmā mēneša
       const a = ymd(miDate(rangeFrom - 2, 1)), b = ymd(miDate(rangeTo + 1, 0));
+      subscribeBusy(a, b);
       for (const cal of ids) {
         const q = query(collection(db, 'calendars', cal, 'events'), where('date', '>=', a), where('date', '<=', b));
         eventUnsubs.push(onSnapshot(q, (snap) => {
@@ -698,29 +726,31 @@
     });
 
     // ---------- Kalendāru josla ----------
-    // "Aizņemts" kalendārs (busy: true) stāv atsevišķi virs svītras un rādās kopā ar jebkuru izvēlēto kalendāru
+    // "Aizņemts" ir katram e-pastam savs personīgais (busy/{e-pasts}/days/{datums}); stāv virs svītras
+    // un rādās kopā ar jebkuru izvēlēto kalendāru. Tikai sarkans dienas fons, bez joslas.
     let showBusy = true;
     let busyEdit = false;   // "Labot" režīms: klikšķis uz dienas to atzīmē / noņem kā aizņemtu
-    const busyId = () => (calendars.find((c) => c.busy && viewIds().includes(c.id)) || {}).id;
+    let busySet = new Set();
+    let busyUnsub = null;
+    const busyOwner = () => viewAs ? viewAs.id : me;
+    function subscribeBusy(a, b) {
+      if (busyUnsub) busyUnsub();
+      const q = query(collection(db, 'busy', busyOwner(), 'days'), where('date', '>=', a), where('date', '<=', b));
+      busyUnsub = onSnapshot(q, (snap) => {
+        busySet = new Set(snap.docs.map((d) => d.id));
+        renderGrid();
+      }, (err) => console.error(err));
+    }
     function visibleSet() {
-      const b = busyId();
-      const set = new Set(selected.size ? [...selected] : viewIds().filter((id) => id !== b));
-      if (b && showBusy) set.add(b);
-      return set;
+      return new Set(selected.size ? [...selected] : viewIds());
     }
     function renderFilters() {
       const f = $('filters');
-      const b = busyId();
-      const ids = viewIds().filter((id) => id !== b);
-      let html = '';
-      if (b) {
-        const c = calById(b);
-        const canEdit = editIds().includes(b);
-        html += `<div class="fchip busy-row ${showBusy ? 'on' : ''}" style="--c:${esc(c.color)}">
-          <button class="busy-tg" data-busy type="button"><span class="box"></span>${esc(c.name)}</button>
-          ${canEdit ? `<button class="busy-edit ${busyEdit ? 'on' : ''}" data-busyedit type="button">${busyEdit ? 'Gatavs' : 'Labot'}</button>` : ''}
+      const ids = viewIds();
+      let html = `<div class="fchip busy-row ${showBusy ? 'on' : ''}" style="--c:#D32F2F">
+          <button class="busy-tg" data-busy type="button"><span class="box"></span>Aizņemts</button>
+          ${viewAs ? '' : `<button class="busy-edit ${busyEdit ? 'on' : ''}" data-busyedit type="button">${busyEdit ? 'Gatavs' : 'Labot'}</button>`}
         </div><hr class="fdiv">`;
-      }
       html += `<button class="fchip ${selected.size === 0 ? 'on' : ''}" data-f="*" style="--c:#2C2416" type="button"><span class="box"></span>Visi</button>`;
       for (const id of ids) {
         const c = calById(id);
@@ -755,7 +785,6 @@
       const visible = visibleSet();
       const order = new Map(calendars.map((c, i) => [c.id, i]));
       const byDate = {};
-      const busyDays = new Set();
       for (const e of events.values()) {
         // Vairāku dienu pasākums parādās katrā dienā no "date" līdz "dateEnd"
         const days = [];
@@ -763,8 +792,6 @@
         for (let d = parseYmd(e.date), n = 0; ymd(d) <= end && n < 366; d.setDate(d.getDate() + 1), n++) days.push(ymd(d));
         for (const c of e.cals || []) {
           if (!visible.has(c) || !calById(c)) continue;
-          // "Aizņemts" nerāda joslu — tikai iekrāso dienu sarkanu
-          if (calById(c).busy) { for (const k of days) busyDays.add(k); continue; }
           for (const k of days) (byDate[k] ||= []).push({ e, c });
         }
       }
@@ -783,7 +810,7 @@
           if ((lead + d - 1) % 7 === 0 || d === 1) cls.push('bl');
           if (key === today) cls.push('today');
           if (key < today) cls.push('past');
-          if (busyDays.has(key)) cls.push('busy');
+          if (showBusy && busySet.has(key)) cls.push('busy');
           if (key === selDate) cls.push('sel');
           html += `<div class="${cls.join(' ')}" data-date="${key}"><span class="num">${d}</span>`;
           for (const { e, c } of items) {
@@ -863,49 +890,39 @@
     $('today').addEventListener('click', () => scrollToMonth(curMi));
 
     // ---------- "Aizņemts" Labot režīms ----------
-    const addDays = (key, n) => { const d = parseYmd(key); d.setDate(d.getDate() + n); return ymd(d); };
-    function busyDoc(date, dateEnd) {
-      return {
-        date, dateEnd: dateEnd && dateEnd > date ? dateEnd : '', cals: [busyId()], status: 'apstiprinats',
-        from: '', to: '', title: '', place: '', address: '', notes: '',
-        createdBy: me, createdAt: serverTimestamp(), updatedBy: me, updatedAt: serverTimestamp(),
-        deleted: false, deletedAt: null, deletedBy: null
-      };
-    }
-    // Brīvu dienu atzīmē kā aizņemtu; aizņemtu — atbrīvo (ja tā ir vairāku dienu perioda daļa, periodu sadala)
+    // Klikšķis uz dienas: brīvu atzīmē kā aizņemtu, aizņemtu atbrīvo. Tikai savējo.
     async function toggleBusyDay(key) {
-      const b = busyId(); if (!b) return;
-      const hits = [...events.values()].filter((e) => (e.cals || []).includes(b) && e.date <= key && (e.dateEnd > e.date ? e.dateEnd : e.date) >= key);
-      const batch = writeBatch(db);
-      const stamp = { updatedBy: me, updatedAt: serverTimestamp() };
-      if (!hits.length) {
-        batch.set(doc(collection(db, 'calendars', b, 'events')), busyDoc(key, ''));
-      }
-      for (const e of hits) {
-        const ref = doc(db, 'calendars', b, 'events', e.id);
-        const end = e.dateEnd > e.date ? e.dateEnd : e.date;
-        const others = (e.cals || []).filter((c) => c !== b);
-        if (others.length) {
-          // Pasākums arī citos kalendāros — noņem tikai "Aizņemts"
-          for (const c of others) batch.update(doc(db, 'calendars', c, 'events', e.id), { cals: others, ...stamp });
-          batch.delete(ref);
-        } else if (e.date === end) {
-          batch.update(ref, { deleted: true, deletedAt: serverTimestamp(), deletedBy: me, ...stamp });
-        } else if (key === e.date) {
-          const nd = addDays(key, 1);
-          batch.update(ref, { date: nd, dateEnd: nd === end ? '' : end, ...stamp });
-        } else if (key === end) {
-          const pd = addDays(key, -1);
-          batch.update(ref, { dateEnd: pd === e.date ? '' : pd, ...stamp });
-        } else {
-          const pd = addDays(key, -1), nd = addDays(key, 1);
-          batch.update(ref, { dateEnd: pd === e.date ? '' : pd, ...stamp });
-          batch.set(doc(collection(db, 'calendars', b, 'events')), busyDoc(nd, end));
-        }
-      }
-      try { await batch.commit(); }
-      catch (err) { console.error(err); toast('Neizdevās saglabāt.', true); }
+      if (viewAs) return;
+      const ref = doc(db, 'busy', me, 'days', key);
+      try {
+        if (busySet.has(key)) await deleteDoc(ref);
+        else await setDoc(ref, { date: key, at: serverTimestamp() });
+      } catch (err) { console.error(err); toast('Neizdevās saglabāt.', true); }
     }
+
+    // ---------- Admins: e-pastu saraksts labajā pusē ("kā šis e-pasts redz") ----------
+    function renderPeople() {
+      const box = $('people');
+      if (!isAdmin) { box.hidden = true; return; }
+      box.hidden = !!panel;
+      const list = [...users].sort((a, b) => (a.name || a.id).localeCompare(b.name || b.id, 'lv'));
+      let html = `<h4>E-pasti</h4><div class="people-list">
+        <button class="person ${viewAs ? '' : 'on'}" data-person="" type="button"><span class="pn">${esc(me)}</span></button>`;
+      for (const u of list) {
+        html += `<button class="person ${viewAs && viewAs.id === u.id ? 'on' : ''}" data-person="${esc(u.id)}" type="button">
+          <span class="pn">${esc(u.name || u.id)}</span>${u.name ? `<span class="pe">${esc(u.id)}</span>` : ''}</button>`;
+      }
+      box.innerHTML = html + '</div>';
+    }
+    $('people').addEventListener('click', (e) => {
+      const b = e.target.closest('[data-person]'); if (!b) return;
+      const id = b.dataset.person;
+      viewAs = id && !(viewAs && viewAs.id === id) ? users.find((u) => u.id === id) || null : null;
+      selected = new Set();
+      busyEdit = false; $('months').classList.remove('busy-mode');
+      renderFilters(); renderPeople();
+      subscribeEvents(); subscribeUpcoming();
+    });
 
     // ---------- Labās puses forma ----------
     function openNew(date) {
@@ -921,6 +938,7 @@
       panel = null; selDate = null;
       $('panel').hidden = true; $('scrim').hidden = true;
       $('cal-wrap').classList.remove('with-panel');
+      renderPeople();
       renderGrid();
     }
     $('scrim').addEventListener('click', closePanel);
@@ -929,6 +947,7 @@
     function renderPanel() {
       const p = $('panel');
       p.hidden = false; $('scrim').hidden = false;
+      $('people').hidden = true;
       $('cal-wrap').classList.add('with-panel');
       const edit = editIds();
 
