@@ -114,7 +114,10 @@
     .desc { resize: none; overflow: hidden; line-height: 1.5; min-height: 5.5rem; }
     .desc[readonly] { border-color: transparent; background: transparent; padding-left: 0; min-height: 0; }
     .venue-time { position: relative; margin-top: 0.6rem; display: flex; flex-direction: column; gap: 0.35rem; align-items: flex-start; }
-    .venue-time .c-time { width: 9rem; border: 0.5px solid #EAD9B8; border-radius: 6px; }
+    .time-range { display: flex; align-items: center; gap: 0.6rem; }
+    .tr-slot { position: relative; }
+    .tr-dash { color: #7A5C38; }
+    .venue-time .c-time { width: 7rem; border: 0.5px solid #EAD9B8; border-radius: 6px; }
     .venue-time .tp { left: 0; top: 100%; }
     .venue { display: grid; grid-template-columns: minmax(0, 1fr) clamp(16rem, 30vw, 24rem); gap: 1.5rem; margin-bottom: 2rem; align-items: start; }
     .venue-text { display: flex; flex-direction: column; gap: 0.5rem; min-width: 0; }
@@ -302,17 +305,22 @@
         <section class="venue">
           <div class="venue-text">
             <input class="plain ev-title" id="v-title" maxlength="200" />
-            <span class="venue-label" data-t="venue"></span>
             <input class="plain venue-name" id="v-name" maxlength="200" />
             <span class="venue-label" style="margin-top:0.6rem" data-t="desc"></span>
             <textarea class="field desc" id="v-desc" rows="3" maxlength="5000"></textarea>
             <div class="venue-time">
               <span class="venue-label" data-t="guests"></span>
-              <button class="cell c-time" type="button" id="v-guests"></button>
+              <div class="time-range">
+                <span class="tr-slot"><button class="cell c-time" type="button" id="v-guests"></button></span>
+                <span class="tr-dash">–</span>
+                <span class="tr-slot"><button class="cell c-time" type="button" id="v-end"></button></span>
+              </div>
             </div>
           </div>
           <div class="venue-map">
-            <span class="venue-label" data-t="address"></span>
+            <span class="venue-label" data-t="city"></span>
+            <input class="plain venue-addr" id="v-city" maxlength="100" />
+            <span class="venue-label" style="margin-top:0.4rem" data-t="address"></span>
             <div class="addr-row">
               <input class="plain venue-addr" id="v-addr" maxlength="300" />
               <button class="btn btn-line btn-sm" id="v-find" data-t="find"></button>
@@ -445,11 +453,11 @@
     };
     // Scenārija teksti projekta valodā (valodu izvēlas admins).
     const T = {
-      lv: { logout: 'Iziet', title: 'Pasākuma nosaukums', desc: 'Apraksts', guests: 'Viesi ierodas', venue: 'Vieta', address: 'Adrese', find: 'Atrast kartē', time: 'Laiks', event: 'Notikums',
+      lv: { logout: 'Iziet', title: 'Pasākuma nosaukums', desc: 'Apraksts', guests: 'Viesi ierodas', city: 'Pilsēta', venue: 'Vieta', address: 'Adrese', find: 'Atrast kartē', time: 'Laiks', event: 'Notikums',
             note: 'Komentārs', addRow: '+ Rinda', cats: 'Kategorijas', edit: 'Labot', done: 'Gatavs', newCat: 'Jauna kategorija',
             empty: 'Vēl nav nevienas rindas.', notFound: 'Adrese nav atrasta', hours: 'Stundas', minutes: 'Minūtes', clear: 'Notīrīt',
             arrive: 'Ierašanās laiks', delRow: 'Izdzēst rindu?', delCat: 'Izdzēst kategoriju?', yes: 'Jā', no: 'Nē' },
-      en: { logout: 'Log out', title: 'Event title', desc: 'Description', guests: 'Guests arrive', venue: 'Venue', address: 'Address', find: 'Find on map', time: 'Time', event: 'Event',
+      en: { logout: 'Log out', title: 'Event title', desc: 'Description', guests: 'Guests arrive', city: 'City', venue: 'Venue', address: 'Address', find: 'Find on map', time: 'Time', event: 'Event',
             note: 'Comment', addRow: '+ Row', cats: 'Categories', edit: 'Edit', done: 'Done', newCat: 'New category',
             empty: 'No rows yet.', notFound: 'Address not found', hours: 'Hours', minutes: 'Minutes', clear: 'Clear',
             arrive: 'Arrival time', delRow: 'Delete row?', delCat: 'Delete category?', yes: 'Yes', no: 'No' }
@@ -631,9 +639,14 @@
       for (const id of ['v-title', 'v-name', 'v-addr', 'v-desc']) $(id).readOnly = !w;
       setVal($('v-desc'), S.data.desc);
       autosize($('v-desc'));
-      $('v-guests').disabled = !w;
-      $('v-guests').textContent = S.data.guests || (w ? '--:--' : '—');
-      $('v-guests').classList.toggle('ph', !S.data.guests);
+      for (const [id, f] of [['v-guests', 'guests'], ['v-end', 'end']]) {
+        $(id).disabled = !w;
+        $(id).textContent = S.data[f] || (w ? '--:--' : '—');
+        $(id).classList.toggle('ph', !S.data[f]);
+      }
+      setVal($('v-city'), S.data.city);
+      $('v-city').readOnly = !w;
+      $('v-city').placeholder = w ? tr('city') : '';
       setVal($('v-title'), S.data.title);
       $('v-title').placeholder = w ? tr('title') : '';
       setVal($('v-name'), S.data.place);
@@ -647,15 +660,20 @@
       autosize(e.target);
       later('desc', () => updateDoc(sref(), { desc: e.target.value, updatedAt: serverTimestamp() }).catch(fail));
     });
-    $('v-guests').addEventListener('click', e => {
-      e.stopPropagation();
-      openTp({
-        key: 'guests',
-        get: () => S.data.guests,
-        set: v => { S.data.guests = v; renderVenue(); updateDoc(sref(), { guests: v, updatedAt: serverTimestamp() }).catch(fail); },
-        hint: () => empty
-      }, $('v-guests').parentElement);
-    });
+    // Viesi ierodas – līdz cikiem (beigu laikam sava uzraksta nav).
+    for (const [id, f] of [['v-guests', 'guests'], ['v-end', 'end']]) {
+      $(id).addEventListener('click', e => {
+        e.stopPropagation();
+        openTp({
+          key: f,
+          get: () => S.data[f],
+          set: v => { S.data[f] = v; renderVenue(); updateDoc(sref(), { [f]: v, updatedAt: serverTimestamp() }).catch(fail); },
+          hint: () => empty
+        }, $(id).parentElement);
+      });
+    }
+    $('v-city').addEventListener('input', e => later('city', () =>
+      updateDoc(sref(), { city: e.target.value, updatedAt: serverTimestamp() }).catch(fail)));
     $('v-title').addEventListener('input', e => later('title', () =>
       updateDoc(sref(), { title: e.target.value, updatedAt: serverTimestamp() }).catch(fail)));
     $('v-name').addEventListener('input', e => later('place', () =>
@@ -690,14 +708,15 @@
       if (!S.centered) { showLatvia(); S.centered = true; }
     }
     $('v-find').addEventListener('click', async () => {
-      const q = $('v-addr').value.trim();
+      const addr = $('v-addr').value.trim(), city = $('v-city').value.trim();
+      const q = [addr, city].filter(Boolean).join(', ');
       if (!q) return;
       try {
         const res = await fetch('https://nominatim.openstreetmap.org/search?format=json&limit=1&countrycodes=lv&q=' + encodeURIComponent(q));
         const [hit] = await res.json();
         if (!hit) { toast(tr('notFound')); return; }
         const lat = +hit.lat, lng = +hit.lon;
-        await updateDoc(sref(), { address: q, lat, lng, updatedAt: serverTimestamp() });
+        await updateDoc(sref(), { address: addr, city, lat, lng, updatedAt: serverTimestamp() });
       } catch (e) { fail(e); }
     });
 
