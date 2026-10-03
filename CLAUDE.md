@@ -176,6 +176,9 @@ un pastāvīgs, īsinājums ir redirect. Abi noved uz to pašu profilu.
   Kategorijas parole: ienākot sava kategorija jau izvēlēta; drīkst rakstīt savu ierašanās laiku un savu komentāru kolonnu jebkurā rindā.
   Laika logā tukšai rindai iekrāsots (gaiši oranžs) iepriekšējās rindas laiks un tas ir noklusējums.
   Scenārija teksti (LV/EN) — `T` objekts failā; kategoriju sākuma nosaukumi pēc projekta valodas.
+- **Sadaļas** (cilnes virs tabulas): `scenarios.sections` [{id,name}], sākumā Uzbūve · Scenārijs · Backstage (EN Setup · Scenario · Backstage).
+  Katrai sava tabula (`rows.sec`; rindas bez `sec` = `scenarijs`). Atverot vienmēr aktīvs **Scenārijs**, to dzēst nevar.
+  "+" pievieno sadaļu; "Labot" režīmā × dzēš sadaļu kopā ar tās rindām (ar apstiprinājumu). Tukšai sadaļai, atverot rakstītājam, izveidojas 4 rindas.
 - Mainot paroli, Admin izmet visus, kas ienāca ar veco. Valodu (`lang`) maina tikai admins.
 - Lietotāja lēmumi: iekrāsošana pagaidām oranža visiem; rindai var būt vairākas kategorijas; kategorijas var pievienot/dzēst (dzēst — paslēpts aiz "Labot");
   PDF: galvenais + 1 kategorija; valoda katram projektam, maina tikai admins.

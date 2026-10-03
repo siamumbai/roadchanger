@@ -134,6 +134,17 @@
     #map { width: 100%; aspect-ratio: 4 / 3; border-radius: 10px; border: 0.5px solid #E0CCA4; background: #FEF9F2; z-index: 0; }
 
     .toolbar { display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.75rem; }
+    .sec-tabs { display: flex; flex-wrap: wrap; align-items: center; gap: 0.25rem 1.5rem; min-width: 0; }
+    .stab-w { position: relative; display: inline-flex; align-items: center; gap: 0.15rem; }
+    .stab { font-size: 15px; letter-spacing: 0.04em; color: #8A6840; padding: 0.35rem 0; border-bottom: 2px solid transparent; }
+    .stab:hover { color: #B07320; }
+    .stab.active { color: #2C2416; border-bottom-color: #B07320; }
+    .stab-x { width: 1.5rem; height: 1.5rem; border-radius: 50%; color: #A33A2A; font-size: 0.95rem; }
+    .stab-x:hover { background: #F6E3DF; }
+    .stab-add { width: 1.8rem; height: 1.8rem; border-radius: 50%; border: 0.5px solid #E0CCA4; color: #8A6840; font-size: 1.05rem; line-height: 1; }
+    .stab-add:hover { border-color: #B07320; color: #B07320; }
+    .stab-form .field { padding: 0.35rem 0.6rem; font-size: 0.88rem; width: 11rem; }
+    .stab-w .cfm { left: 0; right: auto; top: 2.2rem; }
     .toolbar .spacer { flex: 1; }
 
     .sheet { background: #fff; border: 0.5px solid #E0CCA4; border-radius: 10px; box-shadow: 0 4px 18px rgba(44, 36, 22, 0.07); }
@@ -345,6 +356,7 @@
         </section>
 
         <div class="toolbar">
+          <div class="sec-tabs" id="sec-tabs"></div>
           <span class="spacer"></span>
           <button class="btn btn-line btn-sm" id="edit-btn"></button>
         </div>
@@ -452,16 +464,22 @@
         { id: 'dekoracijas', name: 'Decorations' }
       ]
     };
+    // Sadaļas (cilnes virs tabulas). "scenarijs" ir vienmēr un atveras pirmā.
+    const DEFAULT_SECS = {
+      lv: [{ id: 'uzbuve', name: 'Uzbūve' }, { id: 'scenarijs', name: 'Scenārijs' }, { id: 'backstage', name: 'Backstage' }],
+      en: [{ id: 'uzbuve', name: 'Setup' }, { id: 'scenarijs', name: 'Scenario' }, { id: 'backstage', name: 'Backstage' }]
+    };
+    const MAIN_SEC = 'scenarijs';
     // Scenārija teksti projekta valodā (valodu izvēlas admins).
     const T = {
       lv: { logout: 'Iziet', title: 'Pasākuma nosaukums', desc: 'Apraksts', guests: 'Viesi ierodas', city: 'Pilsēta', venue: 'Vieta', address: 'Adrese', find: 'Atrast kartē', time: 'Laiks', event: 'Notikums',
             note: 'Komentārs', addRow: '+ Rinda', cats: 'Kategorijas', edit: 'Labot', done: 'Gatavs', newCat: 'Jauna kategorija',
             empty: 'Vēl nav nevienas rindas.', notFound: 'Adrese nav atrasta', hours: 'Stundas', minutes: 'Minūtes', clear: 'Notīrīt',
-            arrive: 'Ierašanās laiks', delRow: 'Izdzēst rindu?', delCat: 'Izdzēst kategoriju?', yes: 'Jā', no: 'Nē' },
+            arrive: 'Ierašanās laiks', delSec: 'Izdzēst sadaļu un tās rindas?', newSec: 'Jauna sadaļa', delRow: 'Izdzēst rindu?', delCat: 'Izdzēst kategoriju?', yes: 'Jā', no: 'Nē' },
       en: { logout: 'Log out', title: 'Event title', desc: 'Description', guests: 'Guests arrive', city: 'City', venue: 'Venue', address: 'Address', find: 'Find on map', time: 'Time', event: 'Event',
             note: 'Comment', addRow: '+ Row', cats: 'Categories', edit: 'Edit', done: 'Done', newCat: 'New category',
             empty: 'No rows yet.', notFound: 'Address not found', hours: 'Hours', minutes: 'Minutes', clear: 'Clear',
-            arrive: 'Arrival time', delRow: 'Delete row?', delCat: 'Delete category?', yes: 'Yes', no: 'No' }
+            arrive: 'Arrival time', delSec: 'Delete section and its rows?', newSec: 'New section', delRow: 'Delete row?', delCat: 'Delete category?', yes: 'Yes', no: 'No' }
     };
     const SID_KEY = 'rc-scenarijs-sid';
 
@@ -578,7 +596,7 @@
     function openScenario(sid, role, cat) {
       closeScenario();
       S = { sid, role, cat, filled: false, data: null, rows: new Map(), els: new Map(), catinfo: new Map(),
-            sel: role === 'cat' ? cat : null, edit: false, centered: false, unsubs: [] };
+            sel: role === 'cat' ? cat : null, tab: MAIN_SEC, autoFilled: new Set(), addingSec: false, edit: false, centered: false, unsubs: [] };
       $('back-btn').hidden = role !== 'admin';
       $('rows').querySelectorAll('.srow:not(.shead), .sheet-empty').forEach(el => el.remove());
       show('sheet');
@@ -599,15 +617,7 @@
           if (ch.type === 'removed') S.rows.delete(ch.doc.id);
           else S.rows.set(ch.doc.id, ch.doc.data());
         });
-        // Tukšam scenārijam (vecie projekti) uzreiz 4 tukšas rindas.
-        if (!snap.metadata.fromCache && !S.filled) {
-          S.filled = true;
-          if (snap.empty && canWrite()) {
-            const b = writeBatch(db);
-            for (let i = 1; i <= 4; i++) b.set(doc(collection(db, 'scenarios', sid, 'rows')), { t: '', ev: '', note: '', cats: [], order: i * 1000 });
-            b.commit().catch(fail);
-          }
-        }
+        if (!snap.metadata.fromCache) S.filled = true;
         renderRows();
       }, err => console.error(err)));
 
@@ -630,7 +640,80 @@
       document.querySelectorAll('#tp [data-t]').forEach(el => { el.textContent = tr(el.dataset.t); });
       renderVenue();
       renderCats();
+      renderSecs();
       renderRows();
+    }
+
+    // ----- Sadaļas (cilnes) -----
+    const secs = () => S.data.sections || DEFAULT_SECS[S.data.lang] || DEFAULT_SECS.lv;
+    const rowSec = r => r.sec || MAIN_SEC;
+    function renderSecs() {
+      const list = secs();
+      if (!list.some(x => x.id === S.tab)) S.tab = MAIN_SEC;
+      const box = $('sec-tabs');
+      // Pārzīmējot nepazaudē tikko rakstīto jaunās sadaļas nosaukumu.
+      const typed = box.querySelector('.stab-form input')?.value || '';
+      box.replaceChildren();
+      for (const x of list) {
+        const w = document.createElement('span'); w.className = 'stab-w';
+        const b = document.createElement('button'); b.type = 'button';
+        b.className = 'stab' + (x.id === S.tab ? ' active' : ''); b.textContent = x.name;
+        b.addEventListener('click', () => { S.tab = x.id; closeTp(); renderSecs(); renderRows(); });
+        w.append(b);
+        if (S.edit && canWrite() && x.id !== MAIN_SEC) {
+          const del = document.createElement('button'); del.type = 'button'; del.className = 'stab-x'; del.textContent = '×';
+          del.addEventListener('click', e => { e.stopPropagation(); askConfirm(w, tr('delSec'), () => deleteSec(x.id)); });
+          w.append(del);
+        }
+        box.append(w);
+      }
+      if (!canWrite()) return;
+      if (S.addingSec) {
+        const f = document.createElement('form'); f.className = 'stab-form';
+        const inp = document.createElement('input'); inp.className = 'field'; inp.maxLength = 40; inp.placeholder = tr('newSec');
+        inp.value = typed;
+        f.append(inp);
+        f.addEventListener('submit', e => {
+          e.preventDefault();
+          const name = inp.value.trim();
+          S.addingSec = false;
+          if (!name) { renderSecs(); return; }
+          const id = slug(name) + '-' + Math.random().toString(36).slice(2, 6);
+          S.tab = id;
+          updateDoc(sref(), { sections: [...secs(), { id, name }], updatedAt: serverTimestamp() }).catch(fail);
+        });
+        inp.addEventListener('blur', () => setTimeout(() => {
+          if (!S || !inp.isConnected || document.activeElement === inp || inp.value.trim()) return;
+          S.addingSec = false; renderSecs();
+        }));
+        inp.addEventListener('keydown', e => { if (e.key === 'Escape') { inp.value = ''; inp.blur(); } });
+        box.append(f);
+        setTimeout(() => inp.focus());
+      } else {
+        const add = document.createElement('button'); add.type = 'button'; add.className = 'stab-add'; add.textContent = '+';
+        add.addEventListener('click', () => { S.addingSec = true; renderSecs(); });
+        box.append(add);
+      }
+    }
+    async function deleteSec(id) {
+      try {
+        const b = writeBatch(db);
+        b.update(sref(), { sections: secs().filter(x => x.id !== id), updatedAt: serverTimestamp() });
+        for (const [rid, r] of S.rows) if (rowSec(r) === id) b.delete(rref(rid));
+        if (S.tab === id) S.tab = MAIN_SEC;
+        await b.commit();
+      } catch (e) { fail(e); }
+    }
+    // Katrā sadaļā vienmēr vismaz 4 rindas: tukšai sadaļai tās izveido, kad to atver rakstītājs.
+    function ensureRows() {
+      if (!S.filled || !canWrite() || S.autoFilled.has(S.tab)) return;
+      S.autoFilled.add(S.tab);
+      if ([...S.rows.values()].some(r => rowSec(r) === S.tab)) return;
+      const b = writeBatch(db);
+      for (let i = 1; i <= 4; i++) {
+        b.set(doc(collection(db, 'scenarios', S.sid, 'rows')), { t: '', ev: '', note: '', cats: [], sec: S.tab, order: i * 1000 });
+      }
+      b.commit().catch(fail);
     }
 
     // ----- Vieta, adrese, karte -----
@@ -769,7 +852,7 @@
       } catch (e) { fail(e); }
     }
 
-    $('edit-btn').addEventListener('click', () => { S.edit = !S.edit; renderCats(); renderRows(); });
+    $('edit-btn').addEventListener('click', () => { S.edit = !S.edit; renderCats(); renderSecs(); renderRows(); });
 
     // ----- Rindas -----
     // Rindas lauki: t, ev, note, cats[], order, catNotes { catId: teksts }, marks { catId: ['t','ev','note','cn'] }.
@@ -840,7 +923,7 @@
       return el;
     }
 
-    const sortedRows = () => [...S.rows.entries()].sort((a, b) => (a[1].order || 0) - (b[1].order || 0));
+    const sortedRows = () => [...S.rows.entries()].filter(([, r]) => rowSec(r) === S.tab).sort((a, b) => (a[1].order || 0) - (b[1].order || 0));
     const canCat = cat => canWrite() || (S.role === 'cat' && S.cat === cat);
     const catName = id => (S.data.cats || []).find(c => c.id === id)?.name || '';
 
@@ -852,7 +935,7 @@
       const next = list[i + 1] ? (list[i + 1][1].order || 0) : cur + 2000;
       try {
         const ref = await addDoc(collection(db, 'scenarios', S.sid, 'rows'), {
-          t: '', ev: '', note: '', cats: S.sel ? [S.sel] : [], order: (cur + next) / 2
+          t: '', ev: '', note: '', cats: S.sel ? [S.sel] : [], sec: S.tab, order: (cur + next) / 2
         });
         pendingFocus = ref.id;
         renderRows();
@@ -888,6 +971,10 @@
       $('h-cn').textContent = sel ? tr('note') + ' · ' + catName(sel) : '';
 
       for (const [id, el] of S.els) if (!S.rows.has(id)) { el.remove(); S.els.delete(id); }
+      // Citu sadaļu rindas no tabulas izņem (tās paliek atmiņā).
+      const visible = new Set(list.map(([id]) => id));
+      for (const [id, el] of S.els) if (!visible.has(id)) el.remove();
+      ensureRows();
       box.querySelector('.sheet-empty')?.remove();
       if (!list.length) {
         const p = document.createElement('div'); p.className = 'sheet-empty'; p.textContent = tr('empty');
@@ -1032,10 +1119,10 @@
     document.addEventListener('keydown', e => { if (e.key === 'Escape' && !tp.hidden) closeTp(); });
 
     $('add-row').addEventListener('click', async () => {
-      const last = Math.max(0, ...[...S.rows.values()].map(r => r.order || 0));
+      const last = Math.max(0, ...sortedRows().map(([, r]) => r.order || 0));
       try {
         const ref = await addDoc(collection(db, 'scenarios', S.sid, 'rows'), {
-          t: '', ev: '', note: '', cats: S.sel ? [S.sel] : [], order: last + 1000
+          t: '', ev: '', note: '', cats: S.sel ? [S.sel] : [], sec: S.tab, order: last + 1000
         });
         pendingFocus = ref.id;
         renderRows();
@@ -1242,11 +1329,12 @@
         } else {
           b.set(doc(db, 'scenarios', sid), {
             name, lang, place: '', address: '', lat: null, lng: null, cats: modalCats(), archived: false,
+            sections: DEFAULT_SECS[lang] || DEFAULT_SECS.lv,
             createdAt: serverTimestamp(), updatedAt: serverTimestamp()
           });
           // Jaunam scenārijam uzreiz 4 tukšas rindas.
           for (let i = 1; i <= 4; i++) {
-            b.set(doc(collection(db, 'scenarios', sid, 'rows')), { t: '', ev: '', note: '', cats: [], order: i * 1000 });
+            b.set(doc(collection(db, 'scenarios', sid, 'rows')), { t: '', ev: '', note: '', cats: [], sec: MAIN_SEC, order: i * 1000 });
           }
         }
         b.set(doc(db, 'scenarios', sid, 'keys', 'main'), keys);
