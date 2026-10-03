@@ -177,7 +177,11 @@ un pastāvīgs, īsinājums ir redirect. Abi noved uz to pašu profilu.
   Kategorijas parole: ienākot sava kategorija jau izvēlēta; drīkst rakstīt savu ierašanās laiku un savu komentāru kolonnu jebkurā rindā.
   Laika logā tukšai rindai iekrāsots (gaiši oranžs) iepriekšējās rindas laiks un tas ir noklusējums.
   Scenārija teksti (LV/EN) — `T` objekts failā; kategoriju sākuma nosaukumi pēc projekta valodas.
-- **Sadaļas** (cilnes virs tabulas): `scenarios.sections` [{id,name}], sākumā Uzbūve · Scenārijs · Backstage (EN Setup · Scenario · Backstage).
+- **Sadaļas** (cilnes virs tabulas): `scenarios.sections` [{id,name}], sākumā Uzbūve · Scenārijs (EN Setup · Scenario).
+- **Backstage** NAV cilne: tā ir labajā pusē zem kategorijām (poga, atverot kompakta tabula laiks + teksts; rindas ar `sec: 'backstage'`).
+  Kamēr Backstage atvērts, labā puse nav "sticky" (citādi garas tabulas apakša nav sasniedzama).
+- "Labot" režīmā rindām ↑ ↓ (pārvieto, samainot `order` ar kaimiņu) — gan tabulā, gan Backstage.
+- Karte: OpenStreetMap ar siltu krēma toni (CSS filter tikai `.leaflet-tile-pane`, punkts paliek oranžs).
   Katrai sava tabula (`rows.sec`; rindas bez `sec` = `scenarijs`). Atverot vienmēr aktīvs **Scenārijs**, to dzēst nevar.
   "+" pievieno sadaļu; "Labot" režīmā × dzēš sadaļu kopā ar tās rindām (ar apstiprinājumu). Tukšai sadaļai, atverot rakstītājam, izveidojas 4 rindas.
 - Mainot paroli, Admin izmet visus, kas ienāca ar veco. Valodu (`lang`) maina tikai admins.

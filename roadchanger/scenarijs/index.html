@@ -131,6 +131,8 @@
     .venue-addr { font-size: 1rem; color: #6B5035; }
     .addr-row { display: flex; gap: 0.5rem; align-items: center; }
     .addr-row .plain { flex: 1; min-width: 0; }
+    /* Silts krēma tonis kartei (tikai flīzēm — punkts paliek oranžs) */
+    #map .leaflet-tile-pane { filter: sepia(0.38) saturate(0.72) brightness(1.04) contrast(0.95); }
     #map { width: 100%; aspect-ratio: 4 / 3; border-radius: 10px; border: 0.5px solid #E0CCA4; background: #FEF9F2; z-index: 0; }
 
     .toolbar { display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.75rem; }
@@ -148,7 +150,7 @@
     .toolbar .spacer { flex: 1; }
 
     .sheet { background: #fff; border: 0.5px solid #E0CCA4; border-radius: 10px; box-shadow: 0 4px 18px rgba(44, 36, 22, 0.07); }
-    .srow { display: grid; grid-template-columns: 2.25rem 7.5rem minmax(0, 1.2fr) minmax(0, 1fr) 4.5rem; border-bottom: 0.5px solid #EAD9B8; transition: opacity 0.15s, background 0.15s; position: relative; }
+    .srow { display: grid; grid-template-columns: 2.25rem 7.5rem minmax(0, 1.2fr) minmax(0, 1fr) var(--act); border-bottom: 0.5px solid #EAD9B8; transition: opacity 0.15s, background 0.15s; position: relative; }
     .srow:last-child { border-bottom: none; }
     .srow > * { min-width: 0; }
     .shead { border-radius: 10px 10px 0 0; background: #FEF9F2; font-size: 0.75rem; letter-spacing: 0.08em; text-transform: uppercase; color: #7A5C38; }
@@ -178,7 +180,7 @@
     .cw { position: relative; min-width: 0; transition: background 0.15s; }
     .w-note, .w-cn { border-left: 0.5px solid #F2E6CF; }
     .w-cn, .h-cn { display: none; }
-    .sheet.withcat .srow { grid-template-columns: 2.25rem 7.5rem minmax(0, 1.2fr) minmax(0, 1fr) minmax(0, 1fr) 4.5rem; }
+    .sheet.withcat .srow { grid-template-columns: 2.25rem 7.5rem minmax(0, 1.2fr) minmax(0, 1fr) minmax(0, 1fr) var(--act); }
     .sheet.withcat .w-cn, .sheet.withcat .h-cn { display: block; }
     .w-cn { background: #FFFBF5; }
     .h-cn { color: #B07320; }
@@ -201,8 +203,14 @@
     .arrive .cell { border: 0.5px solid #EAD9B8; border-radius: 6px; margin-top: 0.3rem; }
     .arrive .c-time { width: 100%; }
     .mark, .del, .ins { display: flex; align-items: flex-start; justify-content: center; padding-top: 0.75rem; color: #C4A06A; }
+    .sheet { --act: 4.5rem; }
+    .sheet.editing { --act: 8.5rem; }
     .r-act { display: flex; justify-content: flex-end; padding-right: 0.25rem; }
     .r-act button { width: 2rem; }
+    .up, .dn { display: none; align-items: flex-start; justify-content: center; padding-top: 0.7rem; color: #8A6840; font-size: 1rem; line-height: 1; }
+    .editing .up, .editing .dn { display: flex; }
+    .up:hover, .dn:hover { color: #B07320; }
+    .up:disabled, .dn:disabled { visibility: hidden; }
     .mark span { width: 1.05rem; height: 1.05rem; border-radius: 50%; border: 1.5px solid #E08A1E; display: block; }
     .mark.on span { background: #E08A1E; }
     .mark:disabled, .del:disabled, .ins:disabled { visibility: hidden; }
@@ -225,7 +233,23 @@
     .srow.dim { opacity: 0.4; }
     .sheet-empty { padding: 1.25rem; color: #7A5C38; font-size: 0.9rem; }
 
-    .cats { background: #fff; border: 0.5px solid #E0CCA4; border-radius: 12px; box-shadow: 0 4px 18px rgba(44, 36, 22, 0.07); padding: 1.1rem; position: sticky; top: 5.5rem; }
+    .side { display: flex; flex-direction: column; gap: 1rem; position: sticky; top: 5.5rem; }
+    .side.open { position: static; }
+    .cats, .bs { background: #fff; border: 0.5px solid #E0CCA4; border-radius: 12px; box-shadow: 0 4px 18px rgba(44, 36, 22, 0.07); padding: 1.1rem; }
+    .bs-toggle { width: 100%; display: flex; align-items: center; justify-content: space-between; font-family: 'Libre Baskerville', Georgia, serif; font-size: 1.05rem; }
+    .bs-arrow { font-size: 0.8rem; color: #8A6840; transition: transform 0.15s; }
+    .side.open .bs-arrow { transform: rotate(180deg); }
+    .bs-body { margin-top: 0.8rem; }
+    .bs-list { border: 0.5px solid #EAD9B8; border-radius: 8px; margin-bottom: 0.75rem; }
+    .bsrow { display: grid; grid-template-columns: 4.2rem minmax(0, 1fr) auto; border-bottom: 0.5px solid #EAD9B8; position: relative; }
+    .bsrow:last-child { border-bottom: none; }
+    .bsrow .cell { padding: 0.5rem 0.45rem; font-size: 0.88rem; }
+    .bsrow .tp { left: 0; top: 2.3rem; }
+    .bs-act { display: flex; }
+    .bs-act button { width: 1.6rem; }
+    .bs-act .del { display: none; padding-top: 0.55rem; }
+    .bs.editing .bs-act .del, .bs.editing .bs-act .up, .bs.editing .bs-act .dn { display: flex; }
+    .bs-act .up, .bs-act .dn { padding-top: 0.55rem; }
     .cats h3 { font-family: 'Libre Baskerville', Georgia, serif; font-size: 1.05rem; font-weight: 400; margin-bottom: 0.8rem; }
     .cat-list { display: flex; flex-direction: column; gap: 0.4rem; }
     .cat { display: flex; align-items: center; gap: 0.4rem; position: relative; }
@@ -254,15 +278,15 @@
       .sheet-wrap { grid-template-columns: minmax(0, 1fr); padding: 1.5rem 1.25rem 3rem; gap: 1.25rem; }
       .sheet-wrap aside { order: -1; }
       .venue { grid-template-columns: minmax(0, 1fr); }
-      .cats { position: static; }
+      .side { position: static; }
       .cat-list { flex-direction: row; flex-wrap: wrap; }
       .cat-btn { flex: none; }
-      .srow { grid-template-columns: 2.25rem 5.5rem minmax(0, 1fr) 4.5rem; }
+      .srow { grid-template-columns: 2.25rem 5.5rem minmax(0, 1fr) var(--act); }
       .srow .w-ev { grid-column: 3; }
       .srow .w-note { grid-column: 2 / 4; grid-row: 2; border-left: none; }
       .srow .w-note .cell { padding-top: 0; }
       .srow .w-cn { grid-column: 2 / 4; grid-row: 3; border-left: none; }
-      .sheet.withcat .srow { grid-template-columns: 2.25rem 5.5rem minmax(0, 1fr) 4.5rem; }
+      .sheet.withcat .srow { grid-template-columns: 2.25rem 5.5rem minmax(0, 1fr) var(--act); }
       .sheet.withcat .h-cn { display: none; }
       .arrive-row { grid-template-columns: minmax(0, 1fr); }
       .srow .r-act { grid-column: 4; grid-row: 1; }
@@ -370,13 +394,22 @@
         </div>
       </main>
 
-      <aside class="cats">
-        <h3 data-t="cats"></h3>
-        <div class="cat-list" id="cat-list"></div>
-        <form class="cat-add" id="cat-add">
-          <input class="field" id="cat-name" maxlength="40" />
-          <button class="btn btn-line btn-sm" type="submit">+</button>
-        </form>
+      <aside class="side" id="side">
+        <div class="cats">
+          <h3 data-t="cats"></h3>
+          <div class="cat-list" id="cat-list"></div>
+          <form class="cat-add" id="cat-add">
+            <input class="field" id="cat-name" maxlength="40" />
+            <button class="btn btn-line btn-sm" type="submit">+</button>
+          </form>
+        </div>
+        <div class="bs" id="bs">
+          <button class="bs-toggle" type="button" id="bs-toggle"><span data-t="backstage"></span><span class="bs-arrow">▾</span></button>
+          <div class="bs-body" id="bs-body" hidden>
+            <div class="bs-list" id="bs-list"></div>
+            <button class="btn btn-dark btn-sm" type="button" id="bs-add" data-t="addRow"></button>
+          </div>
+        </div>
       </aside>
     </div>
   </div>
@@ -466,8 +499,8 @@
     };
     // Sadaļas (cilnes virs tabulas). "scenarijs" ir vienmēr un atveras pirmā.
     const DEFAULT_SECS = {
-      lv: [{ id: 'uzbuve', name: 'Uzbūve' }, { id: 'scenarijs', name: 'Scenārijs' }, { id: 'backstage', name: 'Backstage' }],
-      en: [{ id: 'uzbuve', name: 'Setup' }, { id: 'scenarijs', name: 'Scenario' }, { id: 'backstage', name: 'Backstage' }]
+      lv: [{ id: 'uzbuve', name: 'Uzbūve' }, { id: 'scenarijs', name: 'Scenārijs' }],
+      en: [{ id: 'uzbuve', name: 'Setup' }, { id: 'scenarijs', name: 'Scenario' }]
     };
     const MAIN_SEC = 'scenarijs';
     // Scenārija teksti projekta valodā (valodu izvēlas admins).
@@ -475,11 +508,11 @@
       lv: { logout: 'Iziet', title: 'Pasākuma nosaukums', desc: 'Apraksts', guests: 'Viesi ierodas', city: 'Pilsēta', venue: 'Vieta', address: 'Adrese', find: 'Atrast kartē', time: 'Laiks', event: 'Notikums',
             note: 'Komentārs', addRow: '+ Rinda', cats: 'Kategorijas', edit: 'Labot', done: 'Gatavs', newCat: 'Jauna kategorija',
             empty: 'Vēl nav nevienas rindas.', notFound: 'Adrese nav atrasta', hours: 'Stundas', minutes: 'Minūtes', clear: 'Notīrīt',
-            arrive: 'Ierašanās laiks', delSec: 'Izdzēst sadaļu un tās rindas?', newSec: 'Jauna sadaļa', delRow: 'Izdzēst rindu?', delCat: 'Izdzēst kategoriju?', yes: 'Jā', no: 'Nē' },
+            arrive: 'Ierašanās laiks', backstage: 'Backstage', delSec: 'Izdzēst sadaļu un tās rindas?', newSec: 'Jauna sadaļa', delRow: 'Izdzēst rindu?', delCat: 'Izdzēst kategoriju?', yes: 'Jā', no: 'Nē' },
       en: { logout: 'Log out', title: 'Event title', desc: 'Description', guests: 'Guests arrive', city: 'City', venue: 'Venue', address: 'Address', find: 'Find on map', time: 'Time', event: 'Event',
             note: 'Comment', addRow: '+ Row', cats: 'Categories', edit: 'Edit', done: 'Done', newCat: 'New category',
             empty: 'No rows yet.', notFound: 'Address not found', hours: 'Hours', minutes: 'Minutes', clear: 'Clear',
-            arrive: 'Arrival time', delSec: 'Delete section and its rows?', newSec: 'New section', delRow: 'Delete row?', delCat: 'Delete category?', yes: 'Yes', no: 'No' }
+            arrive: 'Arrival time', backstage: 'Backstage', delSec: 'Delete section and its rows?', newSec: 'New section', delRow: 'Delete row?', delCat: 'Delete category?', yes: 'Yes', no: 'No' }
     };
     const SID_KEY = 'rc-scenarijs-sid';
 
@@ -596,9 +629,10 @@
     function openScenario(sid, role, cat) {
       closeScenario();
       S = { sid, role, cat, filled: false, data: null, rows: new Map(), els: new Map(), catinfo: new Map(),
-            sel: role === 'cat' ? cat : null, tab: MAIN_SEC, autoFilled: new Set(), addingSec: false, edit: false, centered: false, unsubs: [] };
+            sel: role === 'cat' ? cat : null, tab: MAIN_SEC, bsOpen: false, bsEls: new Map(), autoFilled: new Set(), addingSec: false, edit: false, centered: false, unsubs: [] };
       $('back-btn').hidden = role !== 'admin';
       $('rows').querySelectorAll('.srow:not(.shead), .sheet-empty').forEach(el => el.remove());
+      $('bs-list').replaceChildren();
       show('sheet');
       ensureMap();
 
@@ -619,6 +653,7 @@
         });
         if (!snap.metadata.fromCache) S.filled = true;
         renderRows();
+        renderBs();
       }, err => console.error(err)));
 
       S.unsubs.push(onSnapshot(collection(db, 'scenarios', sid, 'catinfo'), snap => {
@@ -642,10 +677,13 @@
       renderCats();
       renderSecs();
       renderRows();
+      renderBs();
     }
 
     // ----- Sadaļas (cilnes) -----
-    const secs = () => S.data.sections || DEFAULT_SECS[S.data.lang] || DEFAULT_SECS.lv;
+    const BS_SEC = 'backstage';
+    // Backstage nav cilne — tā ir labajā pusē zem kategorijām.
+    const secs = () => (S.data.sections || DEFAULT_SECS[S.data.lang] || DEFAULT_SECS.lv).filter(x => x.id !== BS_SEC);
     const rowSec = r => r.sec || MAIN_SEC;
     function renderSecs() {
       const list = secs();
@@ -705,15 +743,92 @@
       } catch (e) { fail(e); }
     }
     // Katrā sadaļā vienmēr vismaz 4 rindas: tukšai sadaļai tās izveido, kad to atver rakstītājs.
-    function ensureRows() {
-      if (!S.filled || !canWrite() || S.autoFilled.has(S.tab)) return;
-      S.autoFilled.add(S.tab);
-      if ([...S.rows.values()].some(r => rowSec(r) === S.tab)) return;
+    function ensureRows(sec = S.tab) {
+      if (!S.filled || !canWrite() || S.autoFilled.has(sec)) return;
+      S.autoFilled.add(sec);
+      if ([...S.rows.values()].some(r => rowSec(r) === sec)) return;
       const b = writeBatch(db);
       for (let i = 1; i <= 4; i++) {
-        b.set(doc(collection(db, 'scenarios', S.sid, 'rows')), { t: '', ev: '', note: '', cats: [], sec: S.tab, order: i * 1000 });
+        b.set(doc(collection(db, 'scenarios', S.sid, 'rows')), { t: '', ev: '', note: '', cats: [], sec, order: i * 1000 });
       }
       b.commit().catch(fail);
+    }
+
+    // ----- Backstage (labajā pusē zem kategorijām): laiks + teksts -----
+    const bsRows = () => [...S.rows.entries()].filter(([, r]) => rowSec(r) === BS_SEC)
+      .sort((a, b) => (a[1].order || 0) - (b[1].order || 0));
+    $('bs-toggle').addEventListener('click', () => {
+      S.bsOpen = !S.bsOpen;
+      renderBs();
+    });
+    $('bs-add').addEventListener('click', async () => {
+      const last = Math.max(0, ...bsRows().map(([, r]) => r.order || 0));
+      try {
+        await addDoc(collection(db, 'scenarios', S.sid, 'rows'), { t: '', ev: '', note: '', cats: [], sec: BS_SEC, order: last + 1000 });
+      } catch (e) { fail(e); }
+    });
+    function makeBsRow(id) {
+      const el = document.createElement('div');
+      el.className = 'bsrow';
+      el.innerHTML = '<button class="cell c-time" type="button"></button>'
+        + '<textarea class="cell" rows="1" maxlength="2000"></textarea>'
+        + '<div class="bs-act"><button class="up" type="button">↑</button><button class="dn" type="button">↓</button>'
+        + '<button class="del" type="button">×</button></div>';
+      const time = el.querySelector('.c-time'), ev = el.querySelector('textarea');
+      ev.addEventListener('input', () => {
+        autosize(ev);
+        later(id + 'ev', () => updateDoc(rref(id), { ev: ev.value }).catch(fail));
+      });
+      time.addEventListener('click', e => {
+        e.stopPropagation();
+        openTp({
+          key: 'r:' + id,
+          get: () => S.rows.get(id)?.t,
+          set: v => { const r = S.rows.get(id); if (!r) return; r.t = v; renderBs(); updateDoc(rref(id), { t: v }).catch(fail); },
+          hint: () => {
+            const list = bsRows();
+            for (let i = list.findIndex(([rid]) => rid === id) - 1; i >= 0; i--) if (list[i][1].t) return split(list[i][1].t);
+            return empty;
+          }
+        }, el);
+      });
+      el.querySelector('.up').addEventListener('click', () => moveRow(id, -1, bsRows()));
+      el.querySelector('.dn').addEventListener('click', () => moveRow(id, 1, bsRows()));
+      el.querySelector('.del').addEventListener('click', e => {
+        e.stopPropagation();
+        askConfirm(el, tr('delRow'), () => deleteDoc(rref(id)).catch(fail));
+      });
+      el._f = { time, ev, up: el.querySelector('.up'), dn: el.querySelector('.dn'), del: el.querySelector('.del') };
+      return el;
+    }
+    function renderBs() {
+      if (!S || !S.data) return;
+      const open = !!S.bsOpen, w = canWrite();
+      $('side').classList.toggle('open', open);
+      $('bs-body').hidden = !open;
+      $('bs').classList.toggle('editing', S.edit && w);
+      $('bs-add').hidden = !w;
+      if (!open) return;
+      ensureRows(BS_SEC);
+      const box = $('bs-list');
+      const list = bsRows();
+      for (const [id, el] of S.bsEls) if (!S.rows.has(id)) { el.remove(); S.bsEls.delete(id); }
+      list.forEach(([id, r], i) => {
+        let el = S.bsEls.get(id);
+        if (!el) { el = makeBsRow(id); S.bsEls.set(id, el); }
+        const f = el._f;
+        f.ev.readOnly = !w;
+        setVal(f.ev, r.ev);
+        f.time.disabled = !w;
+        f.time.textContent = r.t || (w ? '--:--' : '');
+        f.time.classList.toggle('ph', !r.t);
+        f.up.disabled = !(S.edit && w) || i === 0;
+        f.dn.disabled = !(S.edit && w) || i === list.length - 1;
+        f.del.disabled = !(S.edit && w);
+        const at = box.children[i];
+        if (at !== el) box.insertBefore(el, at || null);
+      });
+      requestAnimationFrame(() => box.querySelectorAll('textarea').forEach(autosize));
     }
 
     // ----- Vieta, adrese, karte -----
@@ -852,12 +967,12 @@
       } catch (e) { fail(e); }
     }
 
-    $('edit-btn').addEventListener('click', () => { S.edit = !S.edit; renderCats(); renderSecs(); renderRows(); });
+    $('edit-btn').addEventListener('click', () => { S.edit = !S.edit; renderCats(); renderSecs(); renderRows(); renderBs(); });
 
     // ----- Rindas -----
     // Rindas lauki: t, ev, note, cats[], order, catNotes { catId: teksts }, marks { catId: ['t','ev','note','cn'] }.
     function autosize(t) { t.style.height = 'auto'; t.style.height = t.scrollHeight + 'px'; }
-    window.addEventListener('resize', () => document.querySelectorAll('#rows textarea, #arr-note, #v-desc').forEach(autosize));
+    window.addEventListener('resize', () => document.querySelectorAll('#rows textarea, #bs-list textarea, #arr-note, #v-desc').forEach(autosize));
     const empty = { h: '', m: '' };
 
     function makeRow(id) {
@@ -869,7 +984,8 @@
         + '<div class="cw w-ev"><textarea class="cell" rows="1" maxlength="2000"></textarea>' + paint('ev') + '</div>'
         + '<div class="cw w-note"><textarea class="cell c-note" rows="1" maxlength="2000"></textarea>' + paint('note') + '</div>'
         + '<div class="cw w-cn"><textarea class="cell c-cn" rows="1" maxlength="2000"></textarea>' + paint('cn') + '</div>'
-        + '<div class="r-act"><button class="ins" type="button">+</button><button class="del" type="button">×</button></div>';
+        + '<div class="r-act"><button class="up" type="button">↑</button><button class="dn" type="button">↓</button>'
+        + '<button class="ins" type="button">+</button><button class="del" type="button">×</button></div>';
       const q = sel => el.querySelector(sel);
       const [time, ev, note, cn] = [q('.c-time'), q('.w-ev textarea'), q('.c-note'), q('.c-cn')];
       const bind = (input, field) => input.addEventListener('input', () => {
@@ -918,7 +1034,9 @@
         askConfirm(el, tr('delRow'), () => deleteDoc(rref(id)).catch(fail));
       });
       q('.ins').addEventListener('click', () => insertAfter(id));
-      el._f = { time, ev, note, cn, mark: q('.mark'), del: q('.del'), ins: q('.ins'),
+      q('.up').addEventListener('click', () => moveRow(id, -1, sortedRows()));
+      q('.dn').addEventListener('click', () => moveRow(id, 1, sortedRows()));
+      el._f = { time, ev, note, cn, mark: q('.mark'), del: q('.del'), ins: q('.ins'), up: q('.up'), dn: q('.dn'),
                 cells: { t: q('.w-t'), ev: q('.w-ev'), note: q('.w-note'), cn: q('.w-cn') } };
       return el;
     }
@@ -926,6 +1044,21 @@
     const sortedRows = () => [...S.rows.entries()].filter(([, r]) => rowSec(r) === S.tab).sort((a, b) => (a[1].order || 0) - (b[1].order || 0));
     const canCat = cat => canWrite() || (S.role === 'cat' && S.cat === cat);
     const catName = id => (S.data.cats || []).find(c => c.id === id)?.name || '';
+
+    // Rindu pārvietošana ("Labot" režīmā): samaina vietām secības numurus ar kaimiņu.
+    function moveRow(id, dir, list) {
+      const i = list.findIndex(([rid]) => rid === id), j = i + dir;
+      if (i < 0 || j < 0 || j >= list.length) return;
+      const [a, b] = [list[i], list[j]];
+      let oa = a[1].order || 0, ob = b[1].order || 0;
+      if (oa === ob) ob = oa + dir;
+      a[1].order = ob; b[1].order = oa;
+      renderRows(); renderBs();
+      const wb = writeBatch(db);
+      wb.update(rref(a[0]), { order: ob });
+      wb.update(rref(b[0]), { order: oa });
+      wb.commit().catch(fail);
+    }
 
     // Jauna tukša rinda tieši zem norādītās.
     async function insertAfter(id) {
@@ -968,6 +1101,7 @@
       const sel = S.sel;
       box.classList.toggle('withcat', !!sel);
       box.classList.toggle('paintable', !!sel && canWrite());
+      box.classList.toggle('editing', S.edit && canWrite());
       $('h-cn').textContent = sel ? tr('note') + ' · ' + catName(sel) : '';
 
       for (const [id, el] of S.els) if (!S.rows.has(id)) { el.remove(); S.els.delete(id); }
@@ -1002,6 +1136,8 @@
         f.mark.classList.toggle('on', !!sel && cats.includes(sel));
         f.del.disabled = !(S.edit && canWrite());
         f.ins.disabled = !canWrite();
+        f.up.disabled = !(S.edit && canWrite()) || i === 0;
+        f.dn.disabled = !(S.edit && canWrite()) || i === list.length - 1;
         el.classList.toggle('hl', !!sel && cats.includes(sel));
         el.classList.toggle('dim', !!sel && !cats.includes(sel));
         // Kārtība: pārvieto tikai, ja rinda nav savā vietā (lai nepazūd fokuss).
