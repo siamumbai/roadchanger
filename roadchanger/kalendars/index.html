@@ -97,6 +97,7 @@
     .see-opt input { width: 1rem; height: 1rem; accent-color: #B07320; }
     td .edit-btn + .edit-btn { margin-left: 0.3rem; }
     .person.on { background: #2C2416; border-color: #2C2416; color: #F5ECD8; }
+    .person.on-busy { background: #D32F2F; border-color: #D32F2F; color: #fff; }
     .person .pn { font-size: 0.88rem; overflow: hidden; text-overflow: ellipsis; max-width: 100%; white-space: nowrap; }
     .person .pe { font-size: 0.72rem; opacity: 0.65; overflow: hidden; text-overflow: ellipsis; max-width: 100%; white-space: nowrap; }
     .side .filters { position: static; flex-direction: column; flex-wrap: nowrap; align-items: stretch; padding: 0; border: none; background: none; gap: 0.4rem; }
@@ -721,7 +722,7 @@
       renderUpcoming();
     }
     function renderUpcoming() {
-      const visible = visibleSet();
+      const visible = new Set(selected.size ? [...selected] : viewIds());
       const list = [...upcoming.values()]
         .filter((e) => (e.cals || []).some((c) => visible.has(c) && calById(c) && !calById(c).busy))
         .sort((a, b) => a.date.localeCompare(b.date) || (a.from || '').localeCompare(b.from || ''))
@@ -796,6 +797,8 @@
       }, (err) => console.error(err));
     }
     function visibleSet() {
+      // Skatoties cita cilvēka aizņemtos datumus — savu kalendāru pasākumus nerāda
+      if (busyOf) return new Set();
       return new Set(selected.size ? [...selected] : viewIds());
     }
     function renderFilters() {
@@ -804,7 +807,8 @@
       let html = `<div class="fchip busy-row ${showBusy ? 'on' : ''} ${busyEdit ? 'editing' : ''}" style="--c:#D32F2F">
           <button class="busy-tg" data-busy type="button"><span class="box"></span>Aizņemts</button>
           ${viewAs || busyOf ? '' : `<button class="busy-edit ${busyEdit ? 'on' : ''}" data-busyedit type="button">${busyEdit ? 'Gatavs' : 'Labot'}</button>`}
-        </div><hr class="fdiv">`;
+        </div>${busyOf ? '' : '<hr class="fdiv">'}`;
+      if (busyOf) { f.innerHTML = html; return; }
       html += `<button class="fchip ${selected.size === 0 ? 'on' : ''}" data-f="*" style="--c:#2C2416" type="button"><span class="box"></span>Visi</button>`;
       for (const id of ids) {
         const c = calById(id);
@@ -1031,7 +1035,7 @@
         const names = profile.seeNames || {};
         let h = `<h4>Aizņemts</h4><div class="people-list">
           <button class="person ${busyOf ? '' : 'on'}" data-person="" type="button"><span class="pn">${esc(me)}</span></button>`;
-        for (const id of see) h += `<button class="person ${busyOf === id ? 'on' : ''}" data-person="${esc(id)}" type="button"><span class="pn">${esc(names[id] || id)}</span></button>`;
+        for (const id of see) h += `<button class="person ${busyOf === id ? 'on-busy' : ''}" data-person="${esc(id)}" type="button"><span class="pn">${esc(names[id] || id)}</span></button>`;
         box.innerHTML = h + '</div>';
         return;
       }
@@ -1052,7 +1056,7 @@
         // Parastam lietotājam mainās tikai "Aizņemts" — kura cilvēka aizņemtos datumus rāda
         busyOf = id && id !== busyOf ? id : null;
         busyEdit = false; $('months').classList.remove('busy-mode');
-        renderFilters(); renderPeople(); subscribeEvents();
+        renderFilters(); renderPeople(); subscribeEvents(); renderUpcoming();
         return;
       }
       viewAs = id && !(viewAs && viewAs.id === id) ? users.find((u) => u.id === id) || null : null;
