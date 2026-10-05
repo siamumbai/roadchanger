@@ -173,6 +173,7 @@
     .day.busy { background-color: color-mix(in srgb, #D32F2F 16%, #fff); }
     .day.busy:hover { background-color: color-mix(in srgb, #D32F2F 22%, #fff); }
     .filters.faded [data-f] { opacity: 0.25; pointer-events: none; }
+    .who-title { font-family: 'Libre Baskerville', Georgia, serif; font-size: 1.15rem; line-height: 1.3; margin: 0.25rem 0 0.6rem; }
     .fdiv { border: none; border-top: 0.5px solid #E0CCA4; margin: 0.35rem 0; }
     /* "Aizņemts" rinda ar pogu "Labot" iekšā */
     .busy-row { justify-content: space-between; padding: 0.3rem 0.35rem 0.3rem 0.85rem; }
@@ -656,6 +657,7 @@
           const all = snap.docs.map((d) => ({ id: d.id, ...d.data() }));
           adminName = (all.find((u) => u.id === ADMIN) || {}).name || '';
           users = all.filter((u) => u.id !== ADMIN);
+          if (!$('scr-main').hidden) renderFilters();
           const pending = users.filter((u) => !(u.view || []).length).length;
           $('pending-badge').hidden = !pending;
           $('pending-badge').textContent = pending;
@@ -791,6 +793,11 @@
     let busyUnsub = null;
     let busyOf = null;   // parastam lietotājam: kura cilvēka "Aizņemts" rādīts (null = savs)
     const busyOwner = () => viewAs ? viewAs.id : (busyOf || me);
+    function busyOwnerName() {
+      if (viewAs) return viewAs.name || viewAs.id;
+      if (busyOf) return (profile.seeNames || {})[busyOf] || busyOf;
+      return (isAdmin ? adminName : profile.name) || me;
+    }
     function subscribeBusy(a, b) {
       if (busyUnsub) busyUnsub();
       const q = query(collection(db, 'busy', busyOwner(), 'days'), where('date', '>=', a), where('date', '<=', b));
@@ -807,7 +814,9 @@
     function renderFilters() {
       const f = $('filters');
       const ids = viewIds();
-      let html = `<div class="fchip busy-row ${showBusy ? 'on' : ''} ${busyEdit ? 'editing' : ''}" style="--c:#D32F2F">
+      // Virs "Aizņemts": vārds uzvārds tam, kura aizņemtie datumi rādīti (sākumā — pieteiktais e-pasts)
+      let html = `<div class="who-title">${esc(busyOwnerName())}</div>`;
+      html += `<div class="fchip busy-row ${showBusy ? 'on' : ''} ${busyEdit ? 'editing' : ''}" style="--c:#D32F2F">
           <button class="busy-tg" data-busy type="button"><span class="box"></span>Aizņemts</button>
           ${viewAs || busyOf ? '<span class="busy-edit" style="visibility:hidden">Labot</span>' : `<button class="busy-edit ${busyEdit ? 'on' : ''}" data-busyedit type="button">${busyEdit ? 'Gatavs' : 'Labot'}</button>`}
         </div><hr class="fdiv">`;
