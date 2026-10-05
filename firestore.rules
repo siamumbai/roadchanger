@@ -78,7 +78,9 @@ service cloud.firestore {
     // Personīgais "Aizņemts": katram e-pastam savs. Vienas dienas dokuments, ID = datums.
     // Lasa un maina tikai pats; admins var lasīt (skats "kā šis e-pasts redz").
     match /busy/{email}/days/{day} {
-      allow read: if isAdmin() || (signedIn() && myEmail() == email);
+      // Lasa arī tie, kuriem admins atļāvis redzēt šī e-pasta aizņemtos datumus (users/{lasītājs}.seeBusy)
+      allow read: if isAdmin() || (signedIn() && myEmail() == email)
+        || (signedIn() && hasProfile() && email in me().get('seeBusy', []));
       allow create: if signedIn() && myEmail() == email
         && day.matches('^[0-9]{4}-[0-9]{2}-[0-9]{2}$')
         && request.resource.data.keys().hasOnly(['date', 'at'])

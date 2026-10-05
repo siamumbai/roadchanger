@@ -91,6 +91,11 @@
     .person { display: flex; flex-direction: column; align-items: flex-start; text-align: left; width: 100%;
       padding: 0.5rem 0.8rem; border-radius: 8px; border: 0.5px solid #E0CCA4; background: #fff; }
     .person:hover { border-color: #B07320; }
+    tr.see-row td { background: #FEF9F2; white-space: normal; }
+    .see-list { display: flex; flex-wrap: wrap; gap: 0.4rem 1rem; padding: 0.25rem 0; }
+    .see-opt { display: inline-flex; align-items: center; gap: 0.4rem; font-size: 0.85rem; cursor: pointer; }
+    .see-opt input { width: 1rem; height: 1rem; accent-color: #B07320; }
+    td .edit-btn + .edit-btn { margin-left: 0.3rem; }
     .person.on { background: #2C2416; border-color: #2C2416; color: #F5ECD8; }
     .person .pn { font-size: 0.88rem; overflow: hidden; text-overflow: ellipsis; max-width: 100%; white-space: nowrap; }
     .person .pe { font-size: 0.72rem; opacity: 0.65; overflow: hidden; text-overflow: ellipsis; max-width: 100%; white-space: nowrap; }
@@ -301,7 +306,7 @@
       .filters { padding: 0.75rem 1rem; flex-wrap: nowrap; overflow-x: auto; -webkit-overflow-scrolling: touch; }
       .cal-wrap { grid-template-columns: minmax(0, 1fr); padding: 0 0.5rem 2rem; }
       .cal-main, .panel, .side { grid-column: auto; grid-row: auto; }
-      .people { display: none !important; }
+      .people { position: static; order: 4; grid-column: auto; grid-row: auto; margin: 1.25rem 0.5rem 0; max-height: none; overflow: visible; }
       /* Telefonā kalendārs ritinās savā rāmī, nevis visa lapa */
       .cal-sticky { position: static; }
       .month h3 { display: none; }
@@ -610,7 +615,7 @@
       perCal = {}; events = new Map(); calendars = []; profile = {}; users = [];
       selected = new Set(); panel = null; selDate = null;
       didInitialScroll = false; rangeFrom = curMi - 2; rangeTo = curMi + 6;
-      viewAs = null; busyEdit = false; busySet = new Set();
+      viewAs = null; busyOf = null; busyEdit = false; busySet = new Set();
       if (busyUnsub) { busyUnsub(); busyUnsub = null; }
     }
 
@@ -631,6 +636,7 @@
         measureSticky();
         subscribeEvents();
         subscribeUpcoming();
+        renderPeople();
         if (!didInitialScroll) { scrollToMonth(curMi, false); didInitialScroll = true; }
         if (tab === 'admin' && isAdmin) { renderCalList(); renderUsers(); }
       };
@@ -779,7 +785,8 @@
     let busyEdit = false;   // "Labot" režīms: klikšķis uz dienas to atzīmē / noņem kā aizņemtu
     let busySet = new Set();
     let busyUnsub = null;
-    const busyOwner = () => viewAs ? viewAs.id : me;
+    let busyOf = null;   // parastam lietotājam: kura cilvēka "Aizņemts" rādīts (null = savs)
+    const busyOwner = () => viewAs ? viewAs.id : (busyOf || me);
     function subscribeBusy(a, b) {
       if (busyUnsub) busyUnsub();
       const q = query(collection(db, 'busy', busyOwner(), 'days'), where('date', '>=', a), where('date', '<=', b));
@@ -796,7 +803,7 @@
       const ids = viewIds();
       let html = `<div class="fchip busy-row ${showBusy ? 'on' : ''} ${busyEdit ? 'editing' : ''}" style="--c:#D32F2F">
           <button class="busy-tg" data-busy type="button"><span class="box"></span>Aizņemts</button>
-          ${viewAs ? '' : `<button class="busy-edit ${busyEdit ? 'on' : ''}" data-busyedit type="button">${busyEdit ? 'Gatavs' : 'Labot'}</button>`}
+          ${viewAs || busyOf ? '' : `<button class="busy-edit ${busyEdit ? 'on' : ''}" data-busyedit type="button">${busyEdit ? 'Gatavs' : 'Labot'}</button>`}
         </div><hr class="fdiv">`;
       html += `<button class="fchip ${selected.size === 0 ? 'on' : ''}" data-f="*" style="--c:#2C2416" type="button"><span class="box"></span>Visi</button>`;
       for (const id of ids) {
@@ -1004,7 +1011,7 @@
     // ---------- "Aizņemts" Labot režīms ----------
     // Klikšķis uz dienas: brīvu atzīmē kā aizņemtu, aizņemtu atbrīvo. Tikai savējo.
     async function toggleBusyDay(key) {
-      if (viewAs) return;
+      if (viewAs || busyOf) return;
       const ref = doc(db, 'busy', me, 'days', key);
       try {
         if (busySet.has(key)) await deleteDoc(ref);
@@ -1015,7 +1022,19 @@
     // ---------- Admins: e-pastu saraksts labajā pusē ("kā šis e-pasts redz") ----------
     function renderPeople() {
       const box = $('people');
-      if (!isAdmin) { box.hidden = true; return; }
+      if (!isAdmin) {
+        // Parastam lietotājam: sevi + tos, kuru aizņemtos datumus admins ļāvis redzēt
+        const see = profile.seeBusy || [];
+        if (busyOf && !see.includes(busyOf)) busyOf = null;
+        if (!see.length) { box.hidden = true; return; }
+        box.hidden = !!panel;
+        const names = profile.seeNames || {};
+        let h = `<h4>Aizņemts</h4><div class="people-list">
+          <button class="person ${busyOf ? '' : 'on'}" data-person="" type="button"><span class="pn">${esc(me)}</span></button>`;
+        for (const id of see) h += `<button class="person ${busyOf === id ? 'on' : ''}" data-person="${esc(id)}" type="button"><span class="pn">${esc(names[id] || id)}</span></button>`;
+        box.innerHTML = h + '</div>';
+        return;
+      }
       box.hidden = !!panel;
       const list = [...users].sort((a, b) => (a.name || a.id).localeCompare(b.name || b.id, 'lv'));
       let html = `<h4>E-pasti</h4><div class="people-list">
@@ -1029,6 +1048,13 @@
     $('people').addEventListener('click', (e) => {
       const b = e.target.closest('[data-person]'); if (!b) return;
       const id = b.dataset.person;
+      if (!isAdmin) {
+        // Parastam lietotājam mainās tikai "Aizņemts" — kura cilvēka aizņemtos datumus rāda
+        busyOf = id && id !== busyOf ? id : null;
+        busyEdit = false; $('months').classList.remove('busy-mode');
+        renderFilters(); renderPeople(); subscribeEvents();
+        return;
+      }
       viewAs = id && !(viewAs && viewAs.id === id) ? users.find((u) => u.id === id) || null : null;
       selected = new Set();
       busyEdit = false; $('months').classList.remove('busy-mode');
@@ -1244,6 +1270,7 @@
     let usersDirty = false;
     const editingUsers = new Set();   // rindas, kurām nospiests "Labot"
     const removeOpen = new Set();     // e-pasti, kuriem atvērts "Izdzēst"
+    const seeOpen = new Set();        // e-pasti, kuriem atvērts "Pievienot"
     function renderUsers() {
       // Nepārzīmē, kamēr raksta vārdu — citādi ievadītais pazustu
       if ($('users-tbl').contains(document.activeElement) && document.activeElement.matches('[data-name]')) { usersDirty = true; return; }
@@ -1272,7 +1299,17 @@
           </td>`;
         }
         html += `<td class="muted">${u.lastSeen ? fmtTs(u.lastSeen) : '—'}</td>
-          <td><button class="edit-btn ${editing ? 'on' : ''}" data-edituser type="button">${editing ? 'Gatavs' : 'Labot'}</button>${pending ? '<span class="tag">Gaida</span>' : ''}</td></tr>`;
+          <td><button class="edit-btn ${editing ? 'on' : ''}" data-edituser type="button">${editing ? 'Gatavs' : 'Labot'}</button>
+            <button class="edit-btn ${seeOpen.has(u.id) ? 'on' : ''}" data-seeusers type="button">Pievienot</button>${pending ? '<span class="tag">Gaida</span>' : ''}</td></tr>`;
+        // "Pievienot": kuru e-pastu aizņemtos datumus šis e-pasts var redzēt labajā pusē
+        if (seeOpen.has(u.id)) {
+          const see = u.seeBusy || [];
+          const others = [{ id: ADMIN, name: '' }, ...users.filter((x) => x.id !== u.id)]
+            .sort((a, b) => (a.id === ADMIN ? -1 : b.id === ADMIN ? 1 : (a.name || a.id).localeCompare(b.name || b.id, 'lv')));
+          html += `<tr class="see-row" data-u="${esc(u.id)}"><td colspan="${calendars.length + 4}"><div class="see-list">
+            ${others.map((o) => `<label class="see-opt"><input type="checkbox" data-see="${esc(o.id)}" ${see.includes(o.id) ? 'checked' : ''} />${esc(o.name || o.id)}</label>`).join('')}
+          </div></td></tr>`;
+        }
       }
       $('users-tbl').innerHTML = html + '</tbody></table>';
     }
@@ -1288,6 +1325,19 @@
           if (usersDirty && !document.activeElement.matches('[data-name]')) renderUsers();
           return;
         }
+        if (e.target.matches('[data-see]')) {
+          const u = users.find((x) => x.id === id) || {};
+          const see = new Set(u.seeBusy || []);
+          const names = { ...(u.seeNames || {}) };
+          const who = e.target.dataset.see;
+          if (e.target.checked) {
+            see.add(who);
+            const o = users.find((x) => x.id === who);
+            names[who] = (o && o.name) || who;
+          } else { see.delete(who); delete names[who]; }
+          await updateDoc(ref, { seeBusy: [...see], seeNames: names });
+          return;
+        }
         if (e.target.matches('[data-acc]')) {
           const u = users.find((x) => x.id === id) || {};
           const view = new Set(u.view || []), edit = new Set(u.edit || []);
@@ -1301,6 +1351,10 @@
     $('users-tbl').addEventListener('click', async (e) => {
       const row = e.target.closest('[data-u]'); if (!row) return;
       const id = row.dataset.u;
+      if (e.target.closest('[data-seeusers]')) {
+        if (seeOpen.has(id)) seeOpen.delete(id); else seeOpen.add(id);
+        renderUsers(); return;
+      }
       if (e.target.closest('[data-edituser]')) {
         if (editingUsers.has(id)) editingUsers.delete(id); else editingUsers.add(id);
         renderUsers(); return;
