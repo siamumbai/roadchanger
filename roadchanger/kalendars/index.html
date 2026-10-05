@@ -1035,7 +1035,7 @@
         if (!see.length) { box.hidden = true; return; }
         box.hidden = !!panel;
         const names = profile.seeNames || {};
-        let h = `<h4>Aizņemts</h4><div class="people-list">
+        let h = `<div class="people-list">
           <button class="person ${busyOf ? '' : 'on'}" data-person="" type="button"><span class="pn">${esc(me)}</span></button>`;
         for (const id of see) h += `<button class="person ${busyOf === id ? 'on-busy' : ''}" data-person="${esc(id)}" type="button"><span class="pn">${esc(names[id] || id)}</span></button>`;
         box.innerHTML = h + '</div>';
