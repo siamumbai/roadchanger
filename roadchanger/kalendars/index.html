@@ -189,6 +189,7 @@
       background: #fff; border: 0.5px solid #E0CCA4; border-radius: 8px; box-shadow: 0 8px 24px rgba(44, 36, 22, 0.12); padding: 0.4rem;
       max-height: 60vh; overflow-y: auto; }
     .who-opt { display: flex; flex-direction: column; align-items: flex-start; text-align: left; width: 100%; padding: 0.45rem 0.6rem; border-radius: 6px; }
+    #side.who-open .filters > :not(.who-wrap), #side.who-open #upc-title, #side.who-open #upcoming { opacity: 0.15; pointer-events: none; transition: opacity 0.15s; }
     .who-opt:hover { background: color-mix(in srgb, #D32F2F 10%, #fff); }
     .fdiv { border: none; border-top: 0.5px solid #E0CCA4; margin: 0.35rem 0; }
     /* "Aizņemts" rinda ar pogu "Labot" iekšā */
@@ -861,12 +862,14 @@
       const cur = opts.find((o) => o.id === act) || opts[0];
       let html = `<div class="who-wrap">
         <button class="who-title" ${opts.length > 1 ? 'data-whotoggle' : ''} type="button">
-          <span class="pn">${esc(cur.name || cur.email)}</span>${cur.name ? `<span class="pe">${esc(cur.email)}</span>` : ''}
+          <span class="pn">${esc(cur.name || cur.email)}</span>
           ${opts.length > 1 ? `<span class="caret">${whoOpen ? '▴' : '▾'}</span>` : ''}
         </button>
         ${whoOpen ? `<div class="who-menu">${opts.filter((o) => o.id !== act).map((o) => `<button class="who-opt" data-person="${esc(o.id)}" type="button">
-            <span class="pn">${esc(o.name || o.email)}</span>${o.name ? `<span class="pe">${esc(o.email)}</span>` : ''}</button>`).join('')}</div>` : ''}
+            <span class="pn">${esc(o.name || o.email)}</span></button>`).join('')}</div>` : ''}
       </div>`;
+      // Kamēr saraksts atvērts — pārējais kreisajā pusē bāls, lai labāk redz e-pastus
+      $('side').classList.toggle('who-open', whoOpen);
       html += `<div class="fchip busy-row ${showBusy ? 'on' : ''} ${busyEdit ? 'editing' : ''}" style="--c:#D32F2F">
           <button class="busy-tg" data-busy type="button"><span class="box"></span>Aizņemts</button>
           ${viewAs || busyOf ? '<span class="busy-edit" style="visibility:hidden">Labot</span>' : `<button class="busy-edit ${busyEdit ? 'on' : ''}" data-busyedit type="button">${busyEdit ? 'Gatavs' : 'Labot'}</button>`}
