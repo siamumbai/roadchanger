@@ -1125,7 +1125,9 @@
       const editable = !e || (e.cals || []).every((c) => edit.includes(c));
       const date = e ? e.date : panel.date;
       const dateEnd = e && e.dateEnd > e.date ? e.dateEnd : '';
-      const head = `<div class="panel-head"><h2>${esc(fmtRange(date, dateEnd))}</h2><button class="x" data-close type="button" aria-label="Aizvērt">×</button></div>`;
+      // "Copy": jauna forma ar visu no oriģināla, izņemot datumu un laiku
+      const src = e || panel.copyFrom || null;
+      const head = `<div class="panel-head"><h2>${date ? esc(fmtRange(date, dateEnd)) : ''}</h2><button class="x" data-close type="button" aria-label="Aizvērt">×</button></div>`;
 
       if (!editable) {
         const names = (e.cals || []).filter((c) => calById(c) && viewIds().includes(c)).map((c) => {
@@ -1147,13 +1149,13 @@
       }
 
       // Jaunam pasākumam iepriekš atzīmē kalendāru, ja joslā izvēlēts tieši viens
-      let checked = e ? [...e.cals] : [];
-      if (!e && selected.size === 1) { const only = [...selected][0]; if (edit.includes(only)) checked = [only]; }
+      let checked = src ? [...src.cals] : [];
+      if (!src && selected.size === 1) { const only = [...selected][0]; if (edit.includes(only)) checked = [only]; }
       const calOpts = edit.filter((id) => !calById(id)?.busy || checked.includes(id)).map((id) => {
         const c = calById(id);
         return `<button type="button" class="opt ${checked.includes(id) ? 'on' : ''}" data-cal="${esc(id)}" style="--c:${esc(c.color)}"><span class="box"></span>${esc(c.name)}</button>`;
       }).join('');
-      const status = e ? e.status : '';
+      const status = src ? src.status : '';
       const stOpts = STATUSES.map(([k, label]) =>
         `<button type="button" class="opt st ${status === k ? 'on' : ''}" data-st="${k}"><span class="dot st-${k}"></span>${label}</button>`).join('');
 
@@ -1167,11 +1169,12 @@
           <div class="row2"><input class="field" type="date" id="f-date" value="${esc(date)}" required /><input class="field" type="date" id="f-end" value="${esc(dateEnd)}" min="${esc(date)}" /></div>
           <span class="flabel">Laiks</span>
           <div class="row2"><input class="field" type="time" id="f-from" value="${esc(e?.from || '')}" /><input class="field" type="time" id="f-to" value="${esc(e?.to || '')}" /></div>
-          <span class="flabel">Vieta</span><input class="field" type="text" id="f-place" maxlength="300" value="${esc(e?.place || '')}" />
-          <span class="flabel">Adrese</span><input class="field" type="text" id="f-address" maxlength="300" value="${esc(e?.address || '')}" />
-          <span class="flabel">Apraksts</span><textarea class="field" id="f-notes" maxlength="5000">${esc(e?.notes || '')}</textarea>
+          <span class="flabel">Vieta</span><input class="field" type="text" id="f-place" maxlength="300" value="${esc(src?.place || '')}" />
+          <span class="flabel">Adrese</span><input class="field" type="text" id="f-address" maxlength="300" value="${esc(src?.address || '')}" />
+          <span class="flabel">Apraksts</span><textarea class="field" id="f-notes" maxlength="5000">${esc(src?.notes || '')}</textarea>
           <div class="panel-actions">
             <button class="btn btn-brown" type="submit">Saglabāt</button>
+            ${e ? '<button class="btn btn-line" type="button" id="f-copy">Copy</button>' : ''}
             ${e ? '<button class="del" type="button" id="f-del">Dzēst</button>' : ''}
           </div>
           <p class="msg err" id="f-msg"></p>
@@ -1195,6 +1198,13 @@
       }
       const s = ev.target.closest('[data-st]');
       if (s) { $('f-st').querySelectorAll('.opt').forEach((o) => o.classList.toggle('on', o === s)); return; }
+      if (ev.target.closest('#f-copy')) {
+        const e = getEv(panel.id); if (!e) return;
+        panel = { mode: 'new', date: '', copyFrom: e }; selDate = null;
+        renderPanel(); renderGrid();
+        $('f-date').focus();
+        return;
+      }
       const del = ev.target.closest('#f-del');
       if (del) {
         if (del.dataset.confirm) { await deleteEvent(); return; }
