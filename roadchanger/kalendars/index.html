@@ -173,7 +173,9 @@
     .day.busy { background-color: color-mix(in srgb, #D32F2F 16%, #fff); }
     .day.busy:hover { background-color: color-mix(in srgb, #D32F2F 22%, #fff); }
     .filters.faded [data-f] { opacity: 0.25; pointer-events: none; }
-    .who-title { font-family: 'Libre Baskerville', Georgia, serif; font-size: 1.15rem; line-height: 1.3; margin: 0.25rem 0 0.6rem; }
+    /* Vārds virs "Aizņemts": tāda pati poga kā labās puses e-pastiem, visa sarkana */
+    .who-title { padding: 0.5rem 0.8rem; border-radius: 8px; border: 0.5px solid #D32F2F; background: #D32F2F; color: #fff;
+      font-size: 0.88rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; margin-bottom: 0.2rem; }
     .fdiv { border: none; border-top: 0.5px solid #E0CCA4; margin: 0.35rem 0; }
     /* "Aizņemts" rinda ar pogu "Labot" iekšā */
     .busy-row { justify-content: space-between; padding: 0.3rem 0.35rem 0.3rem 0.85rem; }
