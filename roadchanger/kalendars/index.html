@@ -47,6 +47,10 @@
     .msg { margin-top: 1rem; font-size: 0.9rem; color: #6B5035; min-height: 1.2em; }
     .msg.err { color: #A33A2A; }
     .login-form { display: flex; flex-direction: column; gap: 0.75rem; }
+    .card { position: relative; }
+    .lang { position: absolute; top: 0.9rem; right: 1rem; font-size: 0.75rem; color: #C9B591; letter-spacing: 0.06em; }
+    .lang button { font-size: 0.75rem; letter-spacing: 0.06em; color: #9A8466; padding: 0.15rem 0.1rem; }
+    .lang button.on { color: #2C2416; font-weight: 700; }
 
     /* ---------- Navigācija ---------- */
     .topnav {
@@ -377,16 +381,17 @@
   <!-- Pieteikšanās -->
   <div id="scr-login" class="center-screen" hidden>
     <div class="card">
+      <div class="lang"><button type="button" data-lang="lv">LAT</button> / <button type="button" data-lang="en">ENG</button></div>
       <a class="card-logo" href="/">Roadchanger</a>
-      <h1>Kalendārs</h1>
+      <h1 data-i18n="title">Kalendārs</h1>
       <form id="email-form" class="login-form">
-        <input class="field" id="email-in" type="email" placeholder="E-pasts" autocomplete="email" required />
-        <button class="btn btn-dark btn-wide" type="submit">Sūtīt pieteikšanās saiti</button>
+        <input class="field" id="email-in" type="email" data-i18n-ph="email" placeholder="E-pasts" autocomplete="email" required />
+        <button class="btn btn-dark btn-wide" type="submit" data-i18n="sendLink">Sūtīt pieteikšanās saiti</button>
       </form>
-      <div class="or">vai</div>
+      <div class="or" data-i18n="or">vai</div>
       <button class="btn btn-line btn-wide" id="google-btn" type="button">
         <svg width="18" height="18" viewBox="0 0 48 48" aria-hidden="true"><path fill="#FFC107" d="M43.6 20.5H42V20H24v8h11.3C33.7 32.7 29.2 36 24 36c-6.6 0-12-5.4-12-12s5.4-12 12-12c3.1 0 5.8 1.2 7.9 3.1l5.7-5.7C34 6.1 29.3 4 24 4 12.9 4 4 12.9 4 24s8.9 20 20 20 20-8.9 20-20c0-1.3-.1-2.4-.4-3.5z"/><path fill="#FF3D00" d="M6.3 14.7l6.6 4.8C14.7 15.1 19 12 24 12c3.1 0 5.8 1.2 7.9 3.1l5.7-5.7C34 6.1 29.3 4 24 4 16.3 4 9.7 8.3 6.3 14.7z"/><path fill="#4CAF50" d="M24 44c5.2 0 9.9-2 13.4-5.2l-6.2-5.2C29.2 35.1 26.7 36 24 36c-5.2 0-9.6-3.3-11.3-8l-6.5 5C9.5 39.6 16.2 44 24 44z"/><path fill="#1976D2" d="M43.6 20.5H42V20H24v8h11.3c-.8 2.2-2.2 4.2-4.1 5.6l6.2 5.2C37 39.2 44 34 44 24c0-1.3-.1-2.4-.4-3.5z"/></svg>
-        Turpināt ar Google
+        <span data-i18n="google">Turpināt ar Google</span>
       </button>
       <p class="msg" id="login-msg"></p>
     </div>
@@ -395,10 +400,11 @@
   <!-- Gaida apstiprinājumu -->
   <div id="scr-wait" class="center-screen" hidden>
     <div class="card">
+      <div class="lang"><button type="button" data-lang="lv">LAT</button> / <button type="button" data-lang="en">ENG</button></div>
       <a class="card-logo" href="/">Roadchanger</a>
-      <h1>Gaida apstiprinājumu</h1>
+      <h1 data-i18n="waiting">Gaida apstiprinājumu</h1>
       <p id="wait-email"></p>
-      <p class="msg"><button class="small-btn" data-signout type="button">Iziet</button></p>
+      <p class="msg"><button class="small-btn" data-signout type="button" data-i18n="signout">Iziet</button></p>
     </div>
   </div>
 
@@ -486,6 +492,29 @@
       appId: '1:333346997656:web:c576e5b8bfdd8aa03497ed'
     });
     const auth = getAuth(app);
+
+    // ---------- Valoda pieteikšanās ekrānā (LAT / ENG) ----------
+    const I18N = {
+      lv: { title: 'Kalendārs', email: 'E-pasts', sendLink: 'Sūtīt pieteikšanās saiti', or: 'vai', google: 'Turpināt ar Google',
+            waiting: 'Gaida apstiprinājumu', signout: 'Iziet', sent: 'Saite nosūtīta uz ', sendFail: 'Neizdevās nosūtīt saiti.', loginFail: 'Neizdevās pieteikties.' },
+      en: { title: 'Calendar', email: 'Email', sendLink: 'Send sign-in link', or: 'or', google: 'Continue with Google',
+            waiting: 'Waiting for approval', signout: 'Sign out', sent: 'Link sent to ', sendFail: 'Could not send the link.', loginFail: 'Sign-in failed.' }
+    };
+    let lang = 'lv';
+    try { lang = localStorage.getItem('rcLang') === 'en' ? 'en' : 'lv'; } catch (_) {}
+    const t = (k) => I18N[lang][k];
+    function applyLang() {
+      document.querySelectorAll('[data-i18n]').forEach((el) => { el.textContent = t(el.dataset.i18n); });
+      document.querySelectorAll('[data-i18n-ph]').forEach((el) => { el.placeholder = t(el.dataset.i18nPh); });
+      document.querySelectorAll('[data-lang]').forEach((b) => b.classList.toggle('on', b.dataset.lang === lang));
+      auth.languageCode = lang;   // pieteikšanās e-pasts arī izvēlētajā valodā
+    }
+    document.querySelectorAll('[data-lang]').forEach((b) => b.addEventListener('click', () => {
+      lang = b.dataset.lang;
+      try { localStorage.setItem('rcLang', lang); } catch (_) {}
+      applyLang();
+    }));
+    applyLang();
     const db = getFirestore(app);
 
     const ADMIN = 'e.asmanis@gmail.com';
@@ -563,15 +592,15 @@
       try {
         await sendSignInLinkToEmail(auth, email, linkSettings);
         try { localStorage.setItem('rcEmail', email); } catch (_) {}
-        m.textContent = `Saite nosūtīta uz ${email}.`;
+        m.textContent = `${t('sent')}${email}.`;
       } catch (err) {
-        console.error(err); m.className = 'msg err'; m.textContent = 'Neizdevās nosūtīt saiti.';
+        console.error(err); m.className = 'msg err'; m.textContent = t('sendFail');
       }
     });
     $('google-btn').addEventListener('click', async () => {
       try { await signInWithPopup(auth, new GoogleAuthProvider()); }
       catch (err) {
-        if (err.code !== 'auth/popup-closed-by-user') { console.error(err); const m = $('login-msg'); m.className = 'msg err'; m.textContent = 'Neizdevās pieteikties.'; }
+        if (err.code !== 'auth/popup-closed-by-user') { console.error(err); const m = $('login-msg'); m.className = 'msg err'; m.textContent = t('loginFail'); }
       }
     });
     document.querySelectorAll('[data-signout]').forEach((b) => b.addEventListener('click', () => signOut(auth)));
@@ -1138,7 +1167,7 @@
       const date = e ? e.date : panel.date;
       const dateEnd = e && e.dateEnd > e.date ? e.dateEnd : '';
       // "Copy": jauna forma ar visu no oriģināla, izņemot datumu un laiku
-      const src = e || panel.copyFrom || null;
+      const src = e;
       const head = `<div class="panel-head"><h2>${date ? esc(fmtRange(date, dateEnd)) : ''}</h2><button class="x" data-close type="button" aria-label="Aizvērt">×</button></div>`;
 
       if (!editable) {
@@ -1186,7 +1215,7 @@
           <span class="flabel">Apraksts</span><textarea class="field" id="f-notes" maxlength="5000">${esc(src?.notes || '')}</textarea>
           <div class="panel-actions">
             <button class="btn btn-brown" type="submit">Saglabāt</button>
-            ${e ? '<button class="btn btn-line" type="button" id="f-copy">Copy</button>' : ''}
+            ${e ? '<button class="btn btn-line" type="button" id="f-copy">Copy</button>' : (copied ? '<button class="btn btn-line" type="button" id="f-paste">Paste</button>' : '')}
             ${e ? '<button class="del" type="button" id="f-del">Dzēst</button>' : ''}
           </div>
           <p class="msg err" id="f-msg"></p>
@@ -1210,13 +1239,8 @@
       }
       const s = ev.target.closest('[data-st]');
       if (s) { $('f-st').querySelectorAll('.opt').forEach((o) => o.classList.toggle('on', o === s)); return; }
-      if (ev.target.closest('#f-copy')) {
-        const e = getEv(panel.id); if (!e) return;
-        panel = { mode: 'new', date: '', copyFrom: e }; selDate = null;
-        renderPanel(); renderGrid();
-        $('f-date').focus();
-        return;
-      }
+      if (ev.target.closest('#f-copy')) { copyEvent(); return; }
+      if (ev.target.closest('#f-paste')) { pasteEvent(); return; }
       const del = ev.target.closest('#f-del');
       if (del) {
         if (del.dataset.confirm) { await deleteEvent(); return; }
@@ -1224,6 +1248,36 @@
         setTimeout(() => { if (del.isConnected) { delete del.dataset.confirm; del.textContent = 'Dzēst'; } }, 4000);
       }
     });
+    // ---------- Copy / Paste ----------
+    // "Copy" atvērtā pasākumā (vai Cmd/Ctrl+C) atceras visu, izņemot datumu un laiku.
+    // Jauna datuma formā "Paste" (vai Cmd/Ctrl+V) to ieliek formā.
+    let copied = null;
+    try { copied = JSON.parse(localStorage.getItem('rcCopied') || 'null'); } catch (_) { copied = null; }
+    function copyEvent() {
+      const e = panel && panel.mode === 'edit' ? getEv(panel.id) : null; if (!e) return;
+      copied = { cals: [...(e.cals || [])], status: e.status || '', place: e.place || '', address: e.address || '', notes: e.notes || '' };
+      try { localStorage.setItem('rcCopied', JSON.stringify(copied)); } catch (_) {}
+      toast('Copy ✓');
+    }
+    function pasteEvent() {
+      if (!copied || !panel || panel.mode !== 'new' || !$('ev-form')) return;
+      $('f-cals').querySelectorAll('.opt').forEach((o) => o.classList.toggle('on', copied.cals.includes(o.dataset.cal)));
+      $('f-st').querySelectorAll('.opt').forEach((o) => o.classList.toggle('on', o.dataset.st === copied.status));
+      $('st-col').hidden = busyOnly([...$('f-cals').querySelectorAll('.opt.on')].map((o) => o.dataset.cal));
+      $('f-place').value = copied.place; $('f-address').value = copied.address; $('f-notes').value = copied.notes;
+    }
+    document.addEventListener('keydown', (e) => {
+      if (!(e.metaKey || e.ctrlKey) || e.altKey || e.shiftKey) return;
+      const k = e.key.toLowerCase();
+      if (k !== 'c' && k !== 'v') return;
+      // Ja raksta laukā vai ir iezīmēts teksts — parastā kopēšana/ielīmēšana
+      const a = document.activeElement;
+      if (a && (a.matches('input, textarea, select') || a.isContentEditable)) return;
+      if (k === 'c' && String(window.getSelection() || '')) return;
+      if (k === 'c' && $('f-copy')) { e.preventDefault(); copyEvent(); }
+      if (k === 'v' && $('f-paste')) { e.preventDefault(); pasteEvent(); }
+    });
+
     $('panel').addEventListener('change', (ev) => {
       if (ev.target.id !== 'f-date') return;
       const end = $('f-end'); end.min = ev.target.value;
