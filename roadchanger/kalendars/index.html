@@ -174,8 +174,18 @@
     .day.busy:hover { background-color: color-mix(in srgb, #D32F2F 22%, #fff); }
     .filters.faded [data-f] { opacity: 0.25; pointer-events: none; }
     /* Vārds virs "Aizņemts": tāda pati poga kā labās puses e-pastiem, visa sarkana */
-    .who-title { padding: 0.5rem 0.8rem; border-radius: 8px; border: 0.5px solid #D32F2F; background: #D32F2F; color: #fff;
-      font-size: 0.88rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; margin-bottom: 0.2rem; }
+    .who-wrap { position: relative; margin-bottom: 0.2rem; }
+    .who-title { position: relative; display: flex; flex-direction: column; align-items: flex-start; width: 100%; text-align: left;
+      padding: 0.5rem 2rem 0.5rem 0.8rem; border-radius: 8px; border: 0.5px solid #D32F2F; background: #D32F2F; color: #fff; cursor: default; }
+    .who-title[data-whotoggle] { cursor: pointer; }
+    .who-title .pn, .who-opt .pn { font-size: 0.88rem; max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .who-title .pe, .who-opt .pe { font-size: 0.72rem; opacity: 0.75; max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .who-title .caret { position: absolute; right: 0.8rem; top: 50%; transform: translateY(-50%); font-size: 0.85rem; }
+    .who-menu { position: absolute; left: 0; right: 0; top: calc(100% + 0.3rem); z-index: 40; display: flex; flex-direction: column; gap: 0.3rem;
+      background: #fff; border: 0.5px solid #E0CCA4; border-radius: 8px; box-shadow: 0 8px 24px rgba(44, 36, 22, 0.12); padding: 0.4rem;
+      max-height: 60vh; overflow-y: auto; }
+    .who-opt { display: flex; flex-direction: column; align-items: flex-start; text-align: left; width: 100%; padding: 0.45rem 0.6rem; border-radius: 6px; }
+    .who-opt:hover { background: color-mix(in srgb, #D32F2F 10%, #fff); }
     .fdiv { border: none; border-top: 0.5px solid #E0CCA4; margin: 0.35rem 0; }
     /* "Aizņemts" rinda ar pogu "Labot" iekšā */
     .busy-row { justify-content: space-between; padding: 0.3rem 0.35rem 0.3rem 0.85rem; }
@@ -817,7 +827,17 @@
       const f = $('filters');
       const ids = viewIds();
       // Virs "Aizņemts": vārds uzvārds tam, kura aizņemtie datumi rādīti (sākumā — pieteiktais e-pasts)
-      let html = `<div class="who-title">${esc(busyOwnerName())}</div>`;
+      const opts = peopleOptions();
+      const act = activePerson();
+      const cur = opts.find((o) => o.id === act) || opts[0];
+      let html = `<div class="who-wrap">
+        <button class="who-title" ${opts.length > 1 ? 'data-whotoggle' : ''} type="button">
+          <span class="pn">${esc(cur.name || cur.email)}</span>${cur.name ? `<span class="pe">${esc(cur.email)}</span>` : ''}
+          ${opts.length > 1 ? `<span class="caret">${whoOpen ? '▴' : '▾'}</span>` : ''}
+        </button>
+        ${whoOpen ? `<div class="who-menu">${opts.filter((o) => o.id !== act).map((o) => `<button class="who-opt" data-person="${esc(o.id)}" type="button">
+            <span class="pn">${esc(o.name || o.email)}</span>${o.name ? `<span class="pe">${esc(o.email)}</span>` : ''}</button>`).join('')}</div>` : ''}
+      </div>`;
       html += `<div class="fchip busy-row ${showBusy ? 'on' : ''} ${busyEdit ? 'editing' : ''}" style="--c:#D32F2F">
           <button class="busy-tg" data-busy type="button"><span class="box"></span>Aizņemts</button>
           ${viewAs || busyOf ? '<span class="busy-edit" style="visibility:hidden">Labot</span>' : `<button class="busy-edit ${busyEdit ? 'on' : ''}" data-busyedit type="button">${busyEdit ? 'Gatavs' : 'Labot'}</button>`}
@@ -832,6 +852,8 @@
       f.innerHTML = html;
     }
     $('filters').addEventListener('click', (e) => {
+      if (e.target.closest('[data-whotoggle]')) { whoOpen = !whoOpen; renderFilters(); return; }
+      const pb = e.target.closest('[data-person]'); if (pb) { selectPerson(pb.dataset.person); return; }
       if (e.target.closest('[data-busyedit]')) {
         busyEdit = !busyEdit;
         if (busyEdit) { showBusy = true; if (panel) closePanel(); }
@@ -1040,49 +1062,39 @@
 
     // ---------- Admins: e-pastu saraksts labajā pusē ("kā šis e-pasts redz") ----------
     let adminName = '';
-    // Saraksta poga: vārds uzvārds (no Admin) un zem tā e-pasts; bez vārda — tikai e-pasts
-    const personBtn = (id, name, email, cls) => `<button class="person ${cls}" data-person="${esc(id)}" type="button">
-      <span class="pn">${esc(name || email)}</span>${name ? `<span class="pe">${esc(email)}</span>` : ''}</button>`;
+    // E-pastu izvēle tagad ir nolaižamajā sarakstā virs "Aizņemts" (labajā pusē saraksta vairs nav)
     function renderPeople() {
-      const box = $('people');
-      if (!isAdmin) {
-        // Parastam lietotājam: sevi + tos, kuru aizņemtos datumus admins ļāvis redzēt
-        const see = profile.seeBusy || [];
-        if (busyOf && !see.includes(busyOf)) busyOf = null;
-        if (!see.length) { box.hidden = true; return; }
-        box.hidden = !!panel;
-        const names = profile.seeNames || {};
-        let h = `<div class="people-list">
-          ${personBtn('', profile.name, me, busyOf ? '' : 'on')}`;
-        for (const id of see) h += personBtn(id, names[id] !== id ? names[id] : '', id, busyOf === id ? 'on-busy' : '');
-        box.innerHTML = h + '</div>';
-        return;
-      }
-      box.hidden = !!panel;
-      const list = [...users].sort((a, b) => (a.name || a.id).localeCompare(b.name || b.id, 'lv'));
-      let html = `<h4>E-pasti</h4><div class="people-list">
-        ${personBtn('', adminName, me, viewAs ? '' : 'on')}`;
-      for (const u of list) {
-        html += `<button class="person ${viewAs && viewAs.id === u.id ? 'on' : ''}" data-person="${esc(u.id)}" type="button">
-          <span class="pn">${esc(u.name || u.id)}</span>${u.name ? `<span class="pe">${esc(u.id)}</span>` : ''}</button>`;
-      }
-      box.innerHTML = html + '</div>';
+      $('people').hidden = true;
+      if (!$('scr-main').hidden) renderFilters();
     }
-    $('people').addEventListener('click', (e) => {
-      const b = e.target.closest('[data-person]'); if (!b) return;
-      const id = b.dataset.person;
+    // Kurus e-pastus var izvēlēties: admins — visus; parasts lietotājs — sevi + atļautos (seeBusy)
+    function peopleOptions() {
+      if (isAdmin) {
+        const list = [...users].sort((a, b) => (a.name || a.id).localeCompare(b.name || b.id, 'lv'));
+        return [{ id: '', name: adminName, email: me }, ...list.map((u) => ({ id: u.id, name: u.name || '', email: u.id }))];
+      }
+      const see = profile.seeBusy || [];
+      if (busyOf && !see.includes(busyOf)) busyOf = null;
+      const names = profile.seeNames || {};
+      return [{ id: '', name: profile.name || '', email: me }, ...see.map((id) => ({ id, name: names[id] !== id ? names[id] || '' : '', email: id }))];
+    }
+    const activePerson = () => isAdmin ? (viewAs ? viewAs.id : '') : (busyOf || '');
+    let whoOpen = false;
+    function selectPerson(id) {
+      whoOpen = false;
+      busyEdit = false; $('months').classList.remove('busy-mode');
       if (!isAdmin) {
         // Parastam lietotājam mainās tikai "Aizņemts" — kura cilvēka aizņemtos datumus rāda
-        busyOf = id && id !== busyOf ? id : null;
-        busyEdit = false; $('months').classList.remove('busy-mode');
-        renderFilters(); renderPeople(); subscribeEvents(); renderUpcoming();
+        busyOf = id || null;
+        renderFilters(); subscribeEvents(); renderUpcoming();
         return;
       }
-      viewAs = id && !(viewAs && viewAs.id === id) ? users.find((u) => u.id === id) || null : null;
+      viewAs = id ? users.find((u) => u.id === id) || null : null;
       selected = new Set();
-      busyEdit = false; $('months').classList.remove('busy-mode');
-      renderFilters(); renderPeople();
-      subscribeEvents(); subscribeUpcoming();
+      renderFilters(); subscribeEvents(); subscribeUpcoming();
+    }
+    document.addEventListener('click', (e) => {
+      if (whoOpen && !e.target.closest('.who-wrap')) { whoOpen = false; renderFilters(); }
     });
 
     // ---------- Labās puses forma ----------
