@@ -653,7 +653,9 @@
         }, (err) => console.error(err)));
       } else {
         otherUnsubs.push(onSnapshot(collection(db, 'users'), (snap) => {
-          users = snap.docs.map((d) => ({ id: d.id, ...d.data() })).filter((u) => u.id !== ADMIN);
+          const all = snap.docs.map((d) => ({ id: d.id, ...d.data() }));
+          adminName = (all.find((u) => u.id === ADMIN) || {}).name || '';
+          users = all.filter((u) => u.id !== ADMIN);
           const pending = users.filter((u) => !(u.view || []).length).length;
           $('pending-badge').hidden = !pending;
           $('pending-badge').textContent = pending;
@@ -1026,6 +1028,10 @@
     }
 
     // ---------- Admins: e-pastu saraksts labajā pusē ("kā šis e-pasts redz") ----------
+    let adminName = '';
+    // Saraksta poga: vārds uzvārds (no Admin) un zem tā e-pasts; bez vārda — tikai e-pasts
+    const personBtn = (id, name, email, cls) => `<button class="person ${cls}" data-person="${esc(id)}" type="button">
+      <span class="pn">${esc(name || email)}</span>${name ? `<span class="pe">${esc(email)}</span>` : ''}</button>`;
     function renderPeople() {
       const box = $('people');
       if (!isAdmin) {
@@ -1036,15 +1042,15 @@
         box.hidden = !!panel;
         const names = profile.seeNames || {};
         let h = `<div class="people-list">
-          <button class="person ${busyOf ? '' : 'on'}" data-person="" type="button"><span class="pn">${esc(me)}</span></button>`;
-        for (const id of see) h += `<button class="person ${busyOf === id ? 'on-busy' : ''}" data-person="${esc(id)}" type="button"><span class="pn">${esc(names[id] || id)}</span></button>`;
+          ${personBtn('', profile.name, me, busyOf ? '' : 'on')}`;
+        for (const id of see) h += personBtn(id, names[id] !== id ? names[id] : '', id, busyOf === id ? 'on-busy' : '');
         box.innerHTML = h + '</div>';
         return;
       }
       box.hidden = !!panel;
       const list = [...users].sort((a, b) => (a.name || a.id).localeCompare(b.name || b.id, 'lv'));
       let html = `<h4>E-pasti</h4><div class="people-list">
-        <button class="person ${viewAs ? '' : 'on'}" data-person="" type="button"><span class="pn">${esc(me)}</span></button>`;
+        ${personBtn('', adminName, me, viewAs ? '' : 'on')}`;
       for (const u of list) {
         html += `<button class="person ${viewAs && viewAs.id === u.id ? 'on' : ''}" data-person="${esc(u.id)}" type="button">
           <span class="pn">${esc(u.name || u.id)}</span>${u.name ? `<span class="pe">${esc(u.id)}</span>` : ''}</button>`;
@@ -1290,6 +1296,9 @@
       let html = `<table><thead><tr><th>Vārds Uzvārds</th><th>E-pasts</th>`;
       for (const c of calendars) html += `<th class="calh"><span class="cn" style="--c:${esc(c.color)}">${esc(c.name)}</span></th>`;
       html += `<th>Pēdējo reizi</th><th></th></tr></thead><tbody>`;
+      // Tava rinda: tikai vārds (rādās citiem labajā pusē, ja viņiem atļauts redzēt tavus aizņemtos datumus)
+      html += `<tr data-u="${esc(ADMIN)}"><td><input class="name-in" data-name value="${esc(adminName)}" placeholder="—" /></td>
+        <td>${esc(ADMIN)}</td><td colspan="${calendars.length + 2}"></td></tr>`;
       for (const u of list) {
         const view = u.view || [], edit = u.edit || [];
         const pending = !view.length;
@@ -1327,7 +1336,14 @@
       const ref = doc(db, 'users', id);
       try {
         if (e.target.matches('[data-name]')) {
-          await updateDoc(ref, { name: e.target.value.trim() });
+          const name = e.target.value.trim();
+          await setDoc(ref, { name }, { merge: true });
+          // Atjauno vārdu arī tiem, kuru labās puses sarakstā šis cilvēks ir
+          const b = writeBatch(db); let n = 0;
+          for (const u of users) if ((u.seeBusy || []).includes(id)) {
+            b.update(doc(db, 'users', u.id), { seeNames: { ...(u.seeNames || {}), [id]: name || id } }); n++;
+          }
+          if (n) await b.commit();
           if (usersDirty && !document.activeElement.matches('[data-name]')) renderUsers();
           return;
         }
@@ -1339,7 +1355,7 @@
           if (e.target.checked) {
             see.add(who);
             const o = users.find((x) => x.id === who);
-            names[who] = (o && o.name) || who;
+            names[who] = who === ADMIN ? (adminName || who) : ((o && o.name) || who);
           } else { see.delete(who); delete names[who]; }
           await updateDoc(ref, { seeBusy: [...see], seeNames: names });
           return;
