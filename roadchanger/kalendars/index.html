@@ -172,6 +172,7 @@
     .day.past .num { color: #B9A584; }
     .day.busy { background-color: color-mix(in srgb, #D32F2F 16%, #fff); }
     .day.busy:hover { background-color: color-mix(in srgb, #D32F2F 22%, #fff); }
+    .filters.faded [data-f] { opacity: 0.25; pointer-events: none; }
     .fdiv { border: none; border-top: 0.5px solid #E0CCA4; margin: 0.35rem 0; }
     /* "Aizņemts" rinda ar pogu "Labot" iekšā */
     .busy-row { justify-content: space-between; padding: 0.3rem 0.35rem 0.3rem 0.85rem; }
@@ -806,9 +807,10 @@
       const ids = viewIds();
       let html = `<div class="fchip busy-row ${showBusy ? 'on' : ''} ${busyEdit ? 'editing' : ''}" style="--c:#D32F2F">
           <button class="busy-tg" data-busy type="button"><span class="box"></span>Aizņemts</button>
-          ${viewAs || busyOf ? '' : `<button class="busy-edit ${busyEdit ? 'on' : ''}" data-busyedit type="button">${busyEdit ? 'Gatavs' : 'Labot'}</button>`}
-        </div>${busyOf ? '' : '<hr class="fdiv">'}`;
-      if (busyOf) { f.innerHTML = html; return; }
+          ${viewAs || busyOf ? '<span class="busy-edit" style="visibility:hidden">Labot</span>' : `<button class="busy-edit ${busyEdit ? 'on' : ''}" data-busyedit type="button">${busyEdit ? 'Gatavs' : 'Labot'}</button>`}
+        </div><hr class="fdiv">`;
+      // Skatoties cita cilvēka aizņemtos datumus — kalendāri paliek vietā, tikai ļoti bāli un neaktīvi
+      f.classList.toggle('faded', !!busyOf);
       html += `<button class="fchip ${selected.size === 0 ? 'on' : ''}" data-f="*" style="--c:#2C2416" type="button"><span class="box"></span>Visi</button>`;
       for (const id of ids) {
         const c = calById(id);
