@@ -115,7 +115,7 @@
     .upc-date small { display: block; font-family: 'Lato', Arial, sans-serif; font-size: 0.68rem; color: #7A5C38; text-transform: uppercase; letter-spacing: 0.05em; margin-top: 0.15rem; }
     .upc-cals { display: flex; flex-wrap: wrap; gap: 0.25rem; }
     .upc-cals > span { display: inline-flex; align-items: center; gap: 0.3rem; font-size: 0.75rem; padding: 0.1rem 0.4rem; border-radius: 4px;
-      background: color-mix(in srgb, var(--c) var(--t, 14%), #fff); border-left: 3px solid var(--c); }
+      background: color-mix(in srgb, var(--c) var(--t, 14%), #fff); border-left: 3px solid var(--c); color: var(--fg, #2C2416); }
     .upc-cals .dot { display: inline-block; flex: none; width: 0.45rem; height: 0.45rem; border-radius: 50%; }
     .upc-place { font-size: 0.78rem; color: #7A5C38; margin-top: 0.25rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
     .upc-empty { font-size: 0.9rem; color: #9A8466; }
@@ -209,7 +209,7 @@
       padding: 0.2rem 0.4rem; border-radius: 4px; text-align: left;
       font-size: 0.75rem; line-height: 1.3;
       background: color-mix(in srgb, var(--c) var(--t, 14%), #fff);
-      border-left: 3px solid var(--c);
+      border-left: 3px solid var(--c); color: var(--fg, #2C2416);
       white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
     }
     .ev:hover { background: color-mix(in srgb, var(--c) calc(var(--t, 14%) + 10%), #fff); }
@@ -218,6 +218,8 @@
     .ev.active { outline: 1.5px solid var(--c); }
     .st-interese { background: #F5D90A; }
     .st-rezervets { background: #E08A1E; }
+    .st-meg_interese { background: #F5D90A; }
+    .st-meg_apstiprinats { background: #3E8E41; }
     .st-apstiprinats { background: #3E8E41; }
 
     /* ---------- Labās puses forma ---------- */
@@ -255,7 +257,9 @@
     .opt .dot { width: 0.6rem; height: 0.6rem; border-radius: 50%; }
     .opt.st { --c: #E08A1E; }
     .opt.st[data-st=apstiprinats] { --c: #3E8E41; }
-    .opt.st[data-st=interese] { --c: #F5D90A; }
+    .opt.st[data-st=interese], .opt.st[data-st=meg_interese] { --c: #F5D90A; }
+    .opt.st[data-st=meg_apstiprinats] { --c: #3E8E41; }
+    .loc-fields[hidden] { display: none !important; }
     .row2 { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 0.6rem; }
     .panel .field { padding: 0.6rem 0.75rem; font-size: 0.9rem; }
     .panel textarea.field { min-height: 7rem; resize: none; line-height: 1.5; }
@@ -532,6 +536,10 @@
       ['rezervets', 'Rezervēts'],
       ['apstiprinats', 'Apstiprināts']
     ];
+    const MEG = [
+      ['meg_interese', 'Interesējas'],
+      ['meg_apstiprinats', 'Apstiprināts']
+    ];
     const MONTHS = ['Janvāris', 'Februāris', 'Marts', 'Aprīlis', 'Maijs', 'Jūnijs', 'Jūlijs', 'Augusts', 'Septembris', 'Oktobris', 'Novembris', 'Decembris'];
     const MONTHS_GEN = ['janvāris', 'februāris', 'marts', 'aprīlis', 'maijs', 'jūnijs', 'jūlijs', 'augusts', 'septembris', 'oktobris', 'novembris', 'decembris'];
     const WEEKDAYS = ['Svētdiena', 'Pirmdiena', 'Otrdiena', 'Trešdiena', 'Ceturtdiena', 'Piektdiena', 'Sestdiena'];
@@ -747,9 +755,13 @@
     }
     const getEv = (id) => events.get(id) || upcoming.get(id);
     // Pasākuma krāsa kalendārā: sarkans "Aizņemts", zaļš "Apstiprināts", oranžs "Interesējas"/"Rezervēts"
-    const evColor = (e, c) => calById(c)?.busy ? '#D32F2F' : ({ apstiprinats: '#3E8E41', rezervets: '#E08A1E', interese: '#F5D90A' })[e.status] || '#E08A1E';
+    const evColor = (e, c) => calById(c)?.busy ? '#D32F2F' : ({ apstiprinats: '#3E8E41', rezervets: '#E08A1E', interese: '#F5D90A', meg_interese: '#F5D90A', meg_apstiprinats: '#3E8E41' })[e.status] || '#E08A1E';
+    const isMeg = (st) => String(st || '').startsWith('meg_');
+    // Dzeltens — bāls fons; oranžs un zaļš — pilnā krāsā ar baltiem burtiem
+    const isYellow = (e) => e.status === 'interese' || e.status === 'meg_interese';
+    const evStyle = (e, c) => `--c:${evColor(e, c)};--t:${isYellow(e) ? '22%' : '100%'};--fg:${isYellow(e) ? '#2C2416' : '#fff'}`;
+    const evLabel = (e, cal) => isMeg(e.status) ? 'Mēģinājums' : cal.name;
     // Dzeltenajam fons stiprāks, citādi uz balta tas gandrīz nav redzams
-    const evTint = (e, c) => !calById(c)?.busy && e.status === 'interese' ? '38%' : '14%';
     const busyOnly = (ids) => ids.length > 0 && ids.every((id) => calById(id)?.busy);
 
     // ---------- Nākošie pasākumi (kreisajā pusē) ----------
@@ -781,7 +793,7 @@
         const d = parseYmd(e.date);
         const cals = (e.cals || []).filter((c) => visible.has(c) && calById(c) && !calById(c).busy).map((c) => {
           const cal = calById(c);
-          return `<span style="--c:${evColor(e, c)};--t:${evTint(e, c)}">${esc(cal.name)}</span>`;
+          return `<span style="${evStyle(e, c)}">${esc(evLabel(e, cal))}</span>`;
         }).join('');
         const end = e.dateEnd && e.dateEnd !== e.date ? parseYmd(e.dateEnd) : null;
         const dd = end ? `${d.getDate()}.–${end.getDate()}.` : `${d.getDate()}.`;
@@ -948,7 +960,7 @@
           for (const { e, c } of items) {
             const cal = calById(c);
             const act = panel && panel.mode === 'edit' && panel.id === e.id ? ' active' : '';
-            html += `<button class="ev${act}" data-ev="${esc(e.id)}" style="--c:${evColor(e, c)};--t:${evTint(e, c)}" type="button" title="${esc(cal.name)}${e.from ? ' · ' + esc(e.from) : ''}${e.place ? ' · ' + esc(e.place) : ''}"><span class="lbl">${esc(cal.name)}</span></button>`;
+            html += `<button class="ev${act}" data-ev="${esc(e.id)}" style="${evStyle(e, c)}" type="button" title="${esc(evLabel(e, cal))}${e.from ? ' · ' + esc(e.from) : ''}${e.place ? ' · ' + esc(e.place) : ''}"><span class="lbl">${esc(evLabel(e, cal))}</span></button>`;
           }
           html += `</div>`;
         }
@@ -1180,11 +1192,11 @@
           const cal = calById(c);
           return `<span class="opt on" style="--c:${esc(cal.color)}"><span class="box"></span>${esc(cal.name)}</span>`;
         }).join('');
-        const st = STATUSES.find(([k]) => k === e.status);
+        const st = [...STATUSES, ...MEG].find(([k]) => k === e.status);
         p.innerHTML = head + `
           <div class="two-col">
             <div><span class="flabel">Kalendāri</span><div class="opts">${names}</div></div>
-            ${busyOnly(e.cals || []) ? '' : `<div><span class="flabel">Statuss</span><div class="opts"><span class="opt"><span class="dot st-${esc(e.status)}"></span>${esc(st ? st[1] : '')}</span></div></div>`}
+            ${busyOnly(e.cals || []) ? '' : `<div><span class="flabel">Statuss</span><div class="opts"><span class="opt"><span class="dot st-${esc(e.status)}"></span>${isMeg(e.status) ? 'Mēģinājums · ' : ''}${esc(st ? st[1] : '')}</span></div></div>`}
           </div>
           <span class="flabel">Laiks</span><p class="ro ${e.from || e.to ? '' : 'muted'}">${esc([e.from, e.to].filter(Boolean).join(' – ') || '—')}</p>
           <span class="flabel">Vieta</span><p class="ro ${e.place ? '' : 'muted'}">${esc(e.place || '—')}</p>
@@ -1202,6 +1214,9 @@
         return `<button type="button" class="opt ${checked.includes(id) ? 'on' : ''}" data-cal="${esc(id)}" style="--c:${esc(c.color)}"><span class="box"></span>${esc(c.name)}</button>`;
       }).join('');
       const status = src ? src.status : '';
+      // Mēģinājums (tikai ar Arfu): divas izvēles; kopā ar statusu var izvēlēties tikai vienu
+      const megOpts = MEG.map(([k, label]) =>
+        `<button type="button" class="opt st ${status === k ? 'on' : ''}" data-st="${k}"><span class="dot st-${k}"></span>${label}</button>`).join('');
       const stOpts = STATUSES.map(([k, label]) =>
         `<button type="button" class="opt st ${status === k ? 'on' : ''}" data-st="${k}"><span class="dot st-${k}"></span>${label}</button>`).join('');
 
@@ -1209,14 +1224,17 @@
         <form id="ev-form">
           <div class="two-col">
             <div><span class="flabel">Kalendāri</span><div class="opts" id="f-cals">${calOpts}</div></div>
-            <div id="st-col" ${busyOnly(checked) ? 'hidden' : ''}><span class="flabel">Statuss</span><div class="opts" id="f-st">${stOpts}</div></div>
+            <div id="st-col" ${busyOnly(checked) ? 'hidden' : ''}><span class="flabel">Statuss</span><div class="opts" id="f-st">${stOpts}</div>
+              <div id="meg-part" hidden><span class="flabel">Mēģinājums</span><div class="opts" id="f-meg">${megOpts}</div></div></div>
           </div>
           <span class="flabel">Datums no – līdz</span>
           <div class="row2"><input class="field" type="date" id="f-date" value="${esc(date)}" required /><input class="field" type="date" id="f-end" value="${esc(dateEnd)}" min="${esc(date)}" /></div>
           <span class="flabel">Laiks</span>
           <div class="row2"><input class="field" type="time" id="f-from" value="${esc(e?.from || '')}" /><input class="field" type="time" id="f-to" value="${esc(e?.to || '')}" /></div>
+          <div id="loc-fields" class="loc-fields">
           <span class="flabel">Vieta</span><input class="field" type="text" id="f-place" maxlength="300" value="${esc(src?.place || '')}" />
           <span class="flabel">Adrese</span><input class="field" type="text" id="f-address" maxlength="300" value="${esc(src?.address || '')}" />
+          </div>
           <span class="flabel">Apraksts</span><textarea class="field" id="f-notes" maxlength="5000">${esc(src?.notes || '')}</textarea>
           <div class="panel-actions">
             <button class="btn btn-brown" type="submit">Saglabāt</button>
@@ -1225,6 +1243,7 @@
           </div>
           <p class="msg err" id="f-msg"></p>
         </form>`;
+      updateMeg();
     }
     function metaHtml(e) {
       const parts = [];
@@ -1240,10 +1259,11 @@
         c.classList.toggle('on');
         // Tikai "Aizņemts" — statuss nav vajadzīgs
         $('st-col').hidden = busyOnly([...$('f-cals').querySelectorAll('.opt.on')].map((o) => o.dataset.cal));
+        updateMeg();
         return;
       }
       const s = ev.target.closest('[data-st]');
-      if (s) { $('f-st').querySelectorAll('.opt').forEach((o) => o.classList.toggle('on', o === s)); return; }
+      if (s) { $('st-col').querySelectorAll('[data-st]').forEach((o) => o.classList.toggle('on', o === s)); updateMeg(); return; }
       if (ev.target.closest('#f-copy')) { copyEvent(); return; }
       if (ev.target.closest('#f-paste')) { pasteEvent(); return; }
       const del = ev.target.closest('#f-del');
@@ -1264,12 +1284,24 @@
       try { localStorage.setItem('rcCopied', JSON.stringify(copied)); } catch (_) {}
       toast('Copy ✓');
     }
+    // "Mēģinājums" redzams tikai, ja atzīmēta Arfa; izvēlēts mēģinājums paslēpj vietu un adresi
+    const isArfa = (id) => id === 'arfa' || calById(id)?.name === 'Arfa';
+    function updateMeg() {
+      if (!$('meg-part')) return;
+      const cals = [...$('f-cals').querySelectorAll('.opt.on')].map((o) => o.dataset.cal);
+      const arfa = cals.some(isArfa);
+      $('meg-part').hidden = !arfa;
+      if (!arfa) $('f-meg').querySelectorAll('.opt').forEach((o) => o.classList.remove('on'));
+      const cur = $('st-col').querySelector('[data-st].on');
+      $('loc-fields').hidden = !!(cur && isMeg(cur.dataset.st));
+    }
     function pasteEvent() {
       if (!copied || !panel || panel.mode !== 'new' || !$('ev-form')) return;
       $('f-cals').querySelectorAll('.opt').forEach((o) => o.classList.toggle('on', copied.cals.includes(o.dataset.cal)));
-      $('f-st').querySelectorAll('.opt').forEach((o) => o.classList.toggle('on', o.dataset.st === copied.status));
+      $('st-col').querySelectorAll('[data-st]').forEach((o) => o.classList.toggle('on', o.dataset.st === copied.status));
       $('st-col').hidden = busyOnly([...$('f-cals').querySelectorAll('.opt.on')].map((o) => o.dataset.cal));
       $('f-place').value = copied.place; $('f-address').value = copied.address; $('f-notes').value = copied.notes;
+      updateMeg();
     }
     document.addEventListener('keydown', (e) => {
       if (!(e.metaKey || e.ctrlKey) || e.altKey || e.shiftKey) return;
@@ -1292,7 +1324,7 @@
       ev.preventDefault();
       const msg = $('f-msg');
       const cals = [...$('f-cals').querySelectorAll('.opt.on')].map((o) => o.dataset.cal);
-      const st = $('f-st').querySelector('.opt.on');
+      const st = $('st-col').querySelector('[data-st].on');
       const date = $('f-date').value;
       if (!cals.length) { msg.textContent = 'Izvēlies kalendāru.'; return; }
       const noStatus = busyOnly(cals);
