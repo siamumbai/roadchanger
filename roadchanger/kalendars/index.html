@@ -264,6 +264,7 @@
     #dur-fields { display: flex; flex-direction: column; gap: 0.4rem; }
     .opts.tpick { gap: 0.3rem; }
     .meg-time { align-self: center; font-family: 'Libre Baskerville', Georgia, serif; font-size: 1.05rem; color: #2C2416; }
+    .meg-time b { font-weight: 400; color: #E08A1E; }
     .meg-time[hidden] { display: none !important; }
     .tpick-hours { display: flex; flex-direction: column; gap: 0.3rem; }
     .tlabel { display: block; font-size: 0.72rem; letter-spacing: 0.1em; text-transform: uppercase; color: #7A5C38; margin-top: 0.3rem; }
@@ -1335,7 +1336,8 @@
       // Mēģinājumam: virsraksts "Datums" un aiz datuma izvēlētais laiks
       $('f-date-label').textContent = meg ? 'Datums' : 'Datums no – līdz';
       $('meg-time').hidden = !meg;
-      $('meg-time').textContent = meg ? megTimes(true).from : '';
+      const mt = meg ? megTimes(true).from : '';
+      $('meg-time').innerHTML = mt ? `plkst. <b>${mt}</b>` : '';
       $('time-fields').hidden = meg;
       $('dur-fields').hidden = !meg;
     }
