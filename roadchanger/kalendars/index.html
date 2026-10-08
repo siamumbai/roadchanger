@@ -263,6 +263,8 @@
     .panel #meg-part .flabel { margin-top: 1.1rem; }
     #dur-fields { display: flex; flex-direction: column; gap: 0.4rem; }
     .opts.tpick { gap: 0.3rem; }
+    .tpick-hours { display: flex; flex-direction: column; gap: 0.3rem; }
+    .tlabel { align-self: center; font-size: 0.72rem; letter-spacing: 0.1em; text-transform: uppercase; color: #7A5C38; margin-right: 0.3rem; }
     .opt.tm { padding: 0.28rem 0.45rem; min-width: 2.3rem; justify-content: center; font-size: 0.82rem; }
     .opt.tm.on { background: #2C2416; border-color: #2C2416; color: #F5ECD8; }
     .row2 { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 0.6rem; }
@@ -1240,8 +1242,8 @@
           <span class="flabel">Laiks</span>
           <div class="row2" id="time-fields"><input class="field" type="time" id="f-from" value="${esc(e?.from || '')}" /><input class="field" type="time" id="f-to" value="${esc(e?.to || '')}" /></div>
           <div id="dur-fields" hidden>
-            <div class="opts tpick">${Array.from({ length: 16 }, (_, i) => String(i + 8).padStart(2, '0')).map((h) => `<button type="button" class="opt tm ${e?.from && e.from.slice(0, 2) === h ? 'on' : ''}" data-h="${h}">${h}</button>`).join('')}</div>
-            <div class="opts tpick">${['00', '15', '30', '45'].map((m) => `<button type="button" class="opt tm ${e?.from && e.from.slice(3, 5) === m ? 'on' : ''}" data-m="${m}">:${m}</button>`).join('')}</div>
+            <div class="tpick-hours" data-hgroup>${[[8, 12], [13, 17], [18, 23]].map(([f, t]) => `<div class="opts tpick">${Array.from({ length: t - f + 1 }, (_, i) => String(f + i).padStart(2, '0')).map((h) => `<button type="button" class="opt tm ${e?.from && e.from.slice(0, 2) === h ? 'on' : ''}" data-h="${h}">${h}</button>`).join('')}</div>`).join('')}</div>
+            <div class="opts tpick"><span class="tlabel">Minūtes</span>${['00', '15', '30', '45'].map((m) => `<button type="button" class="opt tm ${e?.from && e.from.slice(3, 5) === m ? 'on' : ''}" data-m="${m}">:${m}</button>`).join('')}</div>
             <div class="opts tpick">${['1h', '1.5h', '2h', '3h'].map((d) => `<button type="button" class="opt tm ${e?.dur === d ? 'on' : ''}" data-dur="${d}">${d}</button>`).join('')}</div>
           </div>
           <div id="loc-fields" class="loc-fields">
@@ -1281,7 +1283,8 @@
       const tb = ev.target.closest('[data-h], [data-m], [data-dur]');
       if (tb) {
         const was = tb.classList.contains('on');
-        tb.parentElement.querySelectorAll('.opt').forEach((o) => o.classList.remove('on'));
+        // Stundas ir 3 rindās — izvēle viena visās
+        (tb.closest('[data-hgroup]') || tb.parentElement).querySelectorAll('.opt').forEach((o) => o.classList.remove('on'));
         if (!was) tb.classList.add('on');
         return;
       }
