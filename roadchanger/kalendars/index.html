@@ -264,7 +264,7 @@
     #dur-fields { display: flex; flex-direction: column; gap: 0.4rem; }
     .opts.tpick { gap: 0.3rem; }
     .tpick-hours { display: flex; flex-direction: column; gap: 0.3rem; }
-    .tlabel { align-self: center; font-size: 0.72rem; letter-spacing: 0.1em; text-transform: uppercase; color: #7A5C38; margin-right: 0.3rem; }
+    .tlabel { display: block; font-size: 0.72rem; letter-spacing: 0.1em; text-transform: uppercase; color: #7A5C38; margin-top: 0.3rem; }
     .opt.tm { padding: 0.28rem 0.45rem; min-width: 2.3rem; justify-content: center; font-size: 0.82rem; }
     .opt.tm.on { background: #2C2416; border-color: #2C2416; color: #F5ECD8; }
     .row2 { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 0.6rem; }
@@ -1243,8 +1243,8 @@
           <div class="row2" id="time-fields"><input class="field" type="time" id="f-from" value="${esc(e?.from || '')}" /><input class="field" type="time" id="f-to" value="${esc(e?.to || '')}" /></div>
           <div id="dur-fields" hidden>
             <div class="tpick-hours" data-hgroup>${[[8, 12], [13, 17], [18, 23]].map(([f, t]) => `<div class="opts tpick">${Array.from({ length: t - f + 1 }, (_, i) => String(f + i).padStart(2, '0')).map((h) => `<button type="button" class="opt tm ${e?.from && e.from.slice(0, 2) === h ? 'on' : ''}" data-h="${h}">${h}</button>`).join('')}</div>`).join('')}</div>
-            <div class="opts tpick"><span class="tlabel">Minūtes</span>${['00', '15', '30', '45'].map((m) => `<button type="button" class="opt tm ${e?.from && e.from.slice(3, 5) === m ? 'on' : ''}" data-m="${m}">:${m}</button>`).join('')}</div>
-            <div class="opts tpick">${['1h', '1.5h', '2h', '3h'].map((d) => `<button type="button" class="opt tm ${e?.dur === d ? 'on' : ''}" data-dur="${d}">${d}</button>`).join('')}</div>
+            <span class="tlabel">Minūtes</span>
+            <div class="opts tpick">${['00', '15', '30', '45'].map((m) => `<button type="button" class="opt tm ${e?.from && e.from.slice(3, 5) === m ? 'on' : ''}" data-m="${m}">:${m}</button>`).join('')}</div>
           </div>
           <div id="loc-fields" class="loc-fields">
           <span class="flabel">Vieta</span><input class="field" type="text" id="f-place" maxlength="300" value="${esc(src?.place || '')}" />
@@ -1309,17 +1309,13 @@
       toast('Copy ✓');
     }
     // "Mēģinājums" redzams tikai, ja atzīmēta Arfa; izvēlēts mēģinājums paslēpj vietu un adresi
-    // Mēģinājumam: sākums no pogām (stunda + minūtes), beigas = sākums + ilgums
+    // Mēģinājumam: sākums no pogām (stunda + minūtes)
     function megTimes(meg) {
       if (!meg) return { from: $('f-from').value || '', to: $('f-to').value || '' };
       const h = $('dur-fields').querySelector('[data-h].on')?.dataset.h;
       if (!h) return { from: '', to: '' };
       const m = $('dur-fields').querySelector('[data-m].on')?.dataset.m || '00';
-      const from = `${h}:${m}`;
-      const d = parseFloat($('dur-fields').querySelector('[data-dur].on')?.dataset.dur || '');
-      if (!d) return { from, to: '' };
-      const t = (Number(h) * 60 + Number(m) + Math.round(d * 60)) % (24 * 60);
-      return { from, to: `${pad(Math.floor(t / 60))}:${pad(t % 60)}` };
+      return { from: `${h}:${m}`, to: '' };
     }
     const isArfa = (id) => id === 'arfa' || calById(id)?.name === 'Arfa';
     function updateMeg() {
@@ -1380,7 +1376,7 @@
       const data = {
         date, dateEnd, cals, status: st ? st.dataset.st : 'apstiprinats',
         ...megTimes(meg),
-        dur: meg ? ($('dur-fields').querySelector('[data-dur].on')?.dataset.dur || '') : '',
+        dur: '',
         title: old?.title || '', place: $('f-place').value.trim(), address: $('f-address').value.trim(),
         notes: $('f-notes').value.trim(),
         createdBy: old ? old.createdBy : me,
