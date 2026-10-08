@@ -263,6 +263,8 @@
     .panel #meg-part .flabel { margin-top: 1.1rem; }
     #dur-fields { display: flex; flex-direction: column; gap: 0.4rem; }
     .opts.tpick { gap: 0.3rem; }
+    .meg-time { align-self: center; font-family: 'Libre Baskerville', Georgia, serif; font-size: 1.05rem; color: #2C2416; }
+    .meg-time[hidden] { display: none !important; }
     .tpick-hours { display: flex; flex-direction: column; gap: 0.3rem; }
     .tlabel { display: block; font-size: 0.72rem; letter-spacing: 0.1em; text-transform: uppercase; color: #7A5C38; margin-top: 0.3rem; }
     .opt.tm { padding: 0.28rem 0.45rem; min-width: 2.3rem; justify-content: center; font-size: 0.82rem; }
@@ -1237,8 +1239,8 @@
             <div id="st-col" ${busyOnly(checked) ? 'hidden' : ''}><span class="flabel">Statuss</span><div class="opts" id="f-st">${stOpts}</div>
               <div id="meg-part" hidden><span class="flabel">Mēģinājums</span><div class="opts" id="f-meg">${megOpts}</div></div></div>
           </div>
-          <span class="flabel">Datums no – līdz</span>
-          <div class="row2"><input class="field" type="date" id="f-date" value="${esc(date)}" required /><input class="field" type="date" id="f-end" value="${esc(dateEnd)}" min="${esc(date)}" /></div>
+          <span class="flabel" id="f-date-label">Datums no – līdz</span>
+          <div class="row2"><input class="field" type="date" id="f-date" value="${esc(date)}" required /><input class="field" type="date" id="f-end" value="${esc(dateEnd)}" min="${esc(date)}" /><span class="meg-time" id="meg-time" hidden></span></div>
           <span class="flabel">Laiks</span>
           <div class="row2" id="time-fields"><input class="field" type="time" id="f-from" value="${esc(e?.from || '')}" /><input class="field" type="time" id="f-to" value="${esc(e?.to || '')}" /></div>
           <div id="dur-fields" hidden>
@@ -1286,6 +1288,7 @@
         // Stundas ir 3 rindās — izvēle viena visās
         (tb.closest('[data-hgroup]') || tb.parentElement).querySelectorAll('.opt').forEach((o) => o.classList.remove('on'));
         if (!was) tb.classList.add('on');
+        updateMeg();
         return;
       }
       if (ev.target.closest('#f-copy')) { copyEvent(); return; }
@@ -1329,6 +1332,10 @@
       $('loc-fields').hidden = meg;
       // Mēģinājumam: viens datums (bez "līdz") un ilgums 1h / 1.5h / 2h / 3h laika lauku vietā
       $('f-end').hidden = meg;
+      // Mēģinājumam: virsraksts "Datums" un aiz datuma izvēlētais laiks
+      $('f-date-label').textContent = meg ? 'Datums' : 'Datums no – līdz';
+      $('meg-time').hidden = !meg;
+      $('meg-time').textContent = meg ? megTimes(true).from : '';
       $('time-fields').hidden = meg;
       $('dur-fields').hidden = !meg;
     }
