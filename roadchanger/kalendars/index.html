@@ -266,7 +266,9 @@
     /* Tāda pati kontūra kā datuma laukam; izvēlēts laiks — viss oranžs */
     .meg-time { display: flex; align-items: center; padding: 0.45rem 0.7rem; border: 0.5px solid #E0CCA4; border-radius: 8px; background: #fff;
       font-size: 0.9rem; color: #6B5035; }
-    .meg-time.set { color: #E08A1E; border-color: #E08A1E; }
+    .meg-time.set { color: #3E8E41; border-color: #3E8E41; }
+    #meg-time-label[hidden], #f-time-label[hidden] { display: none !important; }
+    .panel .row2 > .flabel { margin: 0.65rem 0 0.3rem; }
     .meg-time[hidden] { display: none !important; }
     .tpick-hours { display: flex; flex-direction: column; gap: 0.3rem; }
     .tlabel { display: block; font-size: 0.72rem; letter-spacing: 0.1em; text-transform: uppercase; color: #7A5C38; margin-top: 0.3rem; }
@@ -1242,9 +1244,9 @@
             <div id="st-col" ${busyOnly(checked) ? 'hidden' : ''}><span class="flabel">Statuss</span><div class="opts" id="f-st">${stOpts}</div>
               <div id="meg-part" hidden><span class="flabel">Mēģinājums</span><div class="opts" id="f-meg">${megOpts}</div></div></div>
           </div>
-          <span class="flabel" id="f-date-label">Datums no – līdz</span>
+          <div class="row2"><span class="flabel" id="f-date-label">Datums no – līdz</span><span class="flabel" id="meg-time-label" hidden>Laiks</span></div>
           <div class="row2"><input class="field" type="date" id="f-date" value="${esc(date)}" required /><input class="field" type="date" id="f-end" value="${esc(dateEnd)}" min="${esc(date)}" /><span class="meg-time" id="meg-time" hidden></span></div>
-          <span class="flabel">Laiks</span>
+          <span class="flabel" id="f-time-label">Laiks</span>
           <div class="row2" id="time-fields"><input class="field" type="time" id="f-from" value="${esc(e?.from || '')}" /><input class="field" type="time" id="f-to" value="${esc(e?.to || '')}" /></div>
           <div id="dur-fields" hidden>
             <div class="tpick-hours" data-hgroup>${[[8, 12], [13, 17], [18, 23]].map(([f, t]) => `<div class="opts tpick">${Array.from({ length: t - f + 1 }, (_, i) => String(f + i).padStart(2, '0')).map((h) => `<button type="button" class="opt tm ${e?.from && e.from.slice(0, 2) === h ? 'on' : ''}" data-h="${h}">${h}</button>`).join('')}</div>`).join('')}</div>
@@ -1339,7 +1341,9 @@
       $('f-date-label').textContent = meg ? 'Datums' : 'Datums no – līdz';
       $('meg-time').hidden = !meg;
       const mt = meg ? megTimes(true).from : '';
-      $('meg-time').textContent = `plkst. ${mt || '-'}`;
+      $('meg-time').textContent = mt || '-';
+      $('meg-time-label').hidden = !meg;
+      $('f-time-label').hidden = meg;
       $('meg-time').classList.toggle('set', !!mt);
       $('time-fields').hidden = meg;
       $('dur-fields').hidden = !meg;
