@@ -259,7 +259,9 @@
     .opt.st[data-st=apstiprinats] { --c: #3E8E41; }
     .opt.st[data-st=interese], .opt.st[data-st=meg_interese] { --c: #F5D90A; }
     .opt.st[data-st=meg_apstiprinats] { --c: #3E8E41; }
-    .loc-fields[hidden] { display: none !important; }
+    .loc-fields[hidden], #f-end[hidden], #time-fields[hidden], #dur-fields[hidden] { display: none !important; }
+    .panel #meg-part .flabel { margin-top: 1.1rem; }
+    .opt.dur.on { background: #2C2416; border-color: #2C2416; color: #F5ECD8; }
     .row2 { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 0.6rem; }
     .panel .field { padding: 0.6rem 0.75rem; font-size: 0.9rem; }
     .panel textarea.field { min-height: 7rem; resize: none; line-height: 1.5; }
@@ -537,7 +539,7 @@
       ['apstiprinats', 'Apstiprināts']
     ];
     const MEG = [
-      ['meg_interese', 'Interesējas'],
+      ['meg_interese', 'Maybe'],
       ['meg_apstiprinats', 'Apstiprināts']
     ];
     const MONTHS = ['Janvāris', 'Februāris', 'Marts', 'Aprīlis', 'Maijs', 'Jūnijs', 'Jūlijs', 'Augusts', 'Septembris', 'Oktobris', 'Novembris', 'Decembris'];
@@ -1198,7 +1200,7 @@
             <div><span class="flabel">Kalendāri</span><div class="opts">${names}</div></div>
             ${busyOnly(e.cals || []) ? '' : `<div><span class="flabel">Statuss</span><div class="opts"><span class="opt"><span class="dot st-${esc(e.status)}"></span>${isMeg(e.status) ? 'Mēģinājums · ' : ''}${esc(st ? st[1] : '')}</span></div></div>`}
           </div>
-          <span class="flabel">Laiks</span><p class="ro ${e.from || e.to ? '' : 'muted'}">${esc([e.from, e.to].filter(Boolean).join(' – ') || '—')}</p>
+          <span class="flabel">Laiks</span><p class="ro ${e.from || e.to || e.dur ? '' : 'muted'}">${esc(isMeg(e.status) ? (e.dur || '—') : ([e.from, e.to].filter(Boolean).join(' – ') || '—'))}</p>
           <span class="flabel">Vieta</span><p class="ro ${e.place ? '' : 'muted'}">${esc(e.place || '—')}</p>
           <span class="flabel">Adrese</span><p class="ro ${e.address ? '' : 'muted'}">${esc(e.address || '—')}</p>
           <span class="flabel">Apraksts</span><p class="ro ${e.notes ? '' : 'muted'}">${esc(e.notes || '—')}</p>
@@ -1230,7 +1232,8 @@
           <span class="flabel">Datums no – līdz</span>
           <div class="row2"><input class="field" type="date" id="f-date" value="${esc(date)}" required /><input class="field" type="date" id="f-end" value="${esc(dateEnd)}" min="${esc(date)}" /></div>
           <span class="flabel">Laiks</span>
-          <div class="row2"><input class="field" type="time" id="f-from" value="${esc(e?.from || '')}" /><input class="field" type="time" id="f-to" value="${esc(e?.to || '')}" /></div>
+          <div class="row2" id="time-fields"><input class="field" type="time" id="f-from" value="${esc(e?.from || '')}" /><input class="field" type="time" id="f-to" value="${esc(e?.to || '')}" /></div>
+          <div class="opts" id="dur-fields" hidden>${['1h', '1.5h', '2h', '3h'].map((d) => `<button type="button" class="opt dur ${e?.dur === d ? 'on' : ''}" data-dur="${d}">${d}</button>`).join('')}</div>
           <div id="loc-fields" class="loc-fields">
           <span class="flabel">Vieta</span><input class="field" type="text" id="f-place" maxlength="300" value="${esc(src?.place || '')}" />
           <span class="flabel">Adrese</span><input class="field" type="text" id="f-address" maxlength="300" value="${esc(src?.address || '')}" />
@@ -1264,6 +1267,8 @@
       }
       const s = ev.target.closest('[data-st]');
       if (s) { $('st-col').querySelectorAll('[data-st]').forEach((o) => o.classList.toggle('on', o === s)); updateMeg(); return; }
+      const du = ev.target.closest('[data-dur]');
+      if (du) { const was = du.classList.contains('on'); $('dur-fields').querySelectorAll('.opt').forEach((o) => o.classList.remove('on')); if (!was) du.classList.add('on'); return; }
       if (ev.target.closest('#f-copy')) { copyEvent(); return; }
       if (ev.target.closest('#f-paste')) { pasteEvent(); return; }
       const del = ev.target.closest('#f-del');
@@ -1293,7 +1298,12 @@
       $('meg-part').hidden = !arfa;
       if (!arfa) $('f-meg').querySelectorAll('.opt').forEach((o) => o.classList.remove('on'));
       const cur = $('st-col').querySelector('[data-st].on');
-      $('loc-fields').hidden = !!(cur && isMeg(cur.dataset.st));
+      const meg = !!(cur && isMeg(cur.dataset.st));
+      $('loc-fields').hidden = meg;
+      // Mēģinājumam: viens datums (bez "līdz") un ilgums 1h / 1.5h / 2h / 3h laika lauku vietā
+      $('f-end').hidden = meg;
+      $('time-fields').hidden = meg;
+      $('dur-fields').hidden = !meg;
     }
     function pasteEvent() {
       if (!copied || !panel || panel.mode !== 'new' || !$('ev-form')) return;
@@ -1330,14 +1340,16 @@
       const noStatus = busyOnly(cals);
       if (!st && !noStatus) { msg.textContent = 'Izvēlies statusu.'; return; }
       if (!date) { msg.textContent = 'Izvēlies datumu.'; return; }
-      let dateEnd = $('f-end').value || '';
+      const meg = !!(st && isMeg(st.dataset.st));
+      let dateEnd = meg ? '' : ($('f-end').value || '');
       if (dateEnd && dateEnd < date) { msg.textContent = 'Beigu datums ir pirms sākuma.'; return; }
       if (dateEnd === date) dateEnd = '';
       const old = panel.mode === 'edit' ? getEv(panel.id) : null;
       const id = old ? old.id : doc(collection(db, 'calendars', cals[0], 'events')).id;
       const data = {
         date, dateEnd, cals, status: st ? st.dataset.st : 'apstiprinats',
-        from: $('f-from').value || '', to: $('f-to').value || '',
+        from: meg ? '' : ($('f-from').value || ''), to: meg ? '' : ($('f-to').value || ''),
+        dur: meg ? ($('dur-fields').querySelector('.on')?.dataset.dur || '') : '',
         title: old?.title || '', place: $('f-place').value.trim(), address: $('f-address').value.trim(),
         notes: $('f-notes').value.trim(),
         createdBy: old ? old.createdBy : me,
