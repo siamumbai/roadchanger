@@ -115,7 +115,7 @@
     .upc-date small { display: block; font-family: 'Lato', Arial, sans-serif; font-size: 0.68rem; color: #7A5C38; text-transform: uppercase; letter-spacing: 0.05em; margin-top: 0.15rem; }
     .upc-cals { display: flex; flex-wrap: wrap; gap: 0.25rem; }
     .upc-cals > span { display: inline-flex; align-items: center; gap: 0.3rem; font-size: 0.75rem; padding: 0.1rem 0.4rem; border-radius: 4px;
-      background: color-mix(in srgb, var(--c) var(--t, 14%), #fff); border-left: 3px solid var(--c); color: var(--fg, #2C2416); }
+      background: color-mix(in srgb, var(--c) var(--t, 14%), #fff); border-left: 3px solid var(--c); color: var(--fg, #2C2416); box-shadow: inset 0 0 0 var(--b, 0) var(--c); }
     .upc-cals .dot { display: inline-block; flex: none; width: 0.45rem; height: 0.45rem; border-radius: 50%; }
     .upc-place { font-size: 0.78rem; color: #7A5C38; margin-top: 0.25rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
     .upc-empty { font-size: 0.9rem; color: #9A8466; }
@@ -209,7 +209,7 @@
       padding: 0.2rem 0.4rem; border-radius: 4px; text-align: left;
       font-size: 0.75rem; line-height: 1.3;
       background: color-mix(in srgb, var(--c) var(--t, 14%), #fff);
-      border-left: 3px solid var(--c); color: var(--fg, #2C2416);
+      border-left: 3px solid var(--c); color: var(--fg, #2C2416); box-shadow: inset 0 0 0 var(--b, 0) var(--c);
       white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
     }
     .ev:hover { background: color-mix(in srgb, var(--c) calc(var(--t, 14%) + 10%), #fff); }
@@ -261,7 +261,10 @@
     .opt.st[data-st=meg_apstiprinats] { --c: #3E8E41; }
     .loc-fields[hidden], #f-end[hidden], #time-fields[hidden], #dur-fields[hidden] { display: none !important; }
     .panel #meg-part .flabel { margin-top: 1.1rem; }
-    .opt.dur.on { background: #2C2416; border-color: #2C2416; color: #F5ECD8; }
+    #dur-fields { display: flex; flex-direction: column; gap: 0.4rem; }
+    .opts.tpick { gap: 0.3rem; }
+    .opt.tm { padding: 0.28rem 0.45rem; min-width: 2.3rem; justify-content: center; font-size: 0.82rem; }
+    .opt.tm.on { background: #2C2416; border-color: #2C2416; color: #F5ECD8; }
     .row2 { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 0.6rem; }
     .panel .field { padding: 0.6rem 0.75rem; font-size: 0.9rem; }
     .panel textarea.field { min-height: 7rem; resize: none; line-height: 1.5; }
@@ -761,8 +764,11 @@
     const isMeg = (st) => String(st || '').startsWith('meg_');
     // Dzeltens — bāls fons; oranžs un zaļš — pilnā krāsā ar baltiem burtiem
     const isYellow = (e) => e.status === 'interese' || e.status === 'meg_interese';
-    const evStyle = (e, c) => `--c:${evColor(e, c)};--t:${isYellow(e) ? '22%' : '100%'};--fg:${isYellow(e) ? '#2C2416' : '#fff'}`;
-    const evLabel = (e, cal) => isMeg(e.status) ? 'Mēģinājums' : cal.name;
+    const evStyle = (e, c) => isMeg(e.status)
+      // Mēģinājums: caurspīdīgs fons, krāsaina kontūra
+      ? `--c:${evColor(e, c)};--t:0%;--fg:#2C2416;--b:1px`
+      : `--c:${evColor(e, c)};--t:${isYellow(e) ? '22%' : '100%'};--fg:${isYellow(e) ? '#2C2416' : '#fff'}`;
+    const evLabel = (e, cal) => isMeg(e.status) ? `Mēģinājums${e.from ? ' ' + e.from + (e.to ? '–' + e.to : '') : ''}` : cal.name;
     // Dzeltenajam fons stiprāks, citādi uz balta tas gandrīz nav redzams
     const busyOnly = (ids) => ids.length > 0 && ids.every((id) => calById(id)?.busy);
 
@@ -1200,7 +1206,7 @@
             <div><span class="flabel">Kalendāri</span><div class="opts">${names}</div></div>
             ${busyOnly(e.cals || []) ? '' : `<div><span class="flabel">Statuss</span><div class="opts"><span class="opt"><span class="dot st-${esc(e.status)}"></span>${isMeg(e.status) ? 'Mēģinājums · ' : ''}${esc(st ? st[1] : '')}</span></div></div>`}
           </div>
-          <span class="flabel">Laiks</span><p class="ro ${e.from || e.to || e.dur ? '' : 'muted'}">${esc(isMeg(e.status) ? (e.dur || '—') : ([e.from, e.to].filter(Boolean).join(' – ') || '—'))}</p>
+          <span class="flabel">Laiks</span><p class="ro ${e.from || e.to || e.dur ? '' : 'muted'}">${esc([e.from, e.to].filter(Boolean).join(' – ') || (isMeg(e.status) ? e.dur : '') || '—')}</p>
           <span class="flabel">Vieta</span><p class="ro ${e.place ? '' : 'muted'}">${esc(e.place || '—')}</p>
           <span class="flabel">Adrese</span><p class="ro ${e.address ? '' : 'muted'}">${esc(e.address || '—')}</p>
           <span class="flabel">Apraksts</span><p class="ro ${e.notes ? '' : 'muted'}">${esc(e.notes || '—')}</p>
@@ -1233,7 +1239,11 @@
           <div class="row2"><input class="field" type="date" id="f-date" value="${esc(date)}" required /><input class="field" type="date" id="f-end" value="${esc(dateEnd)}" min="${esc(date)}" /></div>
           <span class="flabel">Laiks</span>
           <div class="row2" id="time-fields"><input class="field" type="time" id="f-from" value="${esc(e?.from || '')}" /><input class="field" type="time" id="f-to" value="${esc(e?.to || '')}" /></div>
-          <div class="opts" id="dur-fields" hidden>${['1h', '1.5h', '2h', '3h'].map((d) => `<button type="button" class="opt dur ${e?.dur === d ? 'on' : ''}" data-dur="${d}">${d}</button>`).join('')}</div>
+          <div id="dur-fields" hidden>
+            <div class="opts tpick">${Array.from({ length: 16 }, (_, i) => String(i + 8).padStart(2, '0')).map((h) => `<button type="button" class="opt tm ${e?.from && e.from.slice(0, 2) === h ? 'on' : ''}" data-h="${h}">${h}</button>`).join('')}</div>
+            <div class="opts tpick">${['00', '15', '30', '45'].map((m) => `<button type="button" class="opt tm ${e?.from && e.from.slice(3, 5) === m ? 'on' : ''}" data-m="${m}">:${m}</button>`).join('')}</div>
+            <div class="opts tpick">${['1h', '1.5h', '2h', '3h'].map((d) => `<button type="button" class="opt tm ${e?.dur === d ? 'on' : ''}" data-dur="${d}">${d}</button>`).join('')}</div>
+          </div>
           <div id="loc-fields" class="loc-fields">
           <span class="flabel">Vieta</span><input class="field" type="text" id="f-place" maxlength="300" value="${esc(src?.place || '')}" />
           <span class="flabel">Adrese</span><input class="field" type="text" id="f-address" maxlength="300" value="${esc(src?.address || '')}" />
@@ -1267,8 +1277,14 @@
       }
       const s = ev.target.closest('[data-st]');
       if (s) { $('st-col').querySelectorAll('[data-st]').forEach((o) => o.classList.toggle('on', o === s)); updateMeg(); return; }
-      const du = ev.target.closest('[data-dur]');
-      if (du) { const was = du.classList.contains('on'); $('dur-fields').querySelectorAll('.opt').forEach((o) => o.classList.remove('on')); if (!was) du.classList.add('on'); return; }
+      // Mēģinājuma laiks: stunda, minūtes, ilgums — katrā rindā viena izvēle (otrs klikšķis noņem)
+      const tb = ev.target.closest('[data-h], [data-m], [data-dur]');
+      if (tb) {
+        const was = tb.classList.contains('on');
+        tb.parentElement.querySelectorAll('.opt').forEach((o) => o.classList.remove('on'));
+        if (!was) tb.classList.add('on');
+        return;
+      }
       if (ev.target.closest('#f-copy')) { copyEvent(); return; }
       if (ev.target.closest('#f-paste')) { pasteEvent(); return; }
       const del = ev.target.closest('#f-del');
@@ -1290,6 +1306,18 @@
       toast('Copy ✓');
     }
     // "Mēģinājums" redzams tikai, ja atzīmēta Arfa; izvēlēts mēģinājums paslēpj vietu un adresi
+    // Mēģinājumam: sākums no pogām (stunda + minūtes), beigas = sākums + ilgums
+    function megTimes(meg) {
+      if (!meg) return { from: $('f-from').value || '', to: $('f-to').value || '' };
+      const h = $('dur-fields').querySelector('[data-h].on')?.dataset.h;
+      if (!h) return { from: '', to: '' };
+      const m = $('dur-fields').querySelector('[data-m].on')?.dataset.m || '00';
+      const from = `${h}:${m}`;
+      const d = parseFloat($('dur-fields').querySelector('[data-dur].on')?.dataset.dur || '');
+      if (!d) return { from, to: '' };
+      const t = (Number(h) * 60 + Number(m) + Math.round(d * 60)) % (24 * 60);
+      return { from, to: `${pad(Math.floor(t / 60))}:${pad(t % 60)}` };
+    }
     const isArfa = (id) => id === 'arfa' || calById(id)?.name === 'Arfa';
     function updateMeg() {
       if (!$('meg-part')) return;
@@ -1348,8 +1376,8 @@
       const id = old ? old.id : doc(collection(db, 'calendars', cals[0], 'events')).id;
       const data = {
         date, dateEnd, cals, status: st ? st.dataset.st : 'apstiprinats',
-        from: meg ? '' : ($('f-from').value || ''), to: meg ? '' : ($('f-to').value || ''),
-        dur: meg ? ($('dur-fields').querySelector('.on')?.dataset.dur || '') : '',
+        ...megTimes(meg),
+        dur: meg ? ($('dur-fields').querySelector('[data-dur].on')?.dataset.dur || '') : '',
         title: old?.title || '', place: $('f-place').value.trim(), address: $('f-address').value.trim(),
         notes: $('f-notes').value.trim(),
         createdBy: old ? old.createdBy : me,
