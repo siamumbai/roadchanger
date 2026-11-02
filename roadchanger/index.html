@@ -111,10 +111,14 @@
     .service-row:nth-child(even) .service-row-text { background: #FDF5E6; }
     .service-card { border: 0.5px solid #E0CCA4; border-radius: 6px; padding: 2rem 1.75rem; background: #FDF5E6; }
     .service-card.fire { border-color: #DEB87A; background: #FEF3E2; }
-    .service-num { font-family: 'Libre Baskerville', Georgia, serif; font-size: 22px; font-weight: 700; color: #E8D4A8; margin-bottom: 0.75rem; }
     .service-name { font-family: 'Libre Baskerville', Georgia, serif; font-size: 20px; font-weight: 700; color: #2C2416; margin-bottom: 0.6rem; }
     .service-desc { font-size: 13px; color: #7A5C38; line-height: 1.75; margin-bottom: 1.25rem; font-weight: 300; }
-    .tags { display: flex; flex-wrap: wrap; gap: 6px; }
+    .tags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: auto; }
+    .harp-note { display: block; margin-top: 0.6rem; }
+    @media (min-width: 769px) {
+      .harp-text .service-desc { line-height: 1.6; margin-bottom: 0.75rem; }
+      .harp-note { margin-top: 0.375rem; }
+    }
     .tag { font-size: 11px; color: #854F0B; background: #FAEEDA; padding: 4px 10px; border-radius: 3px; letter-spacing: 0.03em; }
 
     .about { padding: 5rem 3rem; background: #FDF5E6; width: 100%; }
@@ -300,7 +304,7 @@
   <section class="services" id="services">
     <div style="max-width:1200px;margin:0 auto;padding:2rem 2rem 0.5rem;">
       <p class="section-tag">What I offer</p>
-      <h2 class="section-title">Six experiences.</h2>
+      <h2 class="section-title">Seven experiences.</h2>
     </div>
 
     <!-- 01 -->
@@ -308,7 +312,6 @@
       <div class="card-dj" style="display:grid;grid-template-columns:380px 1fr 1fr;border-radius:10px;overflow:hidden;border:0.5px solid #E0CCA4;height:300px;box-shadow:0 4px 18px rgba(44,36,22,0.08);gap:4px;background:#FFFBF5;">
         <div class="svc-text-light" style="padding:2.5rem;display:flex;flex-direction:column;justify-content:space-between;">
           <div>
-            <div class="service-num">01</div>
             <div class="service-name">DJ with live saxophone</div>
             <p class="service-desc">World grooves and uplifting energy with live saxophone woven through the mix.</p>
           </div>
@@ -327,7 +330,6 @@
       <div style="display:grid;grid-template-columns:380px 1fr 1fr;border-radius:10px;overflow:hidden;border:0.5px solid #E0CCA4;height:300px;box-shadow:0 4px 18px rgba(44,36,22,0.08);gap:4px;background:#FFFBF5;">
         <div style="padding:2.5rem;background:#FDF5E6;display:flex;flex-direction:column;justify-content:space-between;">
           <div>
-            <div class="service-num">02</div>
             <div class="service-name">Roadchanger Fire Show</div>
             <p class="service-desc">A live fire performance with up to 15 pyrotechnic moments, followed by a full DJ set to close the night. The kind of ending people photograph, share and enjoy.</p>
           </div>
@@ -340,14 +342,26 @@
       </div>
     </div>
 
+    <!-- Live Harp -->
+    <div style="max-width:1200px;margin:0 auto;padding:0 2rem 1.5rem;">
+      <div style="display:grid;grid-template-columns:380px 1fr 1fr;border-radius:10px;overflow:hidden;border:0.5px solid #E0CCA4;height:300px;box-shadow:0 4px 18px rgba(44,36,22,0.08);gap:4px;background:#FFFBF5;">
+        <div class="svc-text-light harp-text" style="padding:2.5rem;display:flex;flex-direction:column;justify-content:flex-start;">
+          <div class="service-name">Live Harp</div>
+          <p class="service-desc">Harp will make your moment stand out with its marvelous look and sound that carries ancient vibes. The Harp set is mixed with complementary electronic instruments and beats to create a unique, uplifting feeling for everyone around.<span class="harp-note">Live Roses can make this set even more special —<br>see below.</span></p>
+          <div class="tags"><span class="tag">Wedding</span><span class="tag">Corporate</span><span class="tag">Special moment</span></div>
+        </div>
+        <div class="img-short" style="overflow:hidden;"><img class="harp-img1" src="images/harp1.jpg" style="width:100%;height:100%;object-fit:cover;object-position:100% center;display:block;transform:scale(1.33);transform-origin:85% 46%;" alt="Live harp and saxophone" /></div>
+        <div class="img-short" style="overflow:hidden;"><img src="images/harp2.jpg" style="width:100%;height:100%;object-fit:cover;display:block;" alt="Harpist and saxophonist with Live Roses" /></div>
+      </div>
+    </div>
+
     <!-- 03 -->
     <div style="max-width:1200px;margin:0 auto;padding:0 2rem 1.5rem;">
       <div style="display:grid;grid-template-columns:380px 1fr 1fr;border-radius:10px;overflow:hidden;border:0.5px solid #E0CCA4;height:300px;box-shadow:0 4px 18px rgba(44,36,22,0.08);gap:4px;background:#FFFBF5;">
         <div class="svc-text-light" style="padding:2.5rem;display:flex;flex-direction:column;justify-content:flex-start;">
-          <div class="service-num">03</div>
           <div class="service-name">Piano lounge</div>
           <p class="service-desc">Piano, saxophone, flute and ambient pads —<br>crafted for moments that need elegance without noise. Perfect for welcome drinks, cocktail hours and gala dinners.</p>
-          <div class="tags"><span class="tag">Welcome drink</span><span class="tag">Gala dinner</span><span class="tag">Award night</span></div>
+          <div class="tags"><span class="tag">Welcome drink</span><span class="tag">Gala dinner</span><span class="tag">Wedding</span></div>
         </div>
         <div class="img-short" style="overflow:hidden;"><img src="images/piano1.jpg" style="width:100%;height:100%;object-fit:cover;display:block;" alt="Piano setup" /></div>
         <div style="overflow:hidden;"><img src="images/piano2.jpg" style="width:100%;height:100%;object-fit:cover;display:block;" alt="Piano sunset" /></div>
@@ -364,7 +378,6 @@
     <div style="max-width:1200px;margin:0 auto;padding:0 2rem 1.5rem;">
       <div class="card-roses" style="display:grid;grid-template-columns:380px 1fr 1fr;border-radius:10px;overflow:hidden;border:0.5px solid #E0CCA4;height:300px;box-shadow:0 4px 18px rgba(44,36,22,0.08);gap:4px;background:#FFFBF5;">
         <div style="padding:2.5rem;background:#FDF5E6;display:flex;flex-direction:column;justify-content:flex-start;">
-          <div class="service-num">04</div>
           <div class="service-name">Live Roses</div>
           <p class="service-desc">Elegant performers in breathtaking floral costumes — floor-length rose gowns, dramatic headpieces and an atmosphere that stops guests in their tracks.<br>They move through your event and become part of the memory.</p>
           <div class="tags"><span class="tag">Weddings</span><span class="tag">Corporate</span><span class="tag">Photo moments</span></div>
@@ -378,7 +391,6 @@
     <div style="max-width:1200px;margin:0 auto;padding:0 2rem 1.5rem;">
       <div style="grid-template-columns:380px 1fr 1fr;border-radius:10px;overflow:hidden;border:0.5px solid #E0CCA4;height:300px;box-shadow:0 4px 18px rgba(44,36,22,0.08);gap:4px;background:#FFFBF5;display:grid;">
         <div style="padding:2.5rem;background:#FDF5E6;display:flex;flex-direction:column;justify-content:flex-start;">
-          <div class="service-num">05</div>
           <div class="service-name">Live Eyes</div>
           <p class="service-desc">Mysterious performers in striking eye costumes — black and gold, otherworldly and unforgettable. They move through your event, interact with guests and create moments people photograph and share.</p>
           <div class="tags"><span class="tag">Festivals</span><span class="tag">Corporate</span><span class="tag">Photo moments</span></div>
@@ -391,7 +403,6 @@
     <div style="max-width:1200px;margin:0 auto;padding:0 2rem 1.5rem;">
       <div class="card-paint" style="display:grid;grid-template-columns:380px 1fr 1fr;border-radius:10px;overflow:hidden;border:0.5px solid #E0CCA4;height:300px;box-shadow:0 4px 18px rgba(44,36,22,0.08);gap:4px;background:#FFFBF5;">
         <div style="padding:2.5rem;background:#FFFBF5;display:flex;flex-direction:column;justify-content:flex-start;">
-          <div class="service-num">06</div>
           <div class="service-name">Live Painting</div>
           <p class="service-desc">A painter sets up an easel at your event and creates a piece live — capturing the venue, the atmosphere, the moment. Guests gather, watch and connect. The painting becomes a unique keepsake from the evening.</p>
           <div class="tags"><span class="tag">Corporate events</span><span class="tag">Private parties</span><span class="tag">Weddings</span></div>

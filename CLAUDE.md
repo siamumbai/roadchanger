@@ -42,7 +42,7 @@
 
 ## Lapu struktūra (stāvoklis 2026-08)
 
-- `/` — galvenā lapa. Hero ("DJ. Saxophone. One performance.", hero.jpg, "Riga, Latvia") → **Six experiences** (01 DJ with live saxophone → WATCH VIDEO uz /dj/; 02 Roadchanger Fire Show → /fire/; 03 Piano lounge) → **My Creative Collaborators** (04 Live Roses; 05 Live Eyes; 06 Live Painting) → **Need Sound and Lights?** (SEE MORE → /lights/) → brūnā svītra → **The artist** (Emīls Ašmanis aka DJ Roadchanger, about.jpg) → **Get in touch** (tumšā sadaļa) → footer.
+- `/` — galvenā lapa. Hero ("DJ. Saxophone. One performance.", hero.jpg, "Riga, Latvia") → **Seven experiences** (DJ with live saxophone → WATCH VIDEO uz /dj/; Roadchanger Fire Show → /fire/; Live Harp; Piano lounge) → **My Creative Collaborators** (Live Roses; Live Eyes; Live Painting; kartiņām ciparu nav, tagi datorā piespiesti pie apakšas) → **Need Sound and Lights?** (SEE MORE → /lights/) → brūnā svītra → **The artist** (Emīls Ašmanis aka DJ Roadchanger, about.jpg) → **Get in touch** (tumšā sadaļa) → footer.
 - `/dj/` — DJ lapa ("DJ Set with Saxophone", video, "Tech Rider" poga → /rider/, sava Get in touch sadaļa).
 - `/fire/` — fire show lapa (6 bilžu režģis + lielā bilde `bigfire1.jpg`, Get in touch).
 - `/rider/` — "Technical Rider": headeris tikai ar Roadchanger logo (→ /), virsraksts, bilde `rider1.jpg`, zem bildes centrēts "If you have any questions please call +371 20031578" (zvanāms `tel:` links).
@@ -73,7 +73,7 @@ Logo "Roadchanger" → `/` · DJ sets → `/dj/` · Fire show → `/fire/` · Ab
 
 ## Bildes (`roadchanger/images/` mape)
 
-hero.jpg · ddj1.jpg · m-ddj1.1.jpg · m-ddj1.2.jpg · ddj2.jpg · fire1.jpg · fire3.jpg · piano1.jpg · piano2.jpg · characters1.jpg · characters2.jpg · eyes1.jpg · eyes2.jpg · paint1.jpg · paint2.jpg · about.jpg · rider1.jpg · bigfire1.jpg
+hero.jpg · ddj1.jpg · m-ddj1.1.jpg · m-ddj1.2.jpg · ddj2.jpg · fire1.jpg · fire3.jpg · piano1.jpg · piano2.jpg · characters1.jpg · characters2.jpg · eyes1.jpg · eyes2.jpg · paint1.jpg · paint2.jpg · harp1.jpg · harp2.jpg · about.jpg · rider1.jpg · bigfire1.jpg
 Jaunām bildēm nosaukumus dod lietotājs — vienmēr pajautā vai apstiprini precīzu faila nosaukumu.
 
 ## SEO un AI redzamība (uzlikts 2026-08-26)
