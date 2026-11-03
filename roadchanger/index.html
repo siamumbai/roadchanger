@@ -114,11 +114,8 @@
     .service-name { font-family: 'Libre Baskerville', Georgia, serif; font-size: 20px; font-weight: 700; color: #2C2416; margin-bottom: 0.6rem; }
     .service-desc { font-size: 13px; color: #7A5C38; line-height: 1.75; margin-bottom: 1.25rem; font-weight: 300; }
     .tags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: auto; }
-    .harp-note { display: block; margin-top: 0.6rem; }
-    @media (min-width: 769px) {
-      .harp-text .service-desc { line-height: 1.6; margin-bottom: 0.75rem; }
-      .harp-note { margin-top: 0.375rem; }
-    }
+    .card-more-box { position: relative; }
+    .card-more { position: absolute; right: 2.5rem; bottom: 2.5rem; cursor: default; }
     .tag { font-size: 11px; color: #854F0B; background: #FAEEDA; padding: 4px 10px; border-radius: 3px; letter-spacing: 0.03em; }
 
     .about { padding: 5rem 3rem; background: #FDF5E6; width: 100%; }
@@ -174,6 +171,7 @@
       .nav-links { display: none; }
       .mobile-br { display: inline; }
       .harp-br { display: none; }
+      .card-more { position: static; order: 1; align-self: flex-start; margin-top: 1rem; }
       .hero, .services, .about, .testimonials, .booking { padding: 2.5rem 1rem; }
       .hero-inner, .about-inner, .booking-inner { grid-template-columns: 1fr; gap: 1.5rem; }
       .hero-title { font-size: 28px; }
@@ -346,10 +344,10 @@
     <!-- Live Harp -->
     <div style="max-width:1200px;margin:0 auto;padding:0 2rem 1.5rem;">
       <div style="display:grid;grid-template-columns:380px 1fr 1fr;border-radius:10px;overflow:hidden;border:0.5px solid #E0CCA4;height:300px;box-shadow:0 4px 18px rgba(44,36,22,0.08);gap:4px;background:#FFFBF5;">
-        <div class="svc-text-light harp-text" style="padding:2.5rem;display:flex;flex-direction:column;justify-content:flex-start;">
+        <div class="svc-text-light harp-text card-more-box" style="padding:2.5rem;display:flex;flex-direction:column;justify-content:flex-start;">
           <div class="service-name">Live Harp</div>
-          <p class="service-desc">Harp will make your moment stand out with its marvelous look and sound that carries ancient vibes. The Harp set is mixed with complementary electronic instruments and beats to create a unique,<br class="harp-br"> uplifting feeling for everyone around.<span class="harp-note">Live Roses can make this set even more special —<br>see below.</span></p>
-          <div class="tags"><span class="tag">Wedding</span><span class="tag">Corporate</span><span class="tag">Special moment</span></div>
+          <p class="service-desc">Harp will make your moment stand out with its marvelous look and sound that carries ancient vibes. The Harp set is mixed with complementary electronic instruments and beats to create a unique,<br class="harp-br"> uplifting feeling for everyone around.</p>
+          <a class="card-more" style="background: #B07320; padding: 10px 20px; border-radius: 3px; text-decoration: none; color: #FFFFFF; font-size: 14px; letter-spacing: 0.05em; font-weight: bold;">SEE MORE</a>
         </div>
         <div class="img-short" style="overflow:hidden;"><img class="harp-img1" src="images/harp1.jpg" style="width:100%;height:100%;object-fit:cover;object-position:100% center;display:block;transform:scale(1.33);transform-origin:85% 46%;" alt="Live harp and saxophone" /></div>
         <div class="img-short" style="overflow:hidden;"><img src="images/harp2.jpg" style="width:100%;height:100%;object-fit:cover;display:block;" alt="Harpist and saxophonist with Live Roses" /></div>
@@ -378,10 +376,10 @@
     <!-- 04 -->
     <div style="max-width:1200px;margin:0 auto;padding:0 2rem 1.5rem;">
       <div class="card-roses" style="display:grid;grid-template-columns:380px 1fr 1fr;border-radius:10px;overflow:hidden;border:0.5px solid #E0CCA4;height:300px;box-shadow:0 4px 18px rgba(44,36,22,0.08);gap:4px;background:#FFFBF5;">
-        <div style="padding:2.5rem;background:#FDF5E6;display:flex;flex-direction:column;justify-content:flex-start;">
+        <div class="card-more-box" style="padding:2.5rem;background:#FDF5E6;display:flex;flex-direction:column;justify-content:flex-start;">
           <div class="service-name">Live Roses</div>
           <p class="service-desc">Elegant performers in breathtaking floral costumes — floor-length rose gowns, dramatic headpieces and an atmosphere that stops guests in their tracks.<br>They move through your event and become part of the memory.</p>
-          <div class="tags"><span class="tag">Weddings</span><span class="tag">Corporate</span><span class="tag">Photo moments</span></div>
+          <a class="card-more" style="background: #B07320; padding: 10px 20px; border-radius: 3px; text-decoration: none; color: #FFFFFF; font-size: 14px; letter-spacing: 0.05em; font-weight: bold;">SEE MORE</a>
         </div>
         <div class="img-shorter" style="overflow:hidden;"><img src="images/characters1.jpg" style="width:100%;height:100%;object-fit:cover;object-position:center 80%;display:block;" alt="Live characters" /></div>
         <div class="img-short" style="overflow:hidden;"><img src="images/characters2.jpg" style="width:100%;height:100%;object-fit:cover;display:block;" alt="Rose characters" /></div>
