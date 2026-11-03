@@ -14,7 +14,7 @@
   <meta property="og:title" content="Live Roses — Roadchanger | Riga, Latvia" />
   <meta property="og:description" content="Elegant performers in breathtaking floral costumes — floor-length rose gowns, dramatic headpieces and an atmosphere that stops guests in their tracks. They move through your event and become part of the memory." />
   <meta property="og:url" content="https://roadchanger.com/rozes/" />
-  <meta property="og:image" content="https://roadchanger.com/images/characters1.jpg" />
+  <meta property="og:image" content="https://roadchanger.com/images/rozes11.jpg" />
   <meta name="twitter:card" content="summary_large_image" />
 
   <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -44,7 +44,7 @@
     .nav-links a:hover { color: #B07320; }
 
     /* Bildes - kartiņas platumā, augstums dabiskais */
-    .media-section { max-width: 900px; margin: 0 auto; padding: 2.5rem 2rem 3rem; }
+    .media-section { max-width: 1100px; margin: 0 auto; padding: 2.5rem 2rem 3rem; }
     .media-title {
       font-family: 'Libre Baskerville', Georgia, serif;
       font-size: 32px;
@@ -62,19 +62,37 @@
       margin-bottom: 2rem;
     }
     .mobile-br { display: none; }
-    .media-card {
-      border-radius: 10px;
-      overflow: hidden;
-      border: 0.5px solid #E0CCA4;
-      box-shadow: 0 4px 18px rgba(44,36,22,0.08);
-      background: #1E1810;
+    /* Kolāža: bildes dažādos izmēros, kolonnas nesakrīt rindās */
+    .rz-grid {
+      display: grid;
+      grid-template-columns: repeat(12, minmax(0, 1fr));
+      grid-template-rows: repeat(34, minmax(0, 1fr));
+      aspect-ratio: 12 / 17;
+      margin: 0 -0.25rem;
     }
-    .media-card + .media-card { margin-top: 1.5rem; }
-    .media-card img {
-      width: 100%;
-      height: auto;
+    .rz { position: relative; }
+    .rz img {
+      position: absolute;
+      top: 0.25rem;
+      left: 0.25rem;
+      width: calc(100% - 0.5rem);
+      height: calc(100% - 0.5rem);
+      object-fit: cover;
       display: block;
+      border-radius: 6px;
+      border: 0.5px solid #DEC898;
     }
+    .a11 { grid-area: 1 / 1 / 15 / 7; }
+    .a1 { grid-area: 1 / 7 / 9 / 13; }
+    .a10 { grid-area: 9 / 7 / 17 / 10; }
+    .a2 { grid-area: 9 / 10 / 18 / 13; }
+    .a6 { grid-area: 15 / 1 / 25 / 4; }
+    .a3 { grid-area: 15 / 4 / 24 / 7; }
+    .a4 { grid-area: 17 / 7 / 27 / 10; }
+    .a7 { grid-area: 18 / 10 / 27 / 13; }
+    .a9 { grid-area: 25 / 1 / 35 / 4; }
+    .a5 { grid-area: 24 / 4 / 35 / 7; }
+    .a8 { grid-area: 27 / 7 / 35 / 13; }
 
     @media (max-width: 768px) {
       nav { padding: 0.75rem 1rem; }
@@ -83,7 +101,29 @@
       .media-section { padding: 0.75rem 1rem 1.25rem; }
       .media-title { font-size: 24px; margin-bottom: 0.3rem; }
       .media-subtitle { font-size: 14px; margin-bottom: 1.25rem; }
-      .media-card + .media-card { margin-top: 0.6rem; }
+      .rz-grid {
+        grid-template-columns: repeat(6, minmax(0, 1fr));
+        grid-template-rows: repeat(68, minmax(0, 1fr));
+        aspect-ratio: 6 / 34;
+        margin: 0 -0.125rem;
+      }
+      .rz img {
+        top: 0.125rem;
+        left: 0.125rem;
+        width: calc(100% - 0.25rem);
+        height: calc(100% - 0.25rem);
+      }
+      .a11 { grid-area: 1 / 1 / 15 / 7; }
+      .a1 { grid-area: 15 / 1 / 23 / 7; }
+      .a10 { grid-area: 23 / 1 / 31 / 4; }
+      .a2 { grid-area: 23 / 4 / 32 / 7; }
+      .a6 { grid-area: 31 / 1 / 42 / 4; }
+      .a3 { grid-area: 32 / 4 / 41 / 7; }
+      .a7 { grid-area: 42 / 1 / 50 / 4; }
+      .a5 { grid-area: 41 / 4 / 52 / 7; }
+      .a9 { grid-area: 50 / 1 / 61 / 4; }
+      .a4 { grid-area: 52 / 4 / 61 / 7; }
+      .a8 { grid-area: 61 / 1 / 69 / 7; }
     }
   </style>
 </head>
@@ -101,12 +141,18 @@
   <div class="media-section">
     <h1 class="media-title">Live Roses</h1>
     <p class="media-subtitle">Elegant performers in breathtaking floral costumes — floor-length rose gowns, dramatic headpieces and an atmosphere that stops guests in their tracks.<br>They move through your event and become part of the memory.</p>
-    <div class="media-card">
-      <img src="/images/characters1.jpg" alt="Live characters" />
-    </div>
-
-    <div class="media-card">
-      <img src="/images/characters2.jpg" alt="Rose characters" />
+    <div class="rz-grid">
+      <div class="rz a11"><img src="/images/rozes11.jpg" alt="Live Roses performer under blue stage lights" /></div>
+      <div class="rz a1"><img src="/images/rozes1.jpg" alt="Live Roses performers at an event" /></div>
+      <div class="rz a10"><img src="/images/rozes10.jpg" alt="Red and white Live Roses performers in a light beam" /></div>
+      <div class="rz a2"><img src="/images/rozes2.jpg" alt="Red Live Roses performer" /></div>
+      <div class="rz a6"><img loading="lazy" decoding="async" src="/images/rozes6.jpg" alt="Pianist in red with a Live Roses performer" style="object-position:40% center;" /></div>
+      <div class="rz a3"><img loading="lazy" decoding="async" src="/images/rozes3.jpg" alt="White Live Roses performer beside a harp" /></div>
+      <div class="rz a4"><img loading="lazy" decoding="async" src="/images/rozes4.jpg" alt="White Live Roses performer in blue light" /></div>
+      <div class="rz a7"><img loading="lazy" decoding="async" src="/images/rozes7.jpg" alt="Pianist with a red Live Roses performer" /></div>
+      <div class="rz a9"><img loading="lazy" decoding="async" src="/images/rozes9.jpg" alt="Red Live Roses performer among dinner tables" style="object-position:55% center;" /></div>
+      <div class="rz a5"><img loading="lazy" decoding="async" src="/images/rozes5.jpg" alt="White Live Roses performer by a window" style="object-position:70% center;" /></div>
+      <div class="rz a8"><img loading="lazy" decoding="async" src="/images/rozes8.jpg" alt="Live Roses performer behind an oyster and champagne bath" style="object-position:center 90%;" /></div>
     </div>
   </div>
 
