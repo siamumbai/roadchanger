@@ -42,8 +42,9 @@
 
 ## Lapu struktūra (stāvoklis 2026-08)
 
-- `/` — galvenā lapa. Hero ("DJ. Saxophone. One performance.", hero.jpg, "Riga, Latvia") → **Seven experiences** (DJ with live saxophone → WATCH VIDEO uz /dj/; Roadchanger Fire Show → /fire/; Live Harp; Piano lounge) → **My Creative Collaborators** (Live Roses; Live Eyes; Live Painting; kartiņām ciparu nav, tagi datorā piespiesti pie apakšas; Live Harp un Live Roses bez tagiem, ar **neaktīvu** SEE MORE pogu bez saites) → **Need Sound and Lights?** (SEE MORE → /lights/) → brūnā svītra → **The artist** (Emīls Ašmanis aka DJ Roadchanger, about.jpg) → **Get in touch** (tumšā sadaļa) → footer.
-- `/arfa/` un `/rozes/` — Live Harp un Live Roses lapas (uzliktas 2026-11-03). **Pagaidām sasniedzamas tikai, ierakstot adresi:** SEE MORE pogas galvenajā lapā apzināti nestrādā, lapas nav sitemap un `llms.txt`. Lietotājs pateiks, kad pogas ieslēgt.
+- `/` — galvenā lapa. Hero ("DJ. Saxophone. One performance.", hero.jpg, "Riga, Latvia") → **Seven experiences** (DJ with live saxophone → WATCH VIDEO uz /dj/; Roadchanger Fire Show → /fire/; Live Harp; Piano lounge) → **My Creative Collaborators** (Live Roses; Live Eyes; Live Painting; kartiņām ciparu nav, tagi datorā piespiesti pie apakšas; Live Harp un Live Roses bez tagiem, ar SEE MORE pogu: Live Harp → /arfa/, Live Roses **neaktīva**, bez saites) → **Need Sound and Lights?** (SEE MORE → /lights/) → brūnā svītra → **The artist** (Emīls Ašmanis aka DJ Roadchanger, about.jpg) → **Get in touch** (tumšā sadaļa) → footer.
+- `/arfa/` — Live Harp lapa (viena bilde `harp1.jpg`), SEE MORE no galvenās lapas, ir sitemap un `llms.txt`.
+- `/rozes/` — Live Roses lapa. **Pagaidām sasniedzama tikai, ierakstot adresi:** SEE MORE poga apzināti nestrādā, lapa nav sitemap un `llms.txt`. Lietotājs pateiks, kad pogu ieslēgt.
 - `/dj/` — DJ lapa ("DJ Set with Saxophone", video, "Tech Rider" poga → /rider/, sava Get in touch sadaļa).
 - `/fire/` — fire show lapa (6 bilžu režģis + lielā bilde `bigfire1.jpg`, Get in touch).
 - `/rider/` — "Technical Rider": headeris tikai ar Roadchanger logo (→ /), virsraksts, bilde `rider1.jpg`, zem bildes centrēts "If you have any questions please call +371 20031578" (zvanāms `tel:` links).
