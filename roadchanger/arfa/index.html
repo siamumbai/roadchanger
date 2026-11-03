@@ -66,8 +66,8 @@
     .rz-grid {
       display: grid;
       grid-template-columns: repeat(12, minmax(0, 1fr));
-      grid-template-rows: repeat(35, minmax(0, 1fr));
-      aspect-ratio: 12 / 17.5;
+      grid-template-rows: repeat(44, minmax(0, 1fr));
+      aspect-ratio: 12 / 22;
       margin: 0 -0.25rem;
     }
     .rz { position: relative; }
@@ -82,16 +82,14 @@
       border-radius: 6px;
       border: 0.5px solid #DEC898;
     }
-    .h1 { grid-area: 1 / 1 / 19 / 7; }
-    .h4 { grid-area: 1 / 7 / 8 / 13; }
-    .h3 { grid-area: 8 / 7 / 16 / 10; }
-    .h8 { grid-area: 8 / 10 / 19 / 13; }
-    .h10 { grid-area: 16 / 7 / 21 / 10; }
-    .h7 { grid-area: 19 / 10 / 28 / 13; }
-    .h2 { grid-area: 21 / 7 / 28 / 10; }
-    .h5 { grid-area: 19 / 1 / 27 / 7; }
-    .h9 { grid-area: 27 / 1 / 36 / 7; }
-    .h6 { grid-area: 28 / 7 / 36 / 13; }
+    .h9 { grid-area: 1 / 1 / 19 / 13; }
+    .h1 { grid-area: 19 / 1 / 37 / 7; }
+    .h4 { grid-area: 19 / 7 / 26 / 13; }
+    .h3 { grid-area: 26 / 7 / 36 / 10; }
+    .h8 { grid-area: 26 / 10 / 37 / 13; }
+    .h2 { grid-area: 36 / 7 / 45 / 10; }
+    .h7 { grid-area: 37 / 10 / 45 / 13; }
+    .h5 { grid-area: 37 / 1 / 45 / 7; }
 
     @media (max-width: 768px) {
       nav { padding: 0.75rem 1rem; }
@@ -102,8 +100,8 @@
       .media-subtitle { font-size: 14px; margin-bottom: 1.25rem; }
       .rz-grid {
         grid-template-columns: repeat(6, minmax(0, 1fr));
-        grid-template-rows: repeat(74, minmax(0, 1fr));
-        aspect-ratio: 6 / 37;
+        grid-template-rows: repeat(61, minmax(0, 1fr));
+        aspect-ratio: 6 / 30.5;
         margin: 0 -0.125rem;
       }
       .rz img {
@@ -112,16 +110,14 @@
         width: calc(100% - 0.25rem);
         height: calc(100% - 0.25rem);
       }
-      .h1 { grid-area: 1 / 1 / 19 / 7; }
-      .h4 { grid-area: 19 / 1 / 27 / 7; }
-      .h3 { grid-area: 27 / 1 / 36 / 4; }
-      .h8 { grid-area: 27 / 4 / 39 / 7; }
-      .h10 { grid-area: 36 / 1 / 41 / 4; }
-      .h7 { grid-area: 39 / 4 / 50 / 7; }
-      .h2 { grid-area: 41 / 1 / 50 / 4; }
-      .h5 { grid-area: 50 / 1 / 58 / 7; }
-      .h9 { grid-area: 58 / 1 / 67 / 7; }
-      .h6 { grid-area: 67 / 1 / 75 / 7; }
+      .h9 { grid-area: 1 / 1 / 10 / 7; }
+      .h1 { grid-area: 10 / 1 / 28 / 7; }
+      .h4 { grid-area: 28 / 1 / 36 / 7; }
+      .h3 { grid-area: 36 / 1 / 45 / 4; }
+      .h8 { grid-area: 36 / 4 / 47 / 7; }
+      .h2 { grid-area: 45 / 1 / 54 / 4; }
+      .h7 { grid-area: 47 / 4 / 54 / 7; }
+      .h5 { grid-area: 54 / 1 / 62 / 7; }
     }
   </style>
 </head>
@@ -140,16 +136,14 @@
     <h1 class="media-title">Live Harp</h1>
     <p class="media-subtitle">Harp will make your moment stand out with its marvelous look and sound that carries ancient vibes. The Harp set is mixed with complementary electronic instruments and beats to create a unique, uplifting feeling for everyone around.</p>
     <div class="rz-grid">
+      <div class="rz h9"><img src="/images/harp1.jpg" alt="Live harp and saxophone" /></div>
       <div class="rz h1"><img src="/images/arfa3.jpg" alt="Harpist with a red flower crown, close up" /></div>
       <div class="rz h4"><img src="/images/arfa4.jpg" alt="Harpist beside a red Live Roses performer" style="object-position:center 85%;" /></div>
-      <div class="rz h3"><img src="/images/arfa1.jpg" alt="Harpist in red playing a golden harp" style="object-position:center 80%;" /></div>
-      <div class="rz h8"><img src="/images/arfa8.jpg" alt="Harpist seen through the harp strings" /></div>
-      <div class="rz h10"><img loading="lazy" decoding="async" src="/images/harp2.jpg" alt="Harpist and saxophonist with Live Roses" /></div>
-      <div class="rz h7"><img loading="lazy" decoding="async" src="/images/arfa7.jpg" alt="Harpist and red Live Roses performer in an event hall" /></div>
+      <div class="rz h3"><img src="/images/arfa1.jpg" alt="Harpist in red playing a golden harp" /></div>
+      <div class="rz h8"><img loading="lazy" decoding="async" src="/images/arfa8.jpg" alt="Harpist seen through the harp strings" /></div>
       <div class="rz h2"><img loading="lazy" decoding="async" src="/images/arfa2.jpg" alt="Harpist playing, seen from behind" style="object-position:center 60%;" /></div>
+      <div class="rz h7"><img loading="lazy" decoding="async" src="/images/arfa7.jpg" alt="Harpist and red Live Roses performer in an event hall" /></div>
       <div class="rz h5"><img loading="lazy" decoding="async" src="/images/arfa6.jpg" alt="Harpist with Live Roses performers and guests" /></div>
-      <div class="rz h9"><img loading="lazy" decoding="async" src="/images/harp1.jpg" alt="Live harp and saxophone" /></div>
-      <div class="rz h6"><img loading="lazy" decoding="async" src="/images/arfa5.jpg" alt="DJ Roadchanger at the keyboard with a saxophone beside him" /></div>
     </div>
   </div>
 
