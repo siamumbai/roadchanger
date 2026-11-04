@@ -24,9 +24,9 @@
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
     html { scroll-behavior: smooth; }
-    body { background: #FFFBF5; color: #2C2416; font-family: 'Lato', Arial, sans-serif; }
+    body { background: #FFFBF5; color: #2C2416; font-family: 'Lato', Arial, sans-serif; zoom: 0.9; }
 
-    /* Header - tāds pats kā galvenajā lapā (bez Book now) */
+    /* Header - tāds pats kā galvenajā lapā */
     nav {
       display: flex;
       justify-content: space-between;
@@ -42,25 +42,18 @@
     .nav-links { display: flex; gap: 2.5rem; }
     .nav-links a { font-size: 13px; color: #8A6840; text-decoration: none; letter-spacing: 0.05em; }
     .nav-links a:hover { color: #B07320; }
+    .nav-cta { background: #2C2416; color: #F5ECD8; font-size: 13px; padding: 9px 22px; border-radius: 3px; text-decoration: none; letter-spacing: 0.06em; }
+    .nav-cta:hover { background: #3D3020; }
 
-    /* Bildes - kartiņas platumā, augstums dabiskais */
-    .media-section { max-width: 1100px; margin: 0 auto; padding: 2.5rem 2rem 3rem; }
-    .media-title {
-      font-family: 'Libre Baskerville', Georgia, serif;
-      font-size: 32px;
-      font-weight: 700;
-      color: #2C2416;
-      line-height: 1.2;
-      margin-bottom: 0.35rem;
-    }
-    .media-subtitle {
-      font-size: 15px;
-      color: #7A5C38;
-      line-height: 1.7;
-      font-weight: 300;
-      max-width: 640px;
-      margin-bottom: 2rem;
-    }
+    .media-section { max-width: 1222px; margin: 0 auto; padding: 2.5rem 2rem 5rem; }
+    .dj-text-wrap { max-width: 900px; margin: 4rem auto 0; padding: 0 3rem; }
+    .contact-section { padding: 5rem 3rem; background: #2C2416; width: 100%; }
+    .contact-wrapper { display: grid; grid-template-columns: 1fr 1fr; gap: 5rem; align-items: start; max-width: 1100px; margin: 0 auto; }
+    .contact-form { display: flex; flex-direction: column; gap: 10px; }
+
+    footer { background: #1E1810; padding: 2rem 3rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; margin: 0; width: 100%; }
+    .footer-logo { font-family: 'Libre Baskerville', Georgia, serif; font-size: 14px; font-weight: 700; letter-spacing: 0.1em; color: #C4A06A; text-transform: uppercase; }
+    .footer-sub { font-size: 11px; color: #5C4028; margin-top: 4px; }
     .mobile-br { display: none; }
     /* Kolāža: bildes dažādos izmēros, kolonnas nesakrīt rindās */
     .rz-grid {
@@ -92,12 +85,15 @@
     .h5 { grid-area: 19 / 1 / 27 / 7; }
 
     @media (max-width: 768px) {
+      body { zoom: 1; }
       nav { padding: 0.75rem 1rem; }
       .nav-links { display: none; }
       .mobile-br { display: inline; }
-      .media-section { padding: 0.75rem 1rem 1.25rem; }
-      .media-title { font-size: 24px; margin-bottom: 0.3rem; }
-      .media-subtitle { font-size: 14px; margin-bottom: 1.25rem; }
+      .media-section { padding: 0.75rem 1rem 3rem; }
+      .dj-text-wrap { margin-top: 1rem; padding: 0; }
+      .contact-section { padding: 3rem 0.5rem; }
+      .contact-wrapper { grid-template-columns: 1fr; gap: 2rem; }
+      footer { padding: 0.5rem; flex-direction: column; align-items: flex-start; }
       .rz-grid {
         grid-template-columns: repeat(6, minmax(0, 1fr));
         grid-template-rows: repeat(52, minmax(0, 1fr));
@@ -129,11 +125,10 @@
       <a href="/fire/">Fire show</a>
       <a href="/#about">About</a>
     </div>
+    <a href="#booking" class="nav-cta">Book now</a>
   </nav>
 
   <div class="media-section">
-    <h1 class="media-title">Live Harp</h1>
-    <p class="media-subtitle">Harp will make your moment stand out with its marvelous look and sound that carries ancient vibes. The Harp set is mixed with complementary electronic instruments and beats to create a unique, uplifting feeling for everyone around.</p>
     <div class="rz-grid">
       <div class="rz h1"><img src="/images/arfa3.jpg" alt="Harpist with a red flower crown, close up" /></div>
       <div class="rz h4"><img src="/images/arfa6.jpg" alt="Harpist with Live Roses performers and guests" style="object-position:70% 50%;" /></div>
@@ -143,7 +138,86 @@
       <div class="rz h7"><img loading="lazy" decoding="async" src="/images/arfa7.jpg" alt="Harpist and red Live Roses performer in an event hall" /></div>
       <div class="rz h5"><img loading="lazy" decoding="async" src="/images/arfa4.jpg" alt="Harpist beside a red Live Roses performer" /></div>
     </div>
+
+    <div class="dj-text-wrap">
+      <h1 style="font-family: 'Libre Baskerville', Georgia, serif; font-size: 28px; font-weight: 700; color: #2C2416; margin-bottom: 1.5rem;">Live Harp</h1>
+      <p style="font-size: 15px; color: #6B5035; line-height: 1.9; margin-bottom: 0.75rem; font-weight: 300;">Harp will make your moment stand out with its marvelous look and sound that carries ancient vibes. The Harp set is mixed with complementary electronic instruments and beats to create a unique, uplifting feeling for everyone around.</p>
+      <div style="margin-top: 2rem;">
+        <a href="/rider/" style="background: #B07320; padding: 12px 28px; border-radius: 3px; text-decoration: none; color: #FFFFFF; font-size: 14px; letter-spacing: 0.05em; font-weight: bold; display: inline-block;">Tech Rider</a>
+      </div>
+    </div>
   </div>
+
+  <!-- GET IN TOUCH SEKCIJA -->
+  <section class="contact-section" id="booking">
+    <div class="contact-wrapper">
+      <div>
+        <p style="font-size: 11px; letter-spacing: 0.2em; color: #C4A06A; text-transform: uppercase; margin-bottom: 1rem;">Get in touch</p>
+        <h2 style="font-family: 'Libre Baskerville', Georgia, serif; font-size: 32px; font-weight: 700; color: #F5ECD8; margin-bottom: 1rem; line-height: 1.2;">Tell me about <br class="mobile-br">your event</h2>
+        <p style="font-size: 15px; color: #A08060; line-height: 1.85; font-weight: 300; margin-bottom: 2.5rem;">I'll get back to you as soon as possible.</p>
+        <div style="display: flex; flex-direction: column; gap: 1rem;">
+          <div style="display: flex; gap: 1rem;">
+            <span style="font-size: 12px; color: #6B5035; text-transform: uppercase; letter-spacing: 0.1em; min-width: 80px; padding-top: 2px;">Email</span>
+            <span style="font-size: 14px; color: #C4A06A;"><a href="mailto:e.asmanis@gmail.com" style="color: #C4A06A; text-decoration: none;">e.asmanis@gmail.com</a></span>
+          </div>
+          <div style="display: flex; gap: 1rem;">
+            <span style="font-size: 12px; color: #6B5035; text-transform: uppercase; letter-spacing: 0.1em; min-width: 80px; padding-top: 2px;">Phone</span>
+            <span style="font-size: 14px; color: #C4A06A;"><a href="tel:+37120031578" style="color: #C4A06A; text-decoration: none;">+371 200 31578</a></span>
+          </div>
+          <div style="display: flex; gap: 1rem;">
+            <span style="font-size: 12px; color: #6B5035; text-transform: uppercase; letter-spacing: 0.1em; min-width: 80px; padding-top: 2px;">Based in</span>
+            <span style="font-size: 14px; color: #C4A06A;">Riga, Latvia</span>
+          </div>
+        </div>
+      </div>
+      <form id="booking-form" class="contact-form" action="https://formspree.io/f/mnjwzwrq" method="POST" onsubmit="submitForm(event)">
+        <input type="text" name="name" placeholder="Your name" required style="background: #3D3020; border: 0.5px solid #5C4028; color: #F5ECD8; border-radius: 4px; padding: 12px 14px; font-size: 14px; width: 100%; font-family: 'Lato', Arial, sans-serif; font-weight: 300;" />
+        <input type="email" name="email" placeholder="Email address" required style="background: #3D3020; border: 0.5px solid #5C4028; color: #F5ECD8; border-radius: 4px; padding: 12px 14px; font-size: 14px; width: 100%; font-family: 'Lato', Arial, sans-serif; font-weight: 300;" />
+        <input type="tel" name="phone" placeholder="Phone number" style="background: #3D3020; border: 0.5px solid #5C4028; color: #F5ECD8; border-radius: 4px; padding: 12px 14px; font-size: 14px; width: 100%; font-family: 'Lato', Arial, sans-serif; font-weight: 300;" />
+        <input type="text" name="date" placeholder="Event date" style="background: #3D3020; border: 0.5px solid #5C4028; color: #F5ECD8; border-radius: 4px; padding: 12px 14px; font-size: 14px; width: 100%; font-family: 'Lato', Arial, sans-serif; font-weight: 300;" />
+        <select name="type" style="background: #3D3020; border: 0.5px solid #5C4028; color: #A08060; border-radius: 4px; padding: 12px 14px; font-size: 14px; width: 100%; font-family: 'Lato', Arial, sans-serif; font-weight: 300;">
+          <option value="">Type of event</option>
+          <option>Private party</option>
+          <option>Office party</option>
+          <option>Wedding</option>
+          <option>Corporate event</option>
+          <option>Club or Bar</option>
+          <option>Other</option>
+        </select>
+        <textarea name="message" placeholder="Tell me about the event — location, vibe, number of guests..." style="background: #3D3020; border: 0.5px solid #5C4028; color: #F5ECD8; border-radius: 4px; padding: 12px 14px; font-size: 14px; width: 100%; min-height: 110px; resize: vertical; font-family: 'Lato', Arial, sans-serif; font-weight: 300;"></textarea>
+        <button type="submit" style="background: #B07320; border: none; cursor: pointer; width: 100%; font-size: 14px; padding: 14px; color: #FFFBF5; border-radius: 4px; font-family: 'Lato', Arial, sans-serif; letter-spacing: 0.06em; font-weight: bold;">Send enquiry</button>
+      </form>
+    </div>
+  </section>
+
+  <footer>
+    <div>
+      <div class="footer-logo">Roadchanger</div>
+      <div class="footer-sub">SIA Mumbai · PVN Nr: LV40203627024 · Reģ. Nr: 40203627024</div>
+    </div>
+  </footer>
+
+  <script>
+    function submitForm(e) {
+      e.preventDefault();
+      const form = document.getElementById('booking-form');
+      const formData = new FormData(form);
+      
+      fetch('https://formspree.io/f/mnjwzwrq', {
+        method: 'POST',
+        body: formData,
+        headers: {
+          'Accept': 'application/json'
+        }
+      })
+      .then(response => {
+        if (response.ok) {
+          window.location.href = 'https://roadchanger.com/thanks';
+        }
+      })
+      .catch(error => console.error('Error:', error));
+    }
+  </script>
 
 </body>
 </html>
