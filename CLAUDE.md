@@ -43,8 +43,8 @@
 ## Lapu struktūra (stāvoklis 2026-08)
 
 - `/` — galvenā lapa. Hero ("DJ. Saxophone. One performance.", hero.jpg, "Riga, Latvia") → **Seven experiences** (DJ with live saxophone → WATCH VIDEO uz /dj/; Roadchanger Fire Show → /fire/; Live Harp; Piano lounge) → **My Creative Collaborators** (Live Roses; Live Eyes; Live Painting; kartiņām ciparu nav, tagi datorā piespiesti pie apakšas; Live Harp un Live Roses bez tagiem, ar SEE MORE pogu: Live Harp → /arfa/, Live Roses → /rozes/) → **Need Sound and Lights?** (SEE MORE → /lights/) → brūnā svītra → **The artist** (Emīls Ašmanis aka DJ Roadchanger, about.jpg) → **Get in touch** (tumšā sadaļa) → footer.
-- `/arfa/` — Live Harp lapa ar 7 bilžu kolāžu (`arfa1`–`arfa4`, `arfa6`–`arfa8`; tas pats `.rz-grid` kā /rozes/), zem bildēm virsraksts, apraksts un "Tech Rider" poga → /rider/, sava Get in touch sadaļa, ir sitemap un `llms.txt`.
-- `/rozes/` — Live Roses lapa ar 13 bilžu kolāžu (`rozes1.jpg`–`rozes13.jpg`; CSS grid `.rz-grid`, telefonam savs izkārtojums), zem bildēm virsraksts un apraksts, sava Get in touch sadaļa. Ir sitemap un `llms.txt`.
+- `/arfa/` — Live Harp lapa: augšā "Live Performance" + virsraksts kā /dj/, tad 7 bilžu kolāža (`arfa1`–`arfa4`, `arfa6`–`arfa8`; tas pats `.rz-grid` kā /rozes/), zem bildēm virsraksts, apraksts un "Tech Rider" poga → /rider/, sava Get in touch sadaļa, ir sitemap un `llms.txt`.
+- `/rozes/` — Live Roses lapa: augšā "Live Performance" + virsraksts kā /dj/, tad 13 bilžu kolāža (`rozes1.jpg`–`rozes13.jpg`; CSS grid `.rz-grid`, telefonam savs izkārtojums), zem bildēm virsraksts un apraksts, sava Get in touch sadaļa. Ir sitemap un `llms.txt`.
 - `/dj/` — DJ lapa ("DJ Set with Saxophone", video, "Tech Rider" poga → /rider/, sava Get in touch sadaļa).
 - `/fire/` — fire show lapa (6 bilžu režģis + lielā bilde `bigfire1.jpg`, Get in touch).
 - `/rider/` — "Technical Rider": headeris tikai ar Roadchanger logo (→ /), virsraksts, bilde `rider1.jpg`, zem bildes centrēts "If you have any questions please call +371 20031578" (zvanāms `tel:` links).
