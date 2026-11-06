@@ -242,18 +242,8 @@
       /* "Need Sound and Lights?" - mazāks fonts mobilajā, lai viena rinda */
       .services .sl-title { font-size: 22px !important; }
 
-      /* Kartiņa 7: atstarpe zem apraksta vienāda ar to virs "My Equipment" */
-      .services .card-equip .service-desc { margin-bottom: 0 !important; }
-
-      /* Kartiņa 7 mobilā: teksts augšā, video zem pilnā platumā (kā bildes augšā) */
-      .services .card-equip {
-        display: flex !important;
-        flex-direction: column !important;
-        gap: 0 !important;
-      }
-      .services .card-equip > div:first-child {          /* teksta bloks: augš/apakš atstarpe vienāda */
-        padding: 1.75rem 1.5rem !important;
-      }
+      /* Kartiņa 7 mobilā: video pilnā platumā */
+      .services .card-equip { width: 100% !important; }
       .services .card-equip > div:last-of-type {          /* video josla mobilajā: zemāka */
         position: relative !important;
         width: 100% !important;
@@ -413,24 +403,17 @@
       </div>
     </div>
 
-    <!-- Bringing it all together -->
-    <div style="max-width:1200px;margin:0 auto;padding:2.5rem 2rem 1rem;">
-      <p class="section-tag">Bringing it all together</p>
-      <h2 class="section-title sl-title" style="margin-bottom:0;">Need Sound and Lights?</h2>
+    <!-- Need Sound and Lights? -->
+    <div class="sl-head" style="max-width:1200px;margin:0 auto;padding:2.5rem 2rem 1rem;display:flex;justify-content:center;align-items:center;gap:1.5rem;flex-wrap:wrap;">
+      <h2 class="section-title sl-title" style="margin-bottom:0;text-transform:uppercase;">Need Sound and Lights?</h2>
+      <div>
+        <a href="/lights/" style="display:inline-block; background: #BC8C45; padding: 10px 20px; border-radius: 3px; text-decoration: none; color: #FFFFFF; font-size: 14px; letter-spacing: 0.05em; font-weight: bold;">SEE MORE</a>
+      </div>
     </div>
 
     <!-- 07 -->
     <div style="max-width:1200px;margin:0 auto;padding:0 2rem 1.5rem;">
-      <div class="card-equip" style="display:grid;grid-template-columns:380px 1fr;border-radius:10px;overflow:hidden;border:0.5px solid #E0CCA4;box-shadow:0 4px 18px rgba(44,36,22,0.08);gap:4px;background:#FFFBF5;">
-        <div style="padding:2.5rem;background:#FDF5E6;display:flex;flex-direction:column;justify-content:space-between;">
-          <div>
-            <div class="service-name">My Equipment</div>
-            <p class="service-desc">Sound System, lights, smoke machines,<br>DJ table, wireless microphones.</p>
-          </div>
-          <div style="display: flex; justify-content: flex-end; margin-top: 1.5rem;">
-            <a href="/lights/" style="background: #BC8C45; padding: 10px 20px; border-radius: 3px; text-decoration: none; color: #FFFFFF; font-size: 14px; letter-spacing: 0.05em; font-weight: bold;">SEE MORE</a>
-          </div>
-        </div>
+      <div class="card-equip" style="width:66%;margin:0 auto;border-radius:10px;overflow:hidden;border:0.5px solid #E0CCA4;box-shadow:0 4px 18px rgba(44,36,22,0.08);background:#FFFBF5;">
         <!-- VIDEO: bunny.net tiešais MP4 — aizpilda rāmi (object-fit: cover), ielādējas pēc attēliem -->
         <div style="position:relative;width:100%;aspect-ratio:16/9;background:#1E1810;overflow:hidden;">
           <video id="equip-video"
