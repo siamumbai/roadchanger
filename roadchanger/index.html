@@ -245,7 +245,7 @@
       /* Mobilā: "SOUND AND LIGHTS" + SEE MORE vienā rindā pa visu video platumu */
       .services .sl-need { display: none; }
       .services .sl-head { flex-wrap: nowrap !important; justify-content: space-between !important; gap: 0.75rem !important; }
-      .services .sl-head a { font-size: 2.8vw !important; line-height: 1.2 !important; padding: 1vw 2.4vw !important; white-space: nowrap; }
+      .services .sl-head a { font-size: 2.8vw !important; line-height: 1.2 !important; padding: 1vw 2.4vw !important; white-space: nowrap; transform: translateY(-0.45vw); }
 
       /* Kartiņas mobilā: rāmis ap bildēm + dziļāka ēna, lai kartiņas nesaplūst */
       .services .svc-card {
@@ -258,7 +258,10 @@
       .services .svc-card > div:not(:first-child) { border-radius: 6px !important; overflow: hidden !important; }
       .services .svc-card > div:first-child { padding-left: 1rem !important; padding-right: 1rem !important; }
       .services .sl-wrap { padding-top: 0 !important; }   /* atstarpe kā starp pārējām kartiņām */
-      .services .card-equip.svc-card { padding: 0.75rem !important; }
+      .services .card-paint .tags { display: none !important; }   /* Live Painting bez tagiem telefonā */
+      .services .card-paint .service-desc { margin-bottom: 0 !important; }   /* bildes tuvāk tekstam */
+      .services .card-equip.svc-card { padding: 0.75rem !important; border-radius: 10px !important; }
+      .services .sl-title { line-height: 1 !important; }
       .services .card-equip.svc-card > div.sl-head { padding: 0.25rem 0 0.75rem !important; }
       .services .card-equip .equip-video { margin: 0 !important; border: none !important; box-shadow: none !important; border-radius: 6px !important; }
 
